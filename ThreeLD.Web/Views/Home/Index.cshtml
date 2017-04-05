@@ -1,0 +1,36 @@
+﻿@model IEnumerable<ThreeLD.DB.Models.Event>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h1>Events</h1>
+
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Date and Time</th>
+			<th>Duration</th>
+			<th>Address</th>
+			<th>Description</th>
+			<th>Category</th>
+			<th>URL</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var e in Model)
+		{
+			<tr>
+				<td>@e.Name</td>
+				<td>@e.DateTime</td>
+				<td>@e.Duration</td>
+				<td>@e.Address</td>
+				<td>@e.Description</td>
+				<td>@e.Category</td>
+				<td><a href="@e.Url" class="btn btn-link">Link</a></td>
+			</tr>
+		}
+	</tbody>
+</table>
+
