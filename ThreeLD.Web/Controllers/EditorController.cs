@@ -32,6 +32,8 @@ namespace ThreeLD.Web.Controllers
 			this.events.Add(e);
 			this.events.Save();
 
+			this.TempData["message"] = $"{e.Name} has been created.";
+
 			return this.RedirectToAction(nameof(this.CreateEvent));
 		}
 	}

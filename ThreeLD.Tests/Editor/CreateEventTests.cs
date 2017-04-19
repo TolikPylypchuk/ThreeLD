@@ -78,6 +78,33 @@ namespace ThreeLD.Tests.Editor
 		}
 
 		[TestMethod]
+		public void CreateEventPostMessageTest()
+		{
+			var eventToAdd = new Event
+			{
+				Name = "Test",
+				Address = "Test",
+				DateTime = DateTime.Now,
+				Duration = TimeSpan.FromHours(2),
+				Url = "https://www.event1.test.com",
+				Description = "A test event",
+				Category = "Test"
+			};
+
+			var mock = new Mock<IRepository<Event>>();
+			mock.Setup(repo => repo.Add(eventToAdd));
+			mock.Setup(repo => repo.Save()).Returns(1);
+
+			var controller = new EditorController(mock.Object);
+
+			controller.Validate(eventToAdd);
+
+			var result = controller.CreateEvent(eventToAdd);
+
+			Assert.IsNotNull(controller.TempData["message"]);
+		}
+
+		[TestMethod]
 		public void CreateEventPostInvalidTest()
 		{
 			var eventToAdd = new Event
