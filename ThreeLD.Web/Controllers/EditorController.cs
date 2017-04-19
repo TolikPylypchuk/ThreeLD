@@ -60,5 +60,21 @@ namespace ThreeLD.Web.Controllers
 			// TODO Redirect to view all events
 			return this.RedirectToAction("");
 		}
+
+		[HttpPost]
+		public RedirectToRouteResult DeleteEvent(int id)
+		{
+			this.events.Delete(id);
+
+			int result = this.events.Save();
+
+			if (result != 0)
+			{
+				this.TempData["message"] = "The event was deleted.";
+			}
+
+			// TODO Redirect to view all events
+			return this.RedirectToAction("");
+		}
 	}
 }
