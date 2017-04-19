@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Web.Mvc;
 using Ninject;
 
@@ -8,6 +9,7 @@ using ThreeLD.DB.Repositories;
 
 namespace ThreeLD.Web.Infrastructure
 {
+	[ExcludeFromCodeCoverage]
 	public class NinjectDependencyResolver : IDependencyResolver
 	{
 		private IKernel kernel;

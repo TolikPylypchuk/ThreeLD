@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Web;
 using System.Web.Mvc;
 
@@ -14,6 +15,7 @@ using ThreeLD.Web.Infrastructure;
 
 namespace ThreeLD.Web.App_Start
 {
+	[ExcludeFromCodeCoverage]
 	public static class NinjectWebCommon 
 	{
 		private static readonly Bootstrapper bootstrapper = new Bootstrapper();
