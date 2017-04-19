@@ -18,7 +18,7 @@ namespace ThreeLD.Web.Controllers
 		[HttpGet]
 		public ViewResult CreateEvent()
 		{
-			return this.View(new Event());
+			return this.View(nameof(this.EditEvent), new Event());
 		}
 
 		[HttpPost]
@@ -26,7 +26,7 @@ namespace ThreeLD.Web.Controllers
 		{
 			if (!this.ModelState.IsValid)
 			{
-				return this.View(e);
+				return this.View(nameof(this.EditEvent), e);
 			}
 
 			this.events.Add(e);
@@ -34,7 +34,31 @@ namespace ThreeLD.Web.Controllers
 
 			this.TempData["message"] = $"{e.Name} has been created.";
 
-			return this.RedirectToAction(nameof(this.CreateEvent));
+			// TODO Redirect to view all events
+			return this.RedirectToAction("");
+		}
+
+		[HttpGet]
+		public ViewResult EditEvent(int id)
+		{
+			return this.View(this.events.GetById(id));
+		}
+
+		[HttpPost]
+		public ActionResult EditEvent(Event e)
+		{
+			if (!this.ModelState.IsValid)
+			{
+				return this.View(nameof(this.EditEvent), e);
+			}
+
+			this.events.Update(e);
+			this.events.Save();
+
+			this.TempData["message"] = $"{e.Name} has been updated.";
+
+			// TODO Redirect to view all events
+			return this.RedirectToAction("");
 		}
 	}
 }

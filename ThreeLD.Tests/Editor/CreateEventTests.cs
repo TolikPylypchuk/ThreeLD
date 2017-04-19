@@ -26,7 +26,7 @@ namespace ThreeLD.Tests.Editor
 
 			var result = controller.CreateEvent();
 
-			Assert.IsNotNull(result.Model);
+			Assert.AreEqual(nameof(controller.EditEvent), result.ViewName);
 			Assert.IsInstanceOfType(result.Model, typeof(Event));
 
 			var model = (Event)result.Model;
@@ -131,6 +131,7 @@ namespace ThreeLD.Tests.Editor
 			var viewResult = (ViewResult)result;
 			
 			Assert.AreSame(eventToAdd, viewResult.Model);
+			Assert.AreEqual(nameof(controller.EditEvent), viewResult.ViewName);
 
 			mock.Verify(repo => repo.Add(eventToAdd), Times.Never());
 			mock.Verify(repo => repo.Save(), Times.Never());
