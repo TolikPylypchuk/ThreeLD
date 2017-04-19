@@ -20,8 +20,8 @@ namespace ThreeLD.DB.Models
 		[Required(ErrorMessage = "The address of the event is required.")]
 		public string Address { get; set; }
 
+		[Url]
 		[Required(ErrorMessage = "The URL of the event is required.")]
-		[RegularExpression(@"^http(s)?://([\w-]+.)+[\w-]+(/[\w- ./?%&=])?$")]
 		public string Url { get; set; }
 
 		[Required(ErrorMessage = "The description of the event is required.")]
