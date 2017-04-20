@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity.Owin;
 using ThreeLD.DB.Infrastructure;
 
-namespace Users.Infrastructure
+namespace ThreeLD.Web.Infrastructure
 {
     public static class IdentityHelpers
     {

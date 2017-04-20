@@ -10,7 +10,7 @@ using ThreeLD.DB.Models;
 using System.Collections.Generic;
 using ThreeLD.Web.Models.ViewModels;
 
-namespace Users.Controllers
+namespace ThreeLD.Web.Controllers
 {
     public class RoleAdminController : Controller
     {

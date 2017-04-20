@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using ThreeLD.DB.Infrastructure;
 using System.Web;
+using System.Collections.Generic;
 
 namespace ThreeLD.Web.Controllers
 {
@@ -33,7 +34,7 @@ namespace ThreeLD.Web.Controllers
             if (ModelState.IsValid)
             {
                 User user = await UserManager.FindAsync(details.UserName,
-                details.Password);
+                    details.Password);
                 if (user == null)
                 {
                     ModelState.AddModelError("", "Invalid name or password.");
@@ -47,6 +48,12 @@ namespace ThreeLD.Web.Controllers
                     {
                         IsPersistent = false
                     }, ident);
+
+                    if(returnUrl == "")
+                    {
+                        return Redirect("~/Account/AccountSettings");
+                    }
+
                     return Redirect(returnUrl);
                 }
             }
@@ -59,6 +66,68 @@ namespace ThreeLD.Web.Controllers
             AuthManager.SignOut();
             return RedirectToAction("Index", "Home");
         }
+
+        [Authorize]
+        public ActionResult AccountSettings()
+        {
+            return View(GetData("IndexLogin"));
+        }
+        [Authorize(Roles = "Users")]
+        public ActionResult OtherAction()
+        {
+            return View("AccountSettings", GetData("OtherAction"));
+        }
+        private Dictionary<string, object> GetData(string actionName)
+        {
+            Dictionary<string, object> dict
+            = new Dictionary<string, object>();
+            dict.Add("Action", actionName);
+            dict.Add("User", HttpContext.User.Identity.Name);
+            dict.Add("Authenticated", HttpContext.User.Identity.IsAuthenticated);
+            dict.Add("Auth Type", HttpContext.User.Identity.AuthenticationType);
+            dict.Add("In Users Role", HttpContext.User.IsInRole("Users"));
+            return dict;
+        }
+
+
+        public ActionResult SignUp()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<ActionResult> SignUp(CreateModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                User user = new User
+                {
+                    UserName = model.UserName,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Email = model.Email
+                };
+                IdentityResult result = await UserManager.CreateAsync(user,
+                model.Password);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("AccountSettings");
+                }
+                else
+                {
+                    AddErrorsFromResult(result);
+                }
+            }
+            return View(model);
+        }
+
+        private void AddErrorsFromResult(IdentityResult result)
+        {
+            foreach (string error in result.Errors)
+            {
+                ModelState.AddModelError("", error);
+            }
+        }
+
         private IAuthenticationManager AuthManager
         {
             get
