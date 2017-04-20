@@ -21,7 +21,7 @@ namespace ThreeLD.Web.Controllers
         [HttpGet]
         public ViewResult ViewEvents()
         {
-            return this.View(this.events.GetAll().ToList<Event>());
+            return this.View(this.events.GetAll());
         }
 
         [HttpGet]
@@ -44,7 +44,7 @@ namespace ThreeLD.Web.Controllers
                 currentEvents = null;
             }
             
-            return this.View(result);
+            return this.View(result.AsQueryable<Event>());
         }
 
         [HttpGet]
@@ -61,7 +61,7 @@ namespace ThreeLD.Web.Controllers
                 result = currentEvents.ToList<Event>();
             }
 
-            return this.View(result);
+            return this.View(result.AsQueryable<Event>());
         }
     }
 }
