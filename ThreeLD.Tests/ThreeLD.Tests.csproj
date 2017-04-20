@@ -89,7 +89,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="User\AddBookmarkTests.cs" />
+    <Compile Include="User\ViewPreferencesTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ThreeLD.DB\ThreeLD.DB.csproj">

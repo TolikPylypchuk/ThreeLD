@@ -71,7 +71,7 @@ namespace ThreeLD.Web.Controllers
         public ViewResult ViewPreferences()
         {
             return this.View(this.preferences.GetAll()
-                .Where(p => p.UserId == User.Identity.GetUserId()));
+                .Where(p => p.UserId == User.Identity.GetUserId()).ToArray());
         }
 
         [HttpPost]
@@ -79,7 +79,7 @@ namespace ThreeLD.Web.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View();
+                return this.View("ViewPreferences");
             }
 
             Preference newPreference = new Preference();
