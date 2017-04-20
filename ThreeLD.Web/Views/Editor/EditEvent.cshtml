@@ -1,0 +1,16 @@
+﻿@model ThreeLD.DB.Models.Event
+
+    <div>
+             @Html.BeginForm()
+        {
+         <p>Name: @Html.TextBoxFor(m=>ProcessModelInfo.Name)</p>
+         @Html.TextBoxFor(m => model.DateTime, new { @type = "date" })
+         @Html.TextBoxFor(m => m.Duration, "{0:hh\\:mm}")
+         <p>Address: @Html.TextBoxFor(m => ProcessModelInfo.Address)</p>
+         <p>URL: @Html.TextBoxFor(m => ProcessModelInfo.Url)</p>
+         <p>Description: @Html.TextBoxFor(m => ProcessModelInfo.Description)</p>
+         <p>Categories: @Html.TextBoxFor(m => ProcessModelInfo.Category)</p>
+         @Html.HiddenFor(m => m.ID);
+         <input type="submit" name="Submit">
+        }
+    </div>
