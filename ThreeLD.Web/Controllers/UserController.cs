@@ -1,9 +1,11 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web;
+using System.Web.Mvc;
 
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System.Linq;
+using Microsoft.AspNet.Identity.Owin;
 
+using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
 
@@ -26,9 +28,8 @@ namespace ThreeLD.Web.Controllers
         [HttpPost]
         public ActionResult AddBookmark(int eventId)
         {
-            var manager = this.UserManager;
-
-            User currentUser = manager.FindById(User.Identity.GetUserId());
+            User currentUser =
+                this.UserManager.FindById(User.Identity.GetUserId());
             Event chosenEvent = this.events.GetById(eventId);
 
             chosenEvent.BookmarkedBy.Add(currentUser);
@@ -46,15 +47,14 @@ namespace ThreeLD.Web.Controllers
         [HttpPost]
         public ActionResult RemoveBookmark(int eventId)
         {
-            var manager = this.UserManager;
-
-            User currentUser = manager.FindById(User.Identity.GetUserId());
+            User currentUser =
+                this.UserManager.FindById(User.Identity.GetUserId());
             Event chosenEvent = this.events.GetById(eventId);
 
             chosenEvent.BookmarkedBy.Remove(currentUser);
             int res = this.events.Save();
 
-            currentUser.BookmarkedEvents.Add(chosenEvent);
+            currentUser.BookmarkedEvents.Remove(chosenEvent);
 
             if (res != 0)
             {
@@ -72,12 +72,6 @@ namespace ThreeLD.Web.Controllers
         {
             return this.View(this.preferences.GetAll()
                 .Where(p => p.UserId == User.Identity.GetUserId()));
-        }
-
-        [HttpGet]
-        public ViewResult AddPreference()
-        {
-            return this.View();
         }
 
         [HttpPost]
@@ -119,13 +113,7 @@ namespace ThreeLD.Web.Controllers
             return this.RedirectToAction("ViewPreferences");
         }
 
-        private UserManager<User> UserManager
-        {
-            get
-            {
-                return new UserManager<User>(
-                    new UserStore<User>(new DB.AppDbContext()));
-            }
-        }
+        private AppUserManager UserManager => 
+            HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
     }
 }
