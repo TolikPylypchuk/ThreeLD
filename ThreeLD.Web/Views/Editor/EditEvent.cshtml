@@ -1,16 +1,25 @@
 ﻿@model ThreeLD.DB.Models.Event
 
-    <div>
-             @Html.BeginForm()
-        {
-         <p>Name: @Html.TextBoxFor(m=>ProcessModelInfo.Name)</p>
-         @Html.TextBoxFor(m => model.DateTime, new { @type = "date" })
-         @Html.TextBoxFor(m => m.Duration, "{0:hh\\:mm}")
-         <p>Address: @Html.TextBoxFor(m => ProcessModelInfo.Address)</p>
-         <p>URL: @Html.TextBoxFor(m => ProcessModelInfo.Url)</p>
-         <p>Description: @Html.TextBoxFor(m => ProcessModelInfo.Description)</p>
-         <p>Categories: @Html.TextBoxFor(m => ProcessModelInfo.Category)</p>
-         @Html.HiddenFor(m => m.ID);
-         <input type="submit" name="Submit">
-        }
-    </div>
+@{
+	ViewBag.Title = "Edit an Event";
+}
+
+<h2>Edit an Event</h2>
+
+<div>
+	@using (Html.BeginForm("EditEvent", "Editor"))
+	{
+		<p>Name: @Html.TextBoxFor(m => m.Name)</p>
+		<p>Date and Time: @Html.TextBoxFor(
+			m => m.DateTime, new { type = "datetime-local" }) </p>
+		<p>Duration: @Html.TextBoxFor(m => m.Duration, "{0:hh\\:mm}") </p>
+		<p>Address: @Html.TextBoxFor(m => m.Address)</p>
+		<p>URL: @Html.TextBoxFor(m => m.Url)</p>
+		<p>Description: @Html.TextBoxFor(m => m.Description)</p>
+		<p>Categories: @Html.TextBoxFor(m => m.Category)</p>
+		
+		@Html.HiddenFor(m => m.Id)
+		
+		<input type="submit" value="Submit">
+	}
+</div>
