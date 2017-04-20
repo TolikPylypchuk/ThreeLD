@@ -13,8 +13,8 @@ namespace ThreeLD.Web.Controllers
 		{
 			this.events = events;
 		}
-
-		public ActionResult Index()
+        
+        public ActionResult Index()
 		{
 			return this.View(this.events.GetAll());
 		}
