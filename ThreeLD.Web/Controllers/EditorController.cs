@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Web.Mvc;
 
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
@@ -16,6 +17,7 @@ namespace ThreeLD.Web.Controllers
 		}
 
 		[HttpGet]
+		[ExcludeFromCodeCoverage]
 		public ViewResult CreateEvent()
 		{
 			return this.View(nameof(this.EditEvent), new Event());
