@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -38,7 +37,7 @@ namespace ThreeLD.Web.Controllers
                 {
                     for (int j = 0; j < currentEvents.Count; j++)
                     {
-                        result.Add(currentEvents[i]);
+                        result.Add(currentEvents[j]);
                     }
                 }
 
