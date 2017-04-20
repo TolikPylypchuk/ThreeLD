@@ -51,8 +51,7 @@ namespace ThreeLD.Web.Controllers
 
 			this.TempData["message"] = $"{e.Name} has been {action}.";
 
-			// TODO Redirect to view all events
-			return this.RedirectToAction("");
+			return this.RedirectToAction("ViewEvents", "Guest");
 		}
 
 		[HttpPost]
@@ -67,8 +66,7 @@ namespace ThreeLD.Web.Controllers
 				this.TempData["message"] = "The event was deleted.";
 			}
 
-			// TODO Redirect to view all events
-			return this.RedirectToAction("");
+			return this.RedirectToAction("ViewEvents", "Guest");
 		}
 	}
 }
