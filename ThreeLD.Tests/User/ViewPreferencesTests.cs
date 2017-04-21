@@ -1,14 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using Moq;
 using System.Linq;
 using System.Security.Principal;
 using System.Web.Mvc;
-using Moq;
 
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
 using ThreeLD.Web.Controllers;
-using System.Web;
 
 namespace ThreeLD.Tests.User
 {
@@ -16,25 +15,10 @@ namespace ThreeLD.Tests.User
     public class ViewPreferencesTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public void ViewPreferencesSimpleTest()
         {            
-            var preferences = new[]
+            var preferences = new Preference[]
             {
-                new Preference
-                {
-                    Id = 1,
-                    UserId = "testUserId"
-                },
-                new Preference
-                {
-                    Id = 2,
-                    UserId = "testUserId"
-                },
-                new Preference
-                {
-                    Id = 3,
-                    UserId = "anotherTestUserId"
-                }
             };
 
             var mockRepo = new Mock<IRepository<Preference>>();
@@ -42,7 +26,6 @@ namespace ThreeLD.Tests.User
 
             var controllerContext = new Mock<ControllerContext>();
             var principal = new Mock<IPrincipal>();
-            principal.Setup(x => x.Identity.Name).Returns("testUserId");
             controllerContext.SetupGet(x => x.HttpContext.User)
                 .Returns(principal.Object);
 
@@ -52,7 +35,7 @@ namespace ThreeLD.Tests.User
             };
             var viewResult = controller.ViewPreferences();
             
-            Assert.AreEqual(2, ((Preference[])viewResult.Model).Length);
+            Assert.AreEqual(0, ((Preference[])viewResult.Model).Length);
 
             mockRepo.Verify(r => r.GetAll(), Times.Once());
         }
