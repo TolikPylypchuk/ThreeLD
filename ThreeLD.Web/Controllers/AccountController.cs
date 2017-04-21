@@ -89,13 +89,15 @@ namespace ThreeLD.Web.Controllers
             return dict;
         }
 
-
+		[AllowAnonymous]
         public ActionResult SignUp()
         {
             return View();
         }
+
         [HttpPost]
-        public async Task<ActionResult> SignUp(CreateModel model)
+        [AllowAnonymous]
+		public async Task<ActionResult> SignUp(CreateModel model)
         {
             if (ModelState.IsValid)
             {
