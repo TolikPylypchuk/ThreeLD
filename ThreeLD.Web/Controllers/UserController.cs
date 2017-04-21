@@ -82,11 +82,13 @@ namespace ThreeLD.Web.Controllers
                 return this.View("ViewPreferences");
             }
 
-            Preference newPreference = new Preference();
-            newPreference.UserId = User.Identity.GetUserId();
-            newPreference.Category = preferenceCategory;
+	        Preference newPreference = new Preference
+	        {
+		        UserId = this.User.Identity.GetUserId(),
+		        Category = preferenceCategory
+	        };
 
-            this.preferences.Add(newPreference);
+	        this.preferences.Add(newPreference);
             this.preferences.Save();
 
             this.TempData["message"] =
