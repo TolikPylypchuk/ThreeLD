@@ -8,7 +8,6 @@ using ThreeLD.DB.Repositories;
 
 namespace ThreeLD.Web.Controllers
 {
-    [Authorize(Roles = "Guest")]
     public class GuestController : Controller
     {
         private IRepository<Event> events;
