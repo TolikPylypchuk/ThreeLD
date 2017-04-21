@@ -6,7 +6,7 @@ using ThreeLD.DB.Repositories;
 
 namespace ThreeLD.Web.Controllers
 {
-	//[Authorize(Roles = "Editor")]
+	[Authorize(Roles = "Editor")]
 	public class EditorController : Controller
 	{
 		private IRepository<Event> events;
@@ -51,7 +51,8 @@ namespace ThreeLD.Web.Controllers
 
 			this.TempData["message"] = $"{e.Name} has been {action}.";
 
-			return this.RedirectToAction("ViewEvents", "Guest");
+			return this.RedirectToAction(
+				nameof(GuestController.ViewEvents), "Guest");
 		}
 
 		[HttpPost]
@@ -66,7 +67,8 @@ namespace ThreeLD.Web.Controllers
 				this.TempData["message"] = "The event was deleted.";
 			}
 
-			return this.RedirectToAction("ViewEvents", "Guest");
+			return this.RedirectToAction(
+				nameof(GuestController.ViewEvents), "Guest");
 		}
 	}
 }
