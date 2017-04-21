@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +10,7 @@ namespace ThreeLD.DB.Repositories
 	public class DbRepository<TEntity> : IRepository<TEntity>
 		where TEntity : EntityBase, new()
 	{
-		private bool disposedValue = false;
+		private bool disposedValue;
 		private AppDbContext context;
 		private DbSet<TEntity> table;
 

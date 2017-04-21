@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using ThreeLD.DB.Models;
@@ -13,7 +14,7 @@ namespace ThreeLD.Tests.User
         [TestMethod]
         public void ProposeEventGetTest()
         {
-            UserController controller = new UserController(null);
+            UserController controller = new UserController(null, null);
             ViewResult result = controller.ProposeEvent();
 
             Assert.IsNotNull(result.Model);

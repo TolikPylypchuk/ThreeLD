@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
 using ThreeLD.DB.Models;
 
 namespace ThreeLD.Web.Models.ViewModels
@@ -8,12 +9,16 @@ namespace ThreeLD.Web.Models.ViewModels
 	{
 		[Required]
 		public string UserName { get; set; }
+
 		[Required]
 		public string FirstName { get; set; }
+
 		[Required]
 		public string LastName { get; set; }
+
 		[Required]
 		public string Email { get; set; }
+
 		[Required]
 		public string Password { get; set; }
 	}
@@ -22,6 +27,7 @@ namespace ThreeLD.Web.Models.ViewModels
 	{
 		[Required]
 		public string UserName { get; set; }
+
 		[Required]
 		public string Password { get; set; }
 	}
