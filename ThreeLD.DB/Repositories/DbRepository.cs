@@ -38,7 +38,8 @@ namespace ThreeLD.DB.Repositories
 
 		public void Delete(int id)
 		{
-			this.context.Entry(new TEntity { Id = id }).State = EntityState.Deleted;
+			this.context.Entry(new TEntity { Id = id }).State
+                = EntityState.Deleted;
 		}
 
 		public void Delete(TEntity entity)

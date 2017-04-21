@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
@@ -13,10 +14,10 @@ namespace ThreeLD.Web.Controllers
 		{
 			this.events = events;
 		}
-
-		public ActionResult Index()
+        
+        public ActionResult Index()
 		{
 			return RedirectToAction("ViewEvents", "GuestController");
 		}
-	}
+    }
 }
