@@ -15,7 +15,7 @@ namespace ThreeLD.Tests.User
     public class ViewPreferencesTests
     {
         [TestMethod]
-        public void ViewPreferencesSimpleTest()
+        public void ViewPreferencesGetUserIdReturnsNullTest()
         {            
             var preferences = new Preference[]
             {
