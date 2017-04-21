@@ -24,43 +24,31 @@ namespace ThreeLD.Web.Controllers
         }
 
         [HttpGet]
-        public ViewResult FilterEventsByCategory(string[] category)
+        public ViewResult FilterEvents(
+            string categories, DateTime? start, DateTime? end)
         {
             List<Event> result = new List<Event>();
 
-            for (int i = 0; i < category.Length; i++)
+            var categoriesArray = categories.Split(',');
+
+            foreach (string category in categoriesArray)
             {
-                var currentEvents = this.events.GetAll().Where(e => e.Category == category[i]).Select(e => e).ToList<Event>();
-
-                if (currentEvents != null)
-                {
-                    for (int j = 0; j < currentEvents.Count; j++)
+                var currentEvents = this.events.GetAll()
+                    .Where(e => e.Category == category)
+                    .Where(e =>
+                        (start == null ||
+                         DateTime.Compare(e.DateTime, start.Value) >= 0) &&
+                        (end == null ||
+                         DateTime.Compare(e.DateTime, end.Value) <= 0))
+                    .ToList();
+                
+                    foreach (Event currentEvent in currentEvents)
                     {
-                        result.Add(currentEvents[j]);
+                        result.Add(currentEvent);
                     }
-                }
-
-                currentEvents = null;
             }
             
-            return this.View(result.AsQueryable<Event>());
-        }
-
-        [HttpGet]
-        public ViewResult FilterEventsByDateTime(DateTime dateFrom,
-            DateTime dateTo)
-        {
-            List<Event> result = new List<Event>();
-            var currentEvents = this.events.GetAll().
-                Where(e => (DateTime.Compare(e.DateTime, dateFrom) >= 0 && 
-                DateTime.Compare(e.DateTime, dateTo) <= 0)).Select(e => e);
-
-            if (currentEvents != null)
-            {
-                result = currentEvents.ToList<Event>();
-            }
-
-            return this.View(result.AsQueryable<Event>());
+            return this.View(result);
         }
     }
 }

@@ -11,7 +11,7 @@ using ThreeLD.DB.Repositories;
 
 namespace ThreeLD.Web.Controllers
 {
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = "User, Editor")]
     public class UserController : Controller
     {
         private IRepository<Preference> preferences;
@@ -26,12 +26,14 @@ namespace ThreeLD.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "User")]
         public ViewResult ProposeEvent()
         {
             return View(new Event());
         }
 
         [HttpPost]
+        [Authorize(Roles = "User")]
         public ActionResult ProposeEvent(Event newEvent)
         {
             if (newEvent != null)
@@ -40,7 +42,7 @@ namespace ThreeLD.Web.Controllers
                 this.events.Save();
             }
 
-            return this.RedirectToAction("");
+            return this.RedirectToAction("ViewEvents", "Guest");
         }
 
         [HttpPost]
