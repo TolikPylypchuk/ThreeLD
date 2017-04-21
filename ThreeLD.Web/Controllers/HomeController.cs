@@ -16,7 +16,7 @@ namespace ThreeLD.Web.Controllers
 
 		public ActionResult Index()
 		{
-			return this.View(this.events.GetAll());
+			return RedirectToAction("ViewEvents", "GuestController");
 		}
 	}
 }
