@@ -109,6 +109,10 @@
     <Compile Include="Migrations\201704192302513_newMigration.Designer.cs">
       <DependentUpon>201704192302513_newMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704211410410_IsApprovedFieldAdd.cs" />
+    <Compile Include="Migrations\201704211410410_IsApprovedFieldAdd.Designer.cs">
+      <DependentUpon>201704211410410_IsApprovedFieldAdd.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppRole.cs" />
     <Compile Include="Models\EntityBase.cs" />
@@ -125,6 +129,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704192302513_newMigration.resx">
       <DependentUpon>201704192302513_newMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704211410410_IsApprovedFieldAdd.resx">
+      <DependentUpon>201704211410410_IsApprovedFieldAdd.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

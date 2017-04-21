@@ -20,7 +20,8 @@ namespace ThreeLD.Web.Controllers
         [HttpGet]
         public ViewResult ViewEvents()
         {
-            return this.View(this.events.GetAll());
+            return this.View(this.events.GetAll()
+                .Where(e => e.IsApproved == true));
         }
 
         [HttpGet]
@@ -34,6 +35,7 @@ namespace ThreeLD.Web.Controllers
             foreach (string category in categoriesArray)
             {
                 var currentEvents = this.events.GetAll()
+                    .Where(e => e.IsApproved == true)
                     .Where(e => e.Category == category)
                     .Where(e =>
                         (start == null ||

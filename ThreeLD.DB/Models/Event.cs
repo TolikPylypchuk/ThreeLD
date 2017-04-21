@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -29,6 +30,9 @@ namespace ThreeLD.DB.Models
 
 		[Required(ErrorMessage = "The category of the event is required.")]
 		public string Category { get; set; }
+        
+        [DefaultValue(true)]
+        public bool IsApproved { get; set; }
 
 		public virtual ICollection<User> BookmarkedBy { get; set; } =
 			new HashSet<User>();

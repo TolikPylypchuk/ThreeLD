@@ -29,14 +29,17 @@ namespace ThreeLD.Web.Controllers
         [Authorize(Roles = "User")]
         public ViewResult ProposeEvent()
         {
-            return View(new Event());
+            Event newEvent = new Event();
+            newEvent.IsApproved = false;
+
+            return View(newEvent);
         }
 
         [HttpPost]
         [Authorize(Roles = "User")]
         public ActionResult ProposeEvent(Event newEvent)
         {
-            if (newEvent != null)
+            if (newEvent != null && newEvent.IsApproved == false)
             {
                 this.events.Add(newEvent);
                 this.events.Save();

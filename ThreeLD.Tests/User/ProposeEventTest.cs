@@ -28,6 +28,7 @@ namespace ThreeLD.Tests.User
             Assert.AreEqual(eventModel.Url, null);
             Assert.AreEqual(eventModel.Description, null);
             Assert.AreEqual(eventModel.Category, null);
+            Assert.IsFalse(eventModel.IsApproved);
         }
 
         [TestMethod]
