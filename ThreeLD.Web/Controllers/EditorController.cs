@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Web.Mvc;
 
 using ThreeLD.DB.Models;
@@ -54,21 +55,52 @@ namespace ThreeLD.Web.Controllers
 			return this.RedirectToAction(
 				nameof(GuestController.ViewEvents), "Guest");
 		}
+		
+		public ViewResult ViewProposedEvents()
+		{
+			return this.View(this.events.GetAll().Where(e => !e.IsApproved));
+		}
 
+		[HttpPost]
+		public RedirectToRouteResult ApproveEvent(int id)
+		{
+			var e = this.events.GetById(id);
+
+			if (e == null)
+			{
+				this.TempData["error"] = "The specified event doesn't exist.";
+			} else
+			{
+				e.IsApproved = true;
+				this.events.Update(e);
+				this.events.Save();
+
+				this.TempData["message"] = $"{e.Name} has been approved.";
+			}
+
+			return this.RedirectToAction(nameof(this.ViewProposedEvents));
+		}
+		
 		[HttpPost]
 		public RedirectToRouteResult DeleteEvent(int id)
 		{
-			this.events.Delete(id);
+			var e = this.events.GetById(id);
 
-			int result = this.events.Save();
-
-			if (result != 0)
+			if (e == null)
 			{
-				this.TempData["message"] = "The event was deleted.";
+				this.TempData["error"] = "The specified event doesn't exist.";
+			} else
+			{
+				this.events.Delete(e);
+				this.events.Save();
+				
+				this.TempData["message"] = $"{e.Name} has been deleted.";
 			}
-
-			return this.RedirectToAction(
-				nameof(GuestController.ViewEvents), "Guest");
+			
+			return e != null && !e.IsApproved
+				? this.RedirectToAction(nameof(this.ViewProposedEvents))
+				: this.RedirectToAction(
+					nameof(GuestController.ViewEvents), "Guest");
 		}
 	}
 }

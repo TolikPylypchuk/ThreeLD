@@ -10,8 +10,10 @@ using Ninject.Web.Common;
 
 using ThreeLD.Web.Infrastructure;
 
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(ThreeLD.Web.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(ThreeLD.Web.App_Start.NinjectWebCommon), "Stop")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(
+	typeof(ThreeLD.Web.App_Start.NinjectWebCommon), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(
+	typeof(ThreeLD.Web.App_Start.NinjectWebCommon), "Stop")]
 
 namespace ThreeLD.Web.App_Start
 {
@@ -22,8 +24,10 @@ namespace ThreeLD.Web.App_Start
 		
 		public static void Start() 
 		{
-			DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
-			DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
+			DynamicModuleUtility.RegisterModule(
+				typeof(OnePerRequestHttpModule));
+			DynamicModuleUtility.RegisterModule(
+				typeof(NinjectHttpModule));
 			bootstrapper.Initialize(CreateKernel);
 		}
         
@@ -37,8 +41,8 @@ namespace ThreeLD.Web.App_Start
 			var kernel = new StandardKernel();
 			try
 			{
-				kernel.Bind<Func<IKernel>>().ToMethod(
-					ctx => () => new Bootstrapper().Kernel);
+				kernel.Bind<Func<IKernel>>()
+					  .ToMethod(ctx => () => new Bootstrapper().Kernel);
 				kernel.Bind<IHttpModule>()
 					  .To<HttpApplicationInitializationHttpModule>();
 
