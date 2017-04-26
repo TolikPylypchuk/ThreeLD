@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity.Owin;
 using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
+using ThreeLD.Web.Models.ViewModels;
 
 namespace ThreeLD.Web.Controllers
 {
@@ -23,6 +24,25 @@ namespace ThreeLD.Web.Controllers
         {
             this.preferences = preferences;
             this.events = events;
+        }
+
+        [HttpGet]
+        [Authorize(Roles ="User")]
+        public ViewResult ViewEvents()
+        {
+            var events = this.events.GetAll().Where(e => e.IsApproved == true);
+
+            User currentUser =
+                this.UserManager.FindById(User.Identity.GetUserId());
+
+            ViewEventsUserModel model = new ViewEventsUserModel();
+            foreach (Event e in events)
+            {
+                model.events.Add(
+                    e, currentUser.BookmarkedEvents.Any(ev => ev.Id == e.Id));
+            }
+
+            return this.View(model);
         }
 
         [HttpGet]
