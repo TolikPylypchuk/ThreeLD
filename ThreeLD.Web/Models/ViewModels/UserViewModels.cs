@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 using ThreeLD.DB.Models;
 
 namespace ThreeLD.Web.Models.ViewModels
 {
+	[ExcludeFromCodeCoverage]
 	public class CreateModel
 	{
 		[Required]
@@ -23,6 +25,7 @@ namespace ThreeLD.Web.Models.ViewModels
 		public string Password { get; set; }
 	}
 
+	[ExcludeFromCodeCoverage]
 	public class LoginModel
 	{
 		[Required]
@@ -32,6 +35,7 @@ namespace ThreeLD.Web.Models.ViewModels
 		public string Password { get; set; }
 	}
 
+	[ExcludeFromCodeCoverage]
 	public class RoleEditModel
 	{
 		public AppRole Role { get; set; }
@@ -39,6 +43,7 @@ namespace ThreeLD.Web.Models.ViewModels
 		public IEnumerable<User> NonMembers { get; set; }
 	}
 
+	[ExcludeFromCodeCoverage]
 	public class RoleModificationModel
 	{
 		[Required]

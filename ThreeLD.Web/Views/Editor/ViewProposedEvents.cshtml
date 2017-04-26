@@ -1,0 +1,51 @@
+﻿@using ThreeLD.DB.Models
+@model IEnumerable<ThreeLD.DB.Models.Event>
+@{
+    ViewBag.Title = "ViewProposedEvents";
+}
+
+<h2>ViewProposedEvents</h2>
+<div>
+	<table class="table table-bordered table-striped">
+		<thead>
+		<tr>
+			<th>Name</th>
+			<th>Date and Time</th>
+			<th>Duration</th>
+			<th>Address</th>
+			<th>Description</th>
+			<th>Category</th>
+			<th>URL</th>
+			<th></th> 
+		</tr>
+		</thead>
+		<tbody>
+		@foreach (var e in Model)
+		{
+			<tr>
+				<td>@e.Name</td>
+				<td>@e.DateTime</td>
+				<td>@e.Duration</td>
+				<td>@e.Address</td>
+				<td>@e.Description</td>
+				<td>@e.Category</td>
+				<td><a href="@e.Url" class="btn btn-link">Link</a></td>
+				<td>
+				@using (Html.BeginForm("ApproveEvent", "Editor"))
+				{
+					<button type="button" class="btn btn-success">Approve</button>
+					@Html.Hidden("id", e.Id)
+				}
+				@using (Html.BeginForm("DeleteEvent", "Editor"))
+				{
+					<button type="button" class="btn btn-danger">Delete</button>
+					@Html.Hidden("id", e.Id)
+				}
+				</td>
+			</tr>
+		}
+		</tbody>
+	</table>
+
+</div>
+
