@@ -8,6 +8,8 @@ using Microsoft.AspNet.Identity.Owin;
 using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
+using ThreeLD.Web.Models.ViewModels;
+using System;
 
 namespace ThreeLD.Web.Controllers
 {
@@ -23,6 +25,27 @@ namespace ThreeLD.Web.Controllers
         {
             this.preferences = preferences;
             this.events = events;
+        }
+
+        [HttpGet]
+        [Authorize(Roles ="User")]
+        public ViewResult ViewEvents()
+        {
+            var events = this.events.GetAll().Where(e => e.IsApproved == true);
+
+            User currentUser =
+                this.UserManager.FindById(User.Identity.GetUserId());
+
+            ViewEventsUserModel model = new ViewEventsUserModel();
+            foreach (Event e in events)
+            {
+                model.Events.Add(
+                    e, currentUser.BookmarkedEvents.Any(ev => ev.Id == e.Id));
+            }
+
+            ViewBag.ReturnURL = "/User/ViewEvents";
+
+            return this.View(model);
         }
 
         [HttpGet]
@@ -66,7 +89,7 @@ namespace ThreeLD.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult RemoveBookmark(int eventId)
+        public ActionResult RemoveBookmark(int eventId, string returnURL)
         {
             User currentUser =
                 this.UserManager.FindById(User.Identity.GetUserId());
@@ -83,8 +106,23 @@ namespace ThreeLD.Web.Controllers
                     $"Bookmark on event {chosenEvent.Name} " +
                     $"has been removed.";
             }
-            
-            return this.RedirectToAction("ViewEvents", "Guest");
+
+            if (String.IsNullOrEmpty(returnURL))
+            {
+                return this.RedirectToAction(nameof(ViewEvents));
+            }
+
+            return this.Redirect(returnURL);
+        }
+        
+        public ActionResult Profile()
+        {
+            ViewBag.ReturnURL = "/User/Profile";
+
+            User currentUser =
+                this.UserManager.FindById(User.Identity.GetUserId());
+
+            return View(new ProfileViewModel { User = currentUser });
         }
 
         [HttpGet]
@@ -99,7 +137,7 @@ namespace ThreeLD.Web.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View("ViewPreferences");
+                return this.View(nameof(ViewPreferences));
             }
 
 	        Preference newPreference = new Preference
@@ -130,6 +168,12 @@ namespace ThreeLD.Web.Controllers
                     $"Preference with category " +
                     $"{this.preferences.GetById(id).Category} " +
                     $"has been removed.";
+            }
+            else
+            {
+                this.TempData["error"] = 
+                    $"The specified preference can not be removed " +
+                    $"because it doesn't exist.";
             }
 
             return this.RedirectToAction(nameof(this.ViewPreferences));

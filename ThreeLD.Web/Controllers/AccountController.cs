@@ -74,12 +74,6 @@ namespace ThreeLD.Web.Controllers
 			return RedirectToAction("Index", "Home");
 		}
 
-		[Authorize]
-		public ActionResult AccountSettings()
-		{
-			return View(GetData("IndexLogin"));
-		}
-
 		[Authorize(Roles = "User")]
 		public ActionResult OtherAction()
 		{
