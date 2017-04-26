@@ -67,6 +67,15 @@ namespace ThreeLD.Web.Controllers
             return this.RedirectToAction("ViewEvents", "Guest");
         }
 
+        [HttpGet]
+        public ViewResult ViewBookmarks()
+        {
+            User currentUser =
+                   this.UserManager.FindById(User.Identity.GetUserId());
+
+            return View(currentUser.BookmarkedEvents);
+        }
+
         [HttpPost]
         public ActionResult AddBookmark(int eventId)
         {
