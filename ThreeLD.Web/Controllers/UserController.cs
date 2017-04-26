@@ -99,7 +99,7 @@ namespace ThreeLD.Web.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View("ViewPreferences");
+                return this.View(nameof(ViewPreferences));
             }
 
 	        Preference newPreference = new Preference
@@ -130,6 +130,12 @@ namespace ThreeLD.Web.Controllers
                     $"Preference with category " +
                     $"{this.preferences.GetById(id).Category} " +
                     $"has been removed.";
+            }
+            else
+            {
+                this.TempData["error"] = 
+                    $"The specified preference can not be removed " +
+                    $"because it doesn't exist.";
             }
 
             return this.RedirectToAction(nameof(this.ViewPreferences));
