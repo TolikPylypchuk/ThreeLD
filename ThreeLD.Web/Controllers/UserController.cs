@@ -115,7 +115,7 @@ namespace ThreeLD.Web.Controllers
                 $"Preference with category {newPreference.Category} " +
                 $"has been created.";
 
-            return this.RedirectToAction("ViewPreferences");
+            return this.RedirectToAction(nameof(this.ViewPreferences));
         }
 
         [HttpPost]
@@ -132,7 +132,7 @@ namespace ThreeLD.Web.Controllers
                     $"has been removed.";
             }
 
-            return this.RedirectToAction("ViewPreferences");
+            return this.RedirectToAction(nameof(this.ViewPreferences));
         }
 
         private AppUserManager UserManager => 

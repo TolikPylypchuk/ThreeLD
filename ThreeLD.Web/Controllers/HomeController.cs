@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
 
 namespace ThreeLD.Web.Controllers
 {
-	public class HomeController : Controller
+    public class HomeController : Controller
 	{
 		private IRepository<Event> events;
 
