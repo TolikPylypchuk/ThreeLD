@@ -1,10 +1,12 @@
 ﻿using System.Web;
 using System.Web.Mvc;
+using System.Threading.Tasks;
+
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.AspNet.Identity;
+
 using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
-using Microsoft.AspNet.Identity;
-using System.Threading.Tasks;
 using ThreeLD.Web.Models.ViewModels;
 
 namespace ThreeLD.Web.Controllers
@@ -13,45 +15,19 @@ namespace ThreeLD.Web.Controllers
 	{
         private AppUserManager UserManager
                 => HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
+        
+        [HttpGet]
+        public ViewResult ViewUsers()
+        {
+            var model = new AdminUsersModel();
 
-        public ActionResult Index()
-		{
-			return View(UserManager.Users);
-		}
+            foreach (var user in this.UserManager.Users)
+            {
+                model.Users.Add(user, this.UserManager.IsInRole(user.Id, "Editor"));
+            }
 
-		public ActionResult Create()
-		{
-			return View();
-		}
-
-		[HttpPost]
-		public async Task<ActionResult> Create(CreateModel model)
-		{
-			if (ModelState.IsValid)
-			{
-				User user = new User
-                {
-                    UserName = model.UserName,
-					FirstName = model.FirstName,
-					LastName = model.LastName,
-					Email = model.Email
-				};
-
-				IdentityResult result = await UserManager.CreateAsync(user,
-				    model.Password);
-
-				if (result.Succeeded)
-				{
-					return RedirectToAction("Index");
-				}
-				else
-				{
-					AddErrorsFromResult(result);
-				}
-			}
-
-			return View(model);
-		}
+            return View(model);
+        }
 
 		[HttpPost]
 		public async Task<ActionResult> Delete(string id)
@@ -74,75 +50,6 @@ namespace ThreeLD.Web.Controllers
 			{
 				return View("Error", new string[] { "User Not Found" });
 			}
-		}
-
-		public async Task<ActionResult> Edit(string id)
-		{
-			User user = await UserManager.FindByIdAsync(id);
-
-			if (user != null)
-			{
-				return View(user);
-			}
-			else
-			{
-				return RedirectToAction("Index");
-			}
-		}
-
-		[HttpPost]
-		public async Task<ActionResult> Edit(string id, string email, string password)
-		{
-			User user = await UserManager.FindByIdAsync(id);
-			if (user != null)
-			{
-				user.Email = email;
-				IdentityResult validEmail
-				= await UserManager.UserValidator.ValidateAsync(user);
-
-				if (!validEmail.Succeeded)
-				{
-					AddErrorsFromResult(validEmail);
-				}
-
-				IdentityResult validPass = null;
-
-				if (password != string.Empty)
-				{
-					validPass
-					    = await UserManager.PasswordValidator.ValidateAsync(password);
-					if (validPass.Succeeded)
-					{
-						user.PasswordHash =
-						UserManager.PasswordHasher.HashPassword(password);
-					}
-					else
-					{
-						AddErrorsFromResult(validPass);
-					}
-				}
-
-				if ((validEmail.Succeeded && validPass == null) || (validEmail.Succeeded
-				    && password != string.Empty && validPass.Succeeded))
-				{
-					IdentityResult result = await UserManager.UpdateAsync(user);
-
-					if (result.Succeeded)
-					{
-						return RedirectToAction("Index");
-					}
-					else
-					{
-						AddErrorsFromResult(result);
-					}
-				}
-			}
-			else
-			{
-				ModelState.AddModelError("", "User Not Found");
-			}
-
-			return View(user);
 		}
 
 		private void AddErrorsFromResult(IdentityResult result)
