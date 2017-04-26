@@ -36,7 +36,6 @@ namespace ThreeLD.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "User")]
         public ActionResult ProposeEvent(Event newEvent)
         {
             if (newEvent != null && newEvent.IsApproved == false)
@@ -62,9 +61,8 @@ namespace ThreeLD.Web.Controllers
 
             this.TempData["message"] =
                 $"Event {chosenEvent.Name} has been bookmarked.";
-
-            //Redirect to ViewAllEvents
-            return this.RedirectToAction("");
+            
+            return this.RedirectToAction("ViewEvents", "Guest");
         }
 
         [HttpPost]
@@ -85,9 +83,8 @@ namespace ThreeLD.Web.Controllers
                     $"Bookmark on event {chosenEvent.Name} " +
                     $"has been removed.";
             }
-
-            //Redirect to ViewAllEvents
-            return this.RedirectToAction("");
+            
+            return this.RedirectToAction("ViewEvents", "Guest");
         }
 
         [HttpGet]
