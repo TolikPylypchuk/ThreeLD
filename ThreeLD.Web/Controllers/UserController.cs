@@ -9,6 +9,7 @@ using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
 using ThreeLD.Web.Models.ViewModels;
+using System;
 
 namespace ThreeLD.Web.Controllers
 {
@@ -38,9 +39,11 @@ namespace ThreeLD.Web.Controllers
             ViewEventsUserModel model = new ViewEventsUserModel();
             foreach (Event e in events)
             {
-                model.events.Add(
+                model.Events.Add(
                     e, currentUser.BookmarkedEvents.Any(ev => ev.Id == e.Id));
             }
+
+            ViewBag.ReturnURL = "/User/ViewEvents";
 
             return this.View(model);
         }
@@ -67,15 +70,6 @@ namespace ThreeLD.Web.Controllers
             return this.RedirectToAction("ViewEvents", "Guest");
         }
 
-        [HttpGet]
-        public ViewResult ViewBookmarks()
-        {
-            User currentUser =
-                   this.UserManager.FindById(User.Identity.GetUserId());
-
-            return View(currentUser.BookmarkedEvents);
-        }
-
         [HttpPost]
         public ActionResult AddBookmark(int eventId)
         {
@@ -95,7 +89,7 @@ namespace ThreeLD.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult RemoveBookmark(int eventId)
+        public ActionResult RemoveBookmark(int eventId, string returnURL)
         {
             User currentUser =
                 this.UserManager.FindById(User.Identity.GetUserId());
@@ -112,8 +106,23 @@ namespace ThreeLD.Web.Controllers
                     $"Bookmark on event {chosenEvent.Name} " +
                     $"has been removed.";
             }
-            
-            return this.RedirectToAction("ViewEvents", "Guest");
+
+            if (String.IsNullOrEmpty(returnURL))
+            {
+                return this.RedirectToAction(nameof(ViewEvents));
+            }
+
+            return this.Redirect(returnURL);
+        }
+        
+        public ActionResult Profile()
+        {
+            ViewBag.ReturnURL = "/User/Profile";
+
+            User currentUser =
+                this.UserManager.FindById(User.Identity.GetUserId());
+
+            return View(new ProfileViewModel { User = currentUser });
         }
 
         [HttpGet]
