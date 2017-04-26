@@ -32,7 +32,7 @@
 			<td>@e.Key.Category</td>
 			<td><a href="@e.Key.Url" class="btn btn-link">Link</a></td>
 			<td>
-				@if (e.Value)
+				@if (e.Key.Value)
 				{
 					using (Html.BeginForm("AddBookmark", "User"))
 					{

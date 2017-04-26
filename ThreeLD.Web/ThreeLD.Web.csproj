@@ -192,6 +192,7 @@
     <Compile Include="Infrastructure\IdentityHelpers.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\ViewModels\UserViewModels.cs" />
+    <Compile Include="Models\ViewModels\ViewEventsUserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -210,8 +211,9 @@
     <Content Include="Views\RoleAdmin\Edit.cshtml" />
     <Content Include="Views\Account\AccountSettings.cshtml" />
     <Content Include="Views\Account\SignUp.cshtml" />
-    <Content Include="Views\User\ViewEventsUser.cshtml" />
     <Content Include="Views\Editor\ViewProposedEvents.cshtml" />
+    <Content Include="Views\User\ViewEvents.cshtml" />
+    <Content Include="Views\User\ViewPreferences.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
