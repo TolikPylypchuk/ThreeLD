@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ThreeLD.DB.Models;
+﻿using ThreeLD.DB.Models;
 
 namespace ThreeLD.Web.Models.ViewModels
 {
