@@ -1,13 +1,13 @@
 ﻿@model ThreeLD.DB.Models.Event
 
 @{
-	ViewBag.Title = "Edit an Event";
+	ViewBag.Title = $"{ViewBag.Action} an Event";
 }
 
-<h2>Edit an Event</h2>
+<h2>@ViewBag.Action an Event</h2>
 
 <div>
-	@using (Html.BeginForm("EditEvent", "Editor"))
+	@using (Html.BeginForm())
 	{
 		<p>Name: @Html.TextBoxFor(m => m.Name)</p>
 		<p>Date and Time: @Html.TextBoxFor(

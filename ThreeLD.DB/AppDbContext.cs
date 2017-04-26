@@ -1,5 +1,4 @@
 ﻿using System.Data.Entity;
-using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -10,7 +9,6 @@ using ThreeLD.DB.Infrastructure;
 
 namespace ThreeLD.DB
 {
-	[ExcludeFromCodeCoverage]
 	public class AppDbContext : IdentityDbContext<User>
 	{
 		public AppDbContext() : base("name=DefaultConnection")
@@ -31,7 +29,6 @@ namespace ThreeLD.DB
 		public DbSet<Preference> Preferences { get; set; }
 	}
 
-	[ExcludeFromCodeCoverage]
 	public class IdentityDbInit : DropCreateDatabaseIfModelChanges<AppDbContext>
 	{
 		public void PerformInitialSetup(AppDbContext context)

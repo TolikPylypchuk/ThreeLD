@@ -21,12 +21,31 @@ namespace ThreeLD.Web.Controllers
 		[ExcludeFromCodeCoverage]
 		public ViewResult CreateEvent()
 		{
+			this.ViewBag.Action = "Create";
 			return this.View(nameof(this.EditEvent), new Event());
 		}
 		
+		[HttpPost]
+		public ActionResult CreateEvent(Event e)
+		{
+			if (!this.ModelState.IsValid)
+			{
+				return this.View(nameof(this.EditEvent), e);
+			}
+			
+			this.events.Add(e);
+			this.events.Save();
+			
+			this.TempData["message"] = $"{e.Name} has been created.";
+
+			return this.RedirectToAction(
+				nameof(GuestController.ViewEvents), "Guest");
+		}
+
 		[HttpGet]
 		public ViewResult EditEvent(int id)
 		{
+			this.ViewBag.Action = "Edit";
 			return this.View(this.events.GetById(id));
 		}
 
@@ -38,19 +57,10 @@ namespace ThreeLD.Web.Controllers
 				return this.View(nameof(this.EditEvent), e);
 			}
 
-			if (e.Id == 0)
-			{
-				this.events.Add(e);
-			} else
-			{
-				this.events.Update(e);
-			}
-			
+			this.events.Update(e);
 			this.events.Save();
-
-			string action = e.Id == 0 ? "created" : "updated";
-
-			this.TempData["message"] = $"{e.Name} has been {action}.";
+			
+			this.TempData["message"] = $"{e.Name} has been updated.";
 
 			return this.RedirectToAction(
 				nameof(GuestController.ViewEvents), "Guest");

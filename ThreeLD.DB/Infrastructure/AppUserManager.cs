@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -9,7 +7,6 @@ using ThreeLD.DB.Models;
 
 namespace ThreeLD.DB.Infrastructure
 {
-	[ExcludeFromCodeCoverage]
 	public class AppUserManager : UserManager<User>
 	{
 		public AppUserManager(IUserStore<User> store) : base(store)
