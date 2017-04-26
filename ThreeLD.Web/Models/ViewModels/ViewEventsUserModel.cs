@@ -8,6 +8,6 @@ namespace ThreeLD.Web.Models.ViewModels
 	public class ViewEventsUserModel
 	{
 		[Required]
-		public Dictionary<Event, bool> events { get; set; }
+		public Dictionary<Event, bool> Events { get; set; }
 	}
 }
