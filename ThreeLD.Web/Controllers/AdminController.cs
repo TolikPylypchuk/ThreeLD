@@ -11,7 +11,10 @@ namespace ThreeLD.Web.Controllers
 {
 	public class AdminController : Controller
 	{
-		public ActionResult Index()
+        private AppUserManager UserManager
+                => HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
+
+        public ActionResult Index()
 		{
 			return View(UserManager.Users);
 		}
@@ -26,13 +29,17 @@ namespace ThreeLD.Web.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				User user = new User { UserName = model.UserName,
+				User user = new User
+                {
+                    UserName = model.UserName,
 					FirstName = model.FirstName,
 					LastName = model.LastName,
 					Email = model.Email
 				};
+
 				IdentityResult result = await UserManager.CreateAsync(user,
-				model.Password);
+				    model.Password);
+
 				if (result.Succeeded)
 				{
 					return RedirectToAction("Index");
@@ -42,6 +49,7 @@ namespace ThreeLD.Web.Controllers
 					AddErrorsFromResult(result);
 				}
 			}
+
 			return View(model);
 		}
 
@@ -49,6 +57,7 @@ namespace ThreeLD.Web.Controllers
 		public async Task<ActionResult> Delete(string id)
 		{
 			User user = await UserManager.FindByIdAsync(id);
+
 			if (user != null)
 			{
 				IdentityResult result = await UserManager.DeleteAsync(user);
@@ -70,6 +79,7 @@ namespace ThreeLD.Web.Controllers
 		public async Task<ActionResult> Edit(string id)
 		{
 			User user = await UserManager.FindByIdAsync(id);
+
 			if (user != null)
 			{
 				return View(user);
@@ -89,15 +99,18 @@ namespace ThreeLD.Web.Controllers
 				user.Email = email;
 				IdentityResult validEmail
 				= await UserManager.UserValidator.ValidateAsync(user);
+
 				if (!validEmail.Succeeded)
 				{
 					AddErrorsFromResult(validEmail);
 				}
+
 				IdentityResult validPass = null;
+
 				if (password != string.Empty)
 				{
 					validPass
-					= await UserManager.PasswordValidator.ValidateAsync(password);
+					    = await UserManager.PasswordValidator.ValidateAsync(password);
 					if (validPass.Succeeded)
 					{
 						user.PasswordHash =
@@ -108,10 +121,12 @@ namespace ThreeLD.Web.Controllers
 						AddErrorsFromResult(validPass);
 					}
 				}
+
 				if ((validEmail.Succeeded && validPass == null) || (validEmail.Succeeded
-				&& password != string.Empty && validPass.Succeeded))
+				    && password != string.Empty && validPass.Succeeded))
 				{
 					IdentityResult result = await UserManager.UpdateAsync(user);
+
 					if (result.Succeeded)
 					{
 						return RedirectToAction("Index");
@@ -126,6 +141,7 @@ namespace ThreeLD.Web.Controllers
 			{
 				ModelState.AddModelError("", "User Not Found");
 			}
+
 			return View(user);
 		}
 
@@ -136,14 +152,5 @@ namespace ThreeLD.Web.Controllers
 				ModelState.AddModelError("", error);
 			}
 		}
-
-		private AppUserManager UserManager
-		{
-			get
-			{
-				return HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
-			}
-		}
 	}
-
 }

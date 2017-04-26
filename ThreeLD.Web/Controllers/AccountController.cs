@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -26,10 +27,11 @@ namespace ThreeLD.Web.Controllers
 		{
 			if (HttpContext.User.Identity.IsAuthenticated)
 			{
-				return View("Error", new[] { "Access Denied" });
+				return RedirectToAction("ViewEvents", "Guest");
 			}
 
 			ViewBag.returnUrl = returnUrl;
+
 			return View();
 		}
 
@@ -41,6 +43,7 @@ namespace ThreeLD.Web.Controllers
 			{
 				User user = await UserManager.FindAsync(details.UserName,
 					details.Password);
+
 				if (user == null)
 				{
 					ModelState.AddModelError("", "Invalid name or password.");
@@ -55,15 +58,17 @@ namespace ThreeLD.Web.Controllers
 						IsPersistent = false
 					}, ident);
 
-					if (returnUrl == "")
+					if (String.IsNullOrEmpty(returnUrl))
 					{
-						return Redirect("~/Account/AccountSettings");
+						return RedirectToAction("ViewEvents", "Guest");
 					}
 
 					return Redirect(returnUrl);
 				}
 			}
+
 			ViewBag.returnUrl = returnUrl;
+
 			return View(details);
 		}
 
@@ -82,7 +87,12 @@ namespace ThreeLD.Web.Controllers
 
 		public ActionResult SignUp()
 		{
-			return View();
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("ViewEvents", "Guest");
+            }
+
+            return View();
 		}
 
 		[HttpPost]
@@ -97,17 +107,20 @@ namespace ThreeLD.Web.Controllers
 					LastName = model.LastName,
 					Email = model.Email
 				};
+
 				IdentityResult result = await UserManager.CreateAsync(user,
-				model.Password);
+				    model.Password);
+
 				if (result.Succeeded)
 				{
-					return RedirectToAction("AccountSettings");
+					return RedirectToAction("ViewEvents", "Guest");
 				}
 				else
 				{
 					AddErrorsFromResult(result);
 				}
 			}
+
 			return View(model);
 		}
 
@@ -129,6 +142,7 @@ namespace ThreeLD.Web.Controllers
 				{ "Auth Type", this.HttpContext.User.Identity.AuthenticationType },
 				{ "In Users Role", this.HttpContext.User.IsInRole("Users") }
 			};
+
 			return dict;
 		}
 	}

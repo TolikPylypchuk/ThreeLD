@@ -27,6 +27,9 @@ namespace ThreeLD.Web.Controllers
             this.events = events;
         }
 
+        private AppUserManager UserManager
+            => HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
+
         [HttpGet]
         [Authorize(Roles ="User")]
         public ViewResult ViewEvents()
@@ -52,10 +55,9 @@ namespace ThreeLD.Web.Controllers
         [Authorize(Roles = "User")]
         public ViewResult ProposeEvent()
         {
-            Event newEvent = new Event();
-            newEvent.IsApproved = false;
+            ViewBag.Action = "Propose";
 
-            return View(newEvent);
+            return this.View("EditEvent", new Event());
         }
 
         [HttpPost]
@@ -178,8 +180,5 @@ namespace ThreeLD.Web.Controllers
 
             return this.RedirectToAction(nameof(this.ViewPreferences));
         }
-
-        private AppUserManager UserManager => 
-            HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
     }
 }

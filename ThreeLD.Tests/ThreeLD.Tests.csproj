@@ -124,10 +124,10 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="Editor\ProposedEventsTests.cs" />
     <Compile Include="Editor\CreateEventTests.cs" />
-    <Compile Include="Guest\FilterEventsTest.cs" />
-    <Compile Include="Guest\ViewEventsTest.cs" />
+    <Compile Include="Guest\FilterEventsTests.cs" />
+    <Compile Include="Guest\ViewEventsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="User\ProposeEventTest.cs" />
+    <Compile Include="User\ProposeEventTests.cs" />
     <Compile Include="Editor\EditEventTests.cs" />
     <Compile Include="Editor\DeleteEventTests.cs" />
     <Compile Include="Extensions.cs" />
