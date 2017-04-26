@@ -31,6 +31,7 @@ namespace ThreeLD.Web.Controllers
 			}
 
 			ViewBag.returnUrl = returnUrl;
+
 			return View();
 		}
 
@@ -42,6 +43,7 @@ namespace ThreeLD.Web.Controllers
 			{
 				User user = await UserManager.FindAsync(details.UserName,
 					details.Password);
+
 				if (user == null)
 				{
 					ModelState.AddModelError("", "Invalid name or password.");
@@ -64,7 +66,9 @@ namespace ThreeLD.Web.Controllers
 					return Redirect(returnUrl);
 				}
 			}
+
 			ViewBag.returnUrl = returnUrl;
+
 			return View(details);
 		}
 
@@ -109,8 +113,10 @@ namespace ThreeLD.Web.Controllers
 					LastName = model.LastName,
 					Email = model.Email
 				};
+
 				IdentityResult result = await UserManager.CreateAsync(user,
-				model.Password);
+				    model.Password);
+
 				if (result.Succeeded)
 				{
 					return RedirectToAction("ViewEvents", "Guest");
@@ -142,6 +148,7 @@ namespace ThreeLD.Web.Controllers
 				{ "Auth Type", this.HttpContext.User.Identity.AuthenticationType },
 				{ "In Users Role", this.HttpContext.User.IsInRole("Users") }
 			};
+
 			return dict;
 		}
 	}
