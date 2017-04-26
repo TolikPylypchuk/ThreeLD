@@ -15,7 +15,7 @@ namespace ThreeLD.Web.Controllers
 	{
         private AppUserManager UserManager
                 => HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
-        
+
         [HttpGet]
         public ViewResult ViewUsers()
         {
@@ -27,6 +27,24 @@ namespace ThreeLD.Web.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult AssignEditor(string id)
+        {
+            UserManager.RemoveFromRole(id, "User");
+            UserManager.AddToRole(id, "Editor");
+
+            return RedirectToAction(nameof(ViewUsers));
+        }
+
+        [HttpPost]
+        public ActionResult UnassignEditor(string id)
+        {
+            UserManager.RemoveFromRole(id, "Editor");
+            UserManager.AddToRole(id, "User");
+
+            return RedirectToAction(nameof(ViewUsers));
         }
 
 		[HttpPost]
