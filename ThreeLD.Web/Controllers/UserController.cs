@@ -29,10 +29,9 @@ namespace ThreeLD.Web.Controllers
         [Authorize(Roles = "User")]
         public ViewResult ProposeEvent()
         {
-            Event newEvent = new Event();
-            newEvent.IsApproved = false;
+            ViewBag.Action = "Propose";
 
-            return View(newEvent);
+            return this.View("EditEvent", new Event());
         }
 
         [HttpPost]

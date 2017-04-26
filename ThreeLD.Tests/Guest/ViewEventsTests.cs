@@ -15,7 +15,7 @@ using ThreeLD.Web.Controllers;
 namespace ThreeLD.Tests.Guest
 {
     [TestClass]
-    public class ViewEventsTest
+    public class ViewEventsTests
     {
         [TestMethod]
         public void ViewEventsGetTest()

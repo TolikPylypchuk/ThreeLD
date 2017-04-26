@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -26,7 +27,7 @@ namespace ThreeLD.Web.Controllers
 		{
 			if (HttpContext.User.Identity.IsAuthenticated)
 			{
-				return View("Error", new[] { "Access Denied" });
+				return RedirectToAction("ViewEvents", "Guest");
 			}
 
 			ViewBag.returnUrl = returnUrl;
@@ -55,9 +56,9 @@ namespace ThreeLD.Web.Controllers
 						IsPersistent = false
 					}, ident);
 
-					if (returnUrl == "")
+					if (String.IsNullOrEmpty(returnUrl))
 					{
-						return Redirect("~/Account/AccountSettings");
+						return RedirectToAction("ViewEvents", "Guest");
 					}
 
 					return Redirect(returnUrl);
@@ -88,7 +89,12 @@ namespace ThreeLD.Web.Controllers
 
 		public ActionResult SignUp()
 		{
-			return View();
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("ViewEvents", "Guest");
+            }
+
+            return View();
 		}
 
 		[HttpPost]
@@ -107,13 +113,14 @@ namespace ThreeLD.Web.Controllers
 				model.Password);
 				if (result.Succeeded)
 				{
-					return RedirectToAction("AccountSettings");
+					return RedirectToAction("ViewEvents", "Guest");
 				}
 				else
 				{
 					AddErrorsFromResult(result);
 				}
 			}
+
 			return View(model);
 		}
 

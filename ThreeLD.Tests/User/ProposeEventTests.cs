@@ -9,7 +9,7 @@ using ThreeLD.Web.Controllers;
 namespace ThreeLD.Tests.User
 {
     [TestClass]
-    public class ProposeEventTest
+    public class ProposeEventTests
     {
         [TestMethod]
         public void ProposeEventGetTest()
