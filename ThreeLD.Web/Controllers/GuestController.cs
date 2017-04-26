@@ -24,7 +24,7 @@ namespace ThreeLD.Web.Controllers
                 .Where(e => e.IsApproved == true));
         }
 
-        [HttpGet]
+        [HttpPost]
         public ViewResult FilterEvents(
             string categories, DateTime? start, DateTime? end)
         {
@@ -50,7 +50,7 @@ namespace ThreeLD.Web.Controllers
                     }
             }
             
-            return this.View(result);
+            return this.View("ViewEvents", result);
         }
     }
 }

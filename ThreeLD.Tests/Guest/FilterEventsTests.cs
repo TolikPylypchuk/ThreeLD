@@ -7,7 +7,7 @@ namespace ThreeLD.Tests.Guest
     public class FilterEventsTests
     {
         [TestMethod]
-        public void FilterEventsGetTest()
+        public void FilterEventsPostTest()
         {
 
         }

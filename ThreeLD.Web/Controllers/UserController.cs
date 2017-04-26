@@ -25,6 +25,9 @@ namespace ThreeLD.Web.Controllers
             this.events = events;
         }
 
+        private AppUserManager UserManager
+            => HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
+
         [HttpGet]
         [Authorize(Roles = "User")]
         public ViewResult ProposeEvent()
@@ -133,8 +136,5 @@ namespace ThreeLD.Web.Controllers
 
             return this.RedirectToAction(nameof(this.ViewPreferences));
         }
-
-        private AppUserManager UserManager => 
-            HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
     }
 }
