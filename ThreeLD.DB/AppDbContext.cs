@@ -1,5 +1,4 @@
 ﻿using System.Data.Entity;
-using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -10,17 +9,16 @@ using ThreeLD.DB.Infrastructure;
 
 namespace ThreeLD.DB
 {
-	[ExcludeFromCodeCoverage]
 	public class AppDbContext : IdentityDbContext<User>
 	{
 		public AppDbContext() : base("name=DefaultConnection")
 		{
 		}
 
-		static AppDbContext()
-		{
-			// Database.SetInitializer<AppDbContext>(new IdentityDbInit());
-		}
+		//static AppDbContext()
+		//{
+		//	Database.SetInitializer<AppDbContext>(new IdentityDbInit());
+		//}
 
 		public static AppDbContext Create()
 		{
@@ -35,20 +33,20 @@ namespace ThreeLD.DB
 	{
 		public void PerformInitialSetup(AppDbContext context)
 		{
-			AppUserManager userMgr =
-				new AppUserManager(new UserStore<User>(context));
-			AppRoleManager roleMgr =
-				new AppRoleManager(new RoleStore<AppRole>(context));
-			string roleName = "Administrators";
-			string userName = "Admin";
-			string password = "MySecret";
-			string email = "admin@example.com";
+			var userMgr = new AppUserManager(new UserStore<User>(context));
+			var roleMgr = new AppRoleManager(new RoleStore<AppRole>(context));
+
+			const string roleName = "Administrators";
+			const string userName = "Admin";
+			const string password = "MySecret";
+			const string email = "admin@example.com";
+
 			if (!roleMgr.RoleExists(roleName))
 			{
 				roleMgr.Create(new AppRole(roleName));
 			}
 
-			User user = userMgr.FindByName(userName);
+			var user = userMgr.FindByName(userName);
 			if (user == null)
 			{
 				userMgr.Create(new User { UserName = userName, Email = email },

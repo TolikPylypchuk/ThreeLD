@@ -1,0 +1,32 @@
+﻿@model ThreeLD.DB.Models.Event
+
+@{
+	ViewBag.Title = $"{ViewBag.Action} an Event";
+}
+
+<h2>@ViewBag.Action an Event</h2>
+
+<div>
+	@using (Html.BeginForm())
+	{
+		<label>Name:</label>
+		@Html.TextBoxFor(m => m.Name)
+		<label>Date and Time: </label>
+		@Html.TextBoxFor(
+			m => m.DateTime, new { type = "datetime-local" })
+		<label>Duration: </label>
+		@Html.TextBoxFor(m => m.Duration, "{0:hh\\:mm}")
+		<label>Address: </label>
+		@Html.TextBoxFor(m => m.Address)
+		<label>URL: </label>
+		@Html.TextBoxFor(m => m.Url)
+		<label>Description: </label>
+		@Html.TextBoxFor(m => m.Description)
+		<label>Categories: </label>
+		@Html.TextBoxFor(m => m.Category)
+		
+		@Html.HiddenFor(m => m.Id)
+		
+		<input type="submit" value="Submit">
+	}
+</div>

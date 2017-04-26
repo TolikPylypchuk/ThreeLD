@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Web.Mvc;
 
 using ThreeLD.DB.Models;
@@ -6,7 +7,7 @@ using ThreeLD.DB.Repositories;
 
 namespace ThreeLD.Web.Controllers
 {
-	//[Authorize(Roles = "Editor")]
+	[Authorize(Roles = "Editor")]
 	public class EditorController : Controller
 	{
 		private IRepository<Event> events;
@@ -20,12 +21,31 @@ namespace ThreeLD.Web.Controllers
 		[ExcludeFromCodeCoverage]
 		public ViewResult CreateEvent()
 		{
+			this.ViewBag.Action = "Create";
 			return this.View(nameof(this.EditEvent), new Event());
 		}
 		
+		[HttpPost]
+		public ActionResult CreateEvent(Event e)
+		{
+			if (!this.ModelState.IsValid)
+			{
+				return this.View(nameof(this.EditEvent), e);
+			}
+			
+			this.events.Add(e);
+			this.events.Save();
+			
+			this.TempData["message"] = $"{e.Name} has been created.";
+
+			return this.RedirectToAction(
+				nameof(GuestController.ViewEvents), "Guest");
+		}
+
 		[HttpGet]
 		public ViewResult EditEvent(int id)
 		{
+			this.ViewBag.Action = "Edit";
 			return this.View(this.events.GetById(id));
 		}
 
@@ -37,36 +57,60 @@ namespace ThreeLD.Web.Controllers
 				return this.View(nameof(this.EditEvent), e);
 			}
 
-			if (e.Id == 0)
-			{
-				this.events.Add(e);
-			} else
-			{
-				this.events.Update(e);
-			}
-			
+			this.events.Update(e);
 			this.events.Save();
+			
+			this.TempData["message"] = $"{e.Name} has been updated.";
 
-			string action = e.Id == 0 ? "created" : "updated";
-
-			this.TempData["message"] = $"{e.Name} has been {action}.";
-
-			return this.RedirectToAction("ViewEvents", "Guest");
+			return this.RedirectToAction(
+				nameof(GuestController.ViewEvents), "Guest");
+		}
+		
+		public ViewResult ViewProposedEvents()
+		{
+			return this.View(this.events.GetAll().Where(e => !e.IsApproved));
 		}
 
 		[HttpPost]
-		public RedirectToRouteResult DeleteEvent(int id)
+		public RedirectToRouteResult ApproveEvent(int id)
 		{
-			this.events.Delete(id);
+			var e = this.events.GetById(id);
 
-			int result = this.events.Save();
-
-			if (result != 0)
+			if (e == null)
 			{
-				this.TempData["message"] = "The event was deleted.";
+				this.TempData["error"] = "The specified event doesn't exist.";
+			} else
+			{
+				e.IsApproved = true;
+				this.events.Update(e);
+				this.events.Save();
+
+				this.TempData["message"] = $"{e.Name} has been approved.";
 			}
 
-			return this.RedirectToAction("ViewEvents", "Guest");
+			return this.RedirectToAction(nameof(this.ViewProposedEvents));
+		}
+		
+		[HttpPost]
+		public RedirectToRouteResult DeleteEvent(int id)
+		{
+			var e = this.events.GetById(id);
+
+			if (e == null)
+			{
+				this.TempData["error"] = "The specified event doesn't exist.";
+			} else
+			{
+				this.events.Delete(e);
+				this.events.Save();
+				
+				this.TempData["message"] = $"{e.Name} has been deleted.";
+			}
+			
+			return e != null && !e.IsApproved
+				? this.RedirectToAction(nameof(this.ViewProposedEvents))
+				: this.RedirectToAction(
+					nameof(GuestController.ViewEvents), "Guest");
 		}
 	}
 }
