@@ -155,8 +155,9 @@ namespace ThreeLD.Web.Controllers
         [HttpPost]
         public ActionResult AddPreference(string preferenceCategory)
         {
-            if (!this.ModelState.IsValid)
+            if (String.IsNullOrEmpty(preferenceCategory))
             {
+                this.TempData["error"] = "Choose a category.";
                 return this.View(nameof(this.Profile));
             }
             
