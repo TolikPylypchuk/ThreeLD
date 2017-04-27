@@ -70,13 +70,19 @@ namespace ThreeLD.Web.Controllers
         [HttpPost]
         public ActionResult ProposeEvent(Event newEvent)
         {
-            if (newEvent != null && newEvent.IsApproved == false)
+            if (!this.ModelState.IsValid)
             {
-                this.events.Add(newEvent);
-                this.events.Save();
+                ViewBag.Action = "Propose";
+
+                return this.View(nameof(EditorController.EditEvent), newEvent);
             }
 
-            return this.RedirectToAction("ViewEvents", "Guest");
+            newEvent.IsApproved = false;
+
+            this.events.Add(newEvent);
+            this.events.Save();
+
+            return this.RedirectToAction("ViewEvents");
         }
 
         [HttpPost]
@@ -115,7 +121,7 @@ namespace ThreeLD.Web.Controllers
                     $"Bookmark on event {chosenEvent.Name} " +
                      "has been removed.";
             }
-
+            
             if (String.IsNullOrEmpty(returnURL))
             {
                 return this.RedirectToAction(nameof(ViewEvents));
@@ -155,14 +161,14 @@ namespace ThreeLD.Web.Controllers
             {
                 return this.View(nameof(ViewPreferences));
             }
-
+            
 	        var newPreference = new Preference
 	        {
 		        UserId = this.User.Identity.GetUserId(),
 		        Category = preferenceCategory
 	        };
 
-	        this.preferences.Add(newPreference);
+            this.preferences.Add(newPreference);
             this.preferences.Save();
 
             this.TempData["message"] =
