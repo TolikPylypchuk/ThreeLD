@@ -1,10 +1,11 @@
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 
 using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
@@ -46,14 +47,16 @@ namespace ThreeLD.Web.Controllers
             var currentUser =
                 this.UserManager.FindById(User.Identity.GetUserId());
 
-            var model = new ViewEventsUserModel();
+            var model = new ViewEventsUserModel()
+            {
+                Events = new Dictionary<Event, bool>()
+            };
+
             foreach (var e in approvedEvents)
             {
                 model.Events.Add(
                     e, currentUser.BookmarkedEvents.Any(ev => ev.Id == e.Id));
             }
-
-            ViewBag.ReturnURL = "/User/ViewEvents";
 
             return this.View(model);
         }
@@ -125,7 +128,7 @@ namespace ThreeLD.Web.Controllers
             
             if (String.IsNullOrEmpty(returnURL))
             {
-                return this.RedirectToAction(nameof(ViewEvents));
+                return this.RedirectToAction(nameof(this.ViewEvents));
             }
 
             return this.Redirect(returnURL);
@@ -137,35 +140,23 @@ namespace ThreeLD.Web.Controllers
 
             var currentUser =
                 this.UserManager.FindById(User.Identity.GetUserId());
+            
+            var categories = this.events.GetAll()
+                .Where(e => e.IsApproved).Select(e => e.Category).Distinct();
 
-            return View(new ProfileViewModel { User = currentUser });
+            return View(new ProfileViewModel
+            {
+                User = currentUser, Categories = categories
+            });
         }
-
-        [HttpGet]
-        public ViewResult ViewPreferences()
-        {
-            string id = User.Identity.GetUserId();
-
-	        var model = new PreferencesViewModel
-	        {
-		        Preferences = this.preferences.GetAll()
-			        .Where(p => p.UserId == id)
-			        .ToArray(),
-		        Categories = this.events.GetAll()
-			        .Where(e => e.IsApproved)
-			        .Select(e => e.Category)
-			        .Distinct()
-	        };
-
-	        return this.View(model);
-        }
-
+        
         [HttpPost]
         public ActionResult AddPreference(string preferenceCategory)
         {
-            if (!this.ModelState.IsValid)
+            if (String.IsNullOrEmpty(preferenceCategory))
             {
-                return this.View(nameof(ViewPreferences));
+                this.TempData["error"] = "Choose a category.";
+                return this.View(nameof(this.Profile));
             }
             
 	        var newPreference = new Preference
@@ -181,7 +172,7 @@ namespace ThreeLD.Web.Controllers
                 $"Preference with category {newPreference.Category} " +
                  "has been created.";
 
-            return this.RedirectToAction(nameof(this.ViewPreferences));
+            return this.RedirectToAction(nameof(this.Profile));
         }
 
         [HttpPost]
@@ -204,7 +195,7 @@ namespace ThreeLD.Web.Controllers
                     "because it doesn't exist.";
             }
 
-            return this.RedirectToAction(nameof(this.ViewPreferences));
+            return this.RedirectToAction(nameof(this.Profile));
         }
     }
 }
