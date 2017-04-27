@@ -211,6 +211,7 @@
     <Content Include="Views\User\Profile.cshtml" />
     <Content Include="Views\Editor\ViewEvents.cshtml" />
     <Content Include="Views\Admin\ViewUsers.cshtml" />
+    <Content Include="Views\User\Profile.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
