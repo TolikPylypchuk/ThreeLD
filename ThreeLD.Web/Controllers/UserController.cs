@@ -68,6 +68,7 @@ namespace ThreeLD.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "User")]
         public ActionResult ProposeEvent(Event newEvent)
         {
             if (!this.ModelState.IsValid)
@@ -82,7 +83,7 @@ namespace ThreeLD.Web.Controllers
             this.events.Add(newEvent);
             this.events.Save();
 
-            return this.RedirectToAction("ViewEvents");
+            return this.RedirectToAction(nameof(this.ViewEvents));
         }
 
         [HttpPost]
@@ -140,8 +141,10 @@ namespace ThreeLD.Web.Controllers
             var categories = this.events.GetAll()
                 .Where(e => e.IsApproved).Select(e => e.Category).Distinct();
 
-            return View(new ProfileViewModel {
-                User = currentUser, Categories = categories });
+            return View(new ProfileViewModel
+            {
+                User = currentUser, Categories = categories
+            });
         }
 
         [HttpPost]

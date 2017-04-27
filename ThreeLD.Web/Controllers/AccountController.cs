@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -23,11 +21,15 @@ namespace ThreeLD.Web.Controllers
 		private AppUserManager UserManager
 			=> HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
 
+        [HttpGet]
 		public ActionResult Login(string returnUrl)
 		{
 			if (HttpContext.User.Identity.IsAuthenticated)
 			{
-				return RedirectToAction("ViewEvents", "Guest");
+				return RedirectToAction(
+                    "Index",
+                    UserManager.GetRoles(
+                        HttpContext.User.Identity.GetUserId())[0]);
 			}
 
 			ViewBag.returnUrl = returnUrl;
@@ -41,8 +43,8 @@ namespace ThreeLD.Web.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				User user = await UserManager.FindAsync(details.UserName,
-					details.Password);
+				var user = await UserManager.FindAsync(
+                    details.UserName, details.Password);
 
 				if (user == null)
 				{
@@ -50,17 +52,21 @@ namespace ThreeLD.Web.Controllers
 				}
 				else
 				{
-					ClaimsIdentity ident = await UserManager.CreateIdentityAsync(user,
-					DefaultAuthenticationTypes.ApplicationCookie);
+					var ident = await UserManager.CreateIdentityAsync(
+                        user, DefaultAuthenticationTypes.ApplicationCookie);
+
 					AuthManager.SignOut();
-					AuthManager.SignIn(new AuthenticationProperties
-					{
-						IsPersistent = false
-					}, ident);
+					AuthManager.SignIn(
+                        new AuthenticationProperties
+					    {
+						    IsPersistent = false
+					    },
+                        ident);
 
 					if (String.IsNullOrEmpty(returnUrl))
 					{
-						return RedirectToAction("ViewEvents", "Guest");
+						return RedirectToAction(
+                            "Index", UserManager.GetRoles(user.Id)[0]);
 					}
 
 					return Redirect(returnUrl);
@@ -78,25 +84,21 @@ namespace ThreeLD.Web.Controllers
 			AuthManager.SignOut();
 			return RedirectToAction("Index", "Home");
 		}
-
-		[Authorize(Roles = "User")]
-		public ActionResult OtherAction()
-		{
-			return View("AccountSettings", GetData("OtherAction"));
-		}
-
+        
+        [HttpGet]
 		public ActionResult SignUp()
 		{
             if (HttpContext.User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("ViewEvents", "Guest");
+                return RedirectToAction(
+                    nameof(UserController.ViewEvents), "User");
             }
 
             return View();
 		}
 
 		[HttpPost]
-		public async Task<ActionResult> SignUp(CreateModel model)
+		public async Task<ActionResult> SignUp(SignUpModel model)
 		{
 			if (ModelState.IsValid)
 			{
@@ -108,17 +110,26 @@ namespace ThreeLD.Web.Controllers
 					Email = model.Email
 				};
 
-				IdentityResult result = await UserManager.CreateAsync(user,
-				    model.Password);
+				var result = await UserManager.CreateAsync(
+                    user, model.Password);
 
 				if (result.Succeeded)
 				{
-					return RedirectToAction("ViewEvents", "Guest");
+                    var ident = await UserManager.CreateIdentityAsync(
+                        user, DefaultAuthenticationTypes.ApplicationCookie);
+
+                    AuthManager.SignIn(
+                        new AuthenticationProperties
+                        {
+                            IsPersistent = true
+                        },
+                        ident);
+
+                    return RedirectToAction(
+                        nameof(UserController.ViewEvents), "User");
 				}
-				else
-				{
-					AddErrorsFromResult(result);
-				}
+
+				AddErrorsFromResult(result);
 			}
 
 			return View(model);
@@ -130,20 +141,6 @@ namespace ThreeLD.Web.Controllers
 			{
 				ModelState.AddModelError("", error);
 			}
-		}
-
-		private Dictionary<string, object> GetData(string actionName)
-		{
-			Dictionary<string, object> dict = new Dictionary<string, object>
-			{
-				{ "Action", actionName },
-				{ "User", this.HttpContext.User.Identity.Name },
-				{ "Authenticated", this.HttpContext.User.Identity.IsAuthenticated },
-				{ "Auth Type", this.HttpContext.User.Identity.AuthenticationType },
-				{ "In Users Role", this.HttpContext.User.IsInRole("Users") }
-			};
-
-			return dict;
 		}
 	}
 }
