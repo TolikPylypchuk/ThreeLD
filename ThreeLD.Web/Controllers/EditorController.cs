@@ -17,6 +17,18 @@ namespace ThreeLD.Web.Controllers
 			this.events = events;
 		}
 
+		[ExcludeFromCodeCoverage]
+		public ActionResult Index()
+		{
+			return this.RedirectToAction(nameof(this.ViewEvents));
+		}
+
+		[ExcludeFromCodeCoverage]
+		public ViewResult ViewEvents()
+		{
+			return this.View(this.events.GetAll().Where(e => e.IsApproved));
+		}
+
 		[HttpGet]
 		[ExcludeFromCodeCoverage]
 		public ViewResult CreateEvent()
