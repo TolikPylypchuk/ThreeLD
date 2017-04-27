@@ -58,8 +58,6 @@ namespace ThreeLD.Web.Controllers
                     e, currentUser.BookmarkedEvents.Any(ev => ev.Id == e.Id));
             }
 
-            ViewBag.ReturnURL = "/User/ViewEvents";
-
             return this.View(model);
         }
 
