@@ -1,0 +1,80 @@
+﻿@model ThreeLD.Web.Models.ViewModels.ViewEventsUserModel
+
+@{
+    ViewBag.Title = "View Events Editor";
+}
+
+<h2>Event</h2>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date and Time</th>
+            <th>Duration</th>
+            <th>Address</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>URL</th>
+            <th>Bookmark</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var e in Model.Events)
+        {
+            <tr>
+                <td>@e.Key.Name</td>
+                <td>@e.Key.DateTime</td>
+                <td>@e.Key.Duration</td>
+                <td>@e.Key.Address</td>
+                <td>@e.Key.Description</td>
+                <td>@e.Key.Category</td>
+                <td><a href="@e.Key.Url" class="btn btn-link">Link</a></td>
+                <td>
+                    @if (e.Value)
+                    {
+                        using (Html.BeginForm("AddBookmark", "User", new { id = e.Key.Id }))
+                        {
+                            <button type="submit" class="btn btn-info">
+                                <span class="glyphicon glyphicon-heart"></span>
+                            </button>
+                        }
+                    }
+                    else
+                    {
+                        using (Html.BeginForm("RemoveBookmark", "User", new { id = e.Key.Id }))
+                        {
+                            <button type="submit" class="btn btn-info">
+                                <span class="glyphicon glyphicon-heart-empty"></span>
+                            </button>
+                        }
+                    }
+                </td>
+                <td>
+                    <div class="btn-group">
+                        @using (Html.BeginForm("ApproveEvent", "Editor", new { id = e.Key.Id }))
+                        {
+                            <button type="submit" class="btn btn-link">
+                                <span class="glyphicons glyphicons-ok"></span>
+                            </button>
+                        }
+
+                        @using (Html.BeginForm("DeleteEvent", "Editor", new { id = e.Key.Id }))
+                        {
+                            <button type="submit" class="btn btn-link">
+                                <span class="glyphicons glyphicons-remove"></span>
+                            </button>
+                        }
+
+                        @using (Html.BeginForm("EditEvent", "Editor", new { id = e.Key.Id }))
+                        {
+                            <button type="submit" class="btn btn-link">
+                                <span class="glyphicons glyphicons-pencil"></span>
+                            </button>
+                        }
+                    </div>
+</td>
+            </tr>
+        }
+    </tbody>
+</table>
