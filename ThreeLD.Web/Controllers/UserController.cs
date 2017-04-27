@@ -32,6 +32,13 @@ namespace ThreeLD.Web.Controllers
 
         [HttpGet]
         [Authorize(Roles ="User")]
+        public ActionResult Index()
+        {
+            return RedirectToAction(nameof(this.ViewEvents));
+        }
+
+        [HttpGet]
+        [Authorize(Roles ="User")]
         public ViewResult ViewEvents()
         {
             var approvedEvents = this.events.GetAll().Where(e => e.IsApproved);
