@@ -153,17 +153,29 @@ namespace ThreeLD.Web.Controllers
         [HttpPost]
         public ActionResult AddPreference(ProfileViewModel model)
         {
-            if (String.IsNullOrEmpty(model.SelectedCategory))
+            string category = model.SelectedCategory;
+
+            if (String.IsNullOrEmpty(category))
             {
-                this.TempData["error"] = "Choose a category.";
+                this.TempData["error"] = "Choose category.";
                 return this.View(nameof(this.Profile));
             }
-            
-	        var newPreference = new Preference
-	        {
-		        UserId = this.User.Identity.GetUserId(),
-		        Category = model.SelectedCategory
-	        };
+
+            var userId = this.User.Identity.GetUserId();
+
+            if (this.preferences.GetAll().Where(p =>
+                    p.Category == category && p.UserId == userId).Count() != 0)
+            {
+                this.TempData["error"] = $"Category {category} is already " +
+                    "assigned as preferred. Choose an unassigned one.";
+                return this.View(nameof(this.Profile));
+            }
+
+            var newPreference = new Preference
+            {
+                UserId = userId,
+		        Category = category
+            };
 
             this.preferences.Add(newPreference);
             this.preferences.Save();
