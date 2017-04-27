@@ -206,7 +206,6 @@
     <Content Include="Views\Admin\ViewUsers.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\AccountSettings.cshtml" />
     <Content Include="Views\Account\SignUp.cshtml" />
     <Content Include="Views\Editor\ViewProposedEvents.cshtml" />
     <Content Include="Views\User\ViewEvents.cshtml" />
@@ -221,8 +220,6 @@
     <Content Include="Views\Editor\_ViewStart.cshtml" />
     <Content Include="Views\Admin\_Layout.cshtml" />
     <Content Include="Views\Admin\_ViewStart.cshtml" />
-    <Content Include="Views\Account\_Layout.cshtml" />
-    <Content Include="Views\Account\_ViewStart.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

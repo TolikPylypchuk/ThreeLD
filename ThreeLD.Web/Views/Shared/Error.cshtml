@@ -1,6 +1,9 @@
 ﻿@model IEnumerable<string>
 
 @{
+	Layout = ViewBag.Role != null
+		? $"~/Views/{ViewBag.Role}/_Layout.cshtml"
+		: "~/Views/Shared/_Layout.cshtml";
 	ViewBag.Title = "Error";
 }
 

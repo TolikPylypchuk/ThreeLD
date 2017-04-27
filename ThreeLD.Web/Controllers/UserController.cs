@@ -65,8 +65,8 @@ namespace ThreeLD.Web.Controllers
         [Authorize(Roles = "User")]
         public ViewResult ProposeEvent()
         {
-            ViewBag.Action = "Propose";
-
+            this.ViewBag.Action = "Propose";
+	        this.ViewBag.Role = "User";
             return this.View("EditEvent", new Event());
         }
 
@@ -76,9 +76,9 @@ namespace ThreeLD.Web.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                ViewBag.Action = "Propose";
-
-                return this.View(nameof(EditorController.EditEvent), newEvent);
+                this.ViewBag.Action = "Propose";
+	            this.ViewBag.Role = "User";
+				return this.View(nameof(EditorController.EditEvent), newEvent);
             }
 
             newEvent.IsApproved = false;

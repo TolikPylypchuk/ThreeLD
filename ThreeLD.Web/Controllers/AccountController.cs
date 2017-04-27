@@ -114,18 +114,26 @@ namespace ThreeLD.Web.Controllers
 
 				if (result.Succeeded)
 				{
-					var ident = await this.UserManager.CreateIdentityAsync(
-						user, DefaultAuthenticationTypes.ApplicationCookie);
+					result = await this.UserManager.AddToRoleAsync(
+						user.Id, "User");
 
-					this.AuthManager.SignIn(
-						new AuthenticationProperties
-						{
-							IsPersistent = true
-						},
-						ident);
+					if (result.Succeeded)
+					{
+						var ident = await this.UserManager.CreateIdentityAsync(
+							user, DefaultAuthenticationTypes.ApplicationCookie);
 
-					return this.RedirectToAction(
-						nameof(HomeController.Index), "Home");
+						this.AuthManager.SignIn(
+							new AuthenticationProperties
+							{
+								IsPersistent = true
+							},
+							ident);
+
+						return this.RedirectToAction(
+							nameof(UserController.Index), "User");
+					}
+
+					await this.UserManager.DeleteAsync(user);
 				}
 
 				this.AddErrorsFromResult(result);

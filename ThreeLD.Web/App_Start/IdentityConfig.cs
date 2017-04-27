@@ -9,7 +9,7 @@ using Owin;
 using ThreeLD.DB;
 using ThreeLD.DB.Infrastructure;
 
-namespace ThreeLD.Web.App_Start
+namespace ThreeLD.Web
 {
 	[ExcludeFromCodeCoverage]
     public class IdentityConfig

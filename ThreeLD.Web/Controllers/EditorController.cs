@@ -61,6 +61,7 @@ namespace ThreeLD.Web.Controllers
 		public ViewResult CreateEvent()
 		{
 			this.ViewBag.Action = "Create";
+			this.ViewBag.Role = "Editor";
 			return this.View(nameof(this.EditEvent), new Event());
 		}
 		
@@ -70,6 +71,7 @@ namespace ThreeLD.Web.Controllers
 			if (!this.ModelState.IsValid)
 			{
 				this.ViewBag.Action = "Create";
+				this.ViewBag.Role = "Editor";
 				return this.View(nameof(this.EditEvent), e);
 			}
 
@@ -86,6 +88,7 @@ namespace ThreeLD.Web.Controllers
 		public ViewResult EditEvent(int id)
 		{
 			this.ViewBag.Action = "Edit";
+			this.ViewBag.Role = "Editor";
 			return this.View(this.events.GetById(id));
 		}
 
@@ -95,6 +98,7 @@ namespace ThreeLD.Web.Controllers
 			if (!this.ModelState.IsValid)
 			{
 				this.ViewBag.Action = "Edit";
+				this.ViewBag.Role = "Editor";
 				return this.View(nameof(this.EditEvent), e);
 			}
 			

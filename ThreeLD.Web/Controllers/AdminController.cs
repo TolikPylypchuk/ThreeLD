@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Threading.Tasks;
@@ -15,36 +16,48 @@ namespace ThreeLD.Web.Controllers
 	public class AdminController : Controller
 	{
         private AppUserManager UserManager
-                => HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
+            => this.HttpContext.GetOwinContext()
+				   .GetUserManager<AppUserManager>();
 
-        public ActionResult Index()
+		private AppRoleManager RoleManager
+			=> this.HttpContext.GetOwinContext()
+				.GetUserManager<AppRoleManager>();
+
+		public ActionResult Index()
         {
-            return RedirectToAction(nameof(this.ViewUsers));
+            return this.RedirectToAction(nameof(this.ViewUsers));
         }
 
         [HttpGet]
         public ViewResult ViewUsers()
         {
+	        var role = this.RoleManager.FindByName("Admin");
+
             var model = new AdminUsersModel
             {
-                Users = new Dictionary<User, bool>()
+                Users = new Dictionary<User, bool>(),
+				Admins = this.UserManager.Users
+					.Where(user => user.Roles.Any(r => r.RoleId == role.Id))
+					.Select(user => user.Id),
+				CurrentUserId = this.HttpContext.User.Identity.GetUserId()
             };
 
             foreach (var user in this.UserManager.Users)
             {
-                model.Users.Add(user, this.UserManager.IsInRole(user.Id, "Editor"));
+                model.Users.Add(
+					user, this.UserManager.IsInRole(user.Id, "Editor"));
             }
 
-            return View(model);
+            return this.View(model);
         }
 
         [HttpPost]
         public ActionResult AssignEditor(string id)
         {
-            UserManager.RemoveFromRole(id, "User");
-            UserManager.AddToRole(id, "Editor");
+            this.UserManager.RemoveFromRole(id, "User");
+            this.UserManager.AddToRole(id, "Editor");
 
-            return RedirectToAction(nameof(ViewUsers));
+            return this.RedirectToAction(nameof(ViewUsers));
         }
 
         [HttpPost]

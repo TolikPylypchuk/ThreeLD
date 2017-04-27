@@ -30,6 +30,33 @@
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
+					<li>
+						@Html.ActionLink(
+							"View Proposed Events",
+							"ViewProposedEvents",
+							"Editor",
+							null,
+							null)
+					</li>
+					<li>
+						@Html.ActionLink(
+							"Create an Event",
+							"CreateEvent",
+							"Editor",
+							null,
+							null)
+					</li>
+				</ul>
+
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						@Html.ActionLink(
+							"My Profile", "Profile", "User", null, null)
+					</li>
+					<li>
+						@Html.ActionLink(
+							"Log Out", "Logout", "Account", null, null)
+					</li>
 				</ul>
 			</div>
 		</div>

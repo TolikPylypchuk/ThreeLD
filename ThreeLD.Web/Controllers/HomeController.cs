@@ -17,15 +17,15 @@ namespace ThreeLD.Web.Controllers
 
 		public ActionResult Index()
 		{
-			if (HttpContext.User.Identity.IsAuthenticated)
+			if (this.HttpContext.User.Identity.IsAuthenticated)
 			{
-				return RedirectToAction(
+				return this.RedirectToAction(
 					"Index",
-					UserManager.GetRoles(
-						HttpContext.User.Identity.GetUserId())[0]);
+					this.UserManager.GetRoles(
+						this.HttpContext.User.Identity.GetUserId())[0]);
 			}
 
-			return RedirectToAction("ViewEvents", "Guest");
+			return this.RedirectToAction("ViewEvents", "Guest");
 		}
 	}
 }
