@@ -1,25 +1,90 @@
 ﻿@model ThreeLD.Web.Models.ViewModels.ProfileViewModel
 
 @{
-	ViewBag.Title = "Account Info";
+    ViewBag.Title = "Account Info";
 }
 
-<thead>
-    <tr>
-        <th>Login</th>
-    </tr>
-    <tr>
-        <th>First name</th>
-    </tr>
-    <tr>
-        <th> Last name</th>
-    </tr>
-    <tr>
-        <th>Email</th>
-    </tr>
-</thead>
-<tbody>
-        <tr>
-        </tr>
-</tbody>
+<div class="container">
+    <div>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Login</th>
+                    <td>@Model.User.UserName</td>
+                </tr>
+                <tr>
+                    <th>First name</th>
+                    <td>@Model.User.FirstName</td>
+                </tr>
+                <tr>
+                    <th> Last name</th>
+                    <td>@Model.User.LastName</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>@Model.User.Email</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@foreach (var p in Model.User.Preferences)
+{
+    <ul class="list-group">
+        <li class="list-group-item">
+            @p.Category
+            @using (Html.BeginForm("RemovePreference", "User"))
+                {
+                @Html.Hidden("id", p.Id)
+                <button type="submit" class="btn btn-link">
+                    <span class="glyphicons glyphicons-remove">
+                    </span>
+                </button>
+            }
+        </li>
+    </ul>
+}
+
+@using (Html.BeginForm("AddPreference", "User"))
+{
+    <div class="form-group">
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+                Choose Category
+                <span class="caret"></span>
+            </button>
+            @Html.DropDownListFor(
+                    m => m.SelectedCategory,
+                    Model.Categories.Select(c => new SelectListItem
+                    {
+                        Text = c,
+                        Value = c
+                    }))
+
+        </div>
+        <button type="submit" class="btn btn-link">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
+    </div>
+}
+
+@foreach (var p in Model.User.BookmarkedEvents)
+            {
+    <ul class="list-group">
+        <li class="list-group-item">
+            @p.Name
+            @using (Html.BeginForm(
+                    "RemoveBookmark",
+                    "User",
+                    new { eventId = p.Id, returnURL = ViewBag.ReturnURL }))
+            {
+                <button type="submit" class="btn btn-link">
+                    <span class="glyphicons glyphicons-remove">
+                    </span>
+                </button>
+            }
+        </li>
+    </ul>
+}
 @Html.ActionLink("Sign Out", "Logout", "Account", null, new { @class = "btn btn-primary" })

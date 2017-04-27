@@ -7,5 +7,6 @@ namespace ThreeLD.Web.Models.ViewModels
     {
         public User User { get; set; }
         public IEnumerable<string> Categories { get; set; }
+        public string SelectedCategory { get; set; }
     }
 }
