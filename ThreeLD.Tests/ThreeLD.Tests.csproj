@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ThreeLD.Tests</RootNamespace>
     <AssemblyName>ThreeLD.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <IsCodedUITest>False</IsCodedUITest>
@@ -125,12 +125,11 @@
     <Compile Include="Editor\ProposedEventsTests.cs" />
     <Compile Include="Editor\CreateEventTests.cs" />
     <Compile Include="Guest\FilterEventsTests.cs" />
-    <Compile Include="Guest\ViewEventsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="User\ProposeEventTests.cs" />
     <Compile Include="Editor\EditEventTests.cs" />
     <Compile Include="Editor\DeleteEventTests.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="User\RemovePreferenceTests.cs" />
     <Compile Include="User\ViewPreferencesTests.cs" />
   </ItemGroup>
   <ItemGroup>
