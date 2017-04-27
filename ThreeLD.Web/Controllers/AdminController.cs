@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity.Owin;
 using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
 using ThreeLD.Web.Models.ViewModels;
+using System.Collections.Generic;
 
 namespace ThreeLD.Web.Controllers
 {
@@ -24,7 +25,10 @@ namespace ThreeLD.Web.Controllers
         [HttpGet]
         public ViewResult ViewUsers()
         {
-            var model = new AdminUsersModel();
+            var model = new AdminUsersModel
+            {
+                Users = new Dictionary<User, bool>()
+            };
 
             foreach (var user in this.UserManager.Users)
             {
