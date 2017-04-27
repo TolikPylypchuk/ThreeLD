@@ -140,7 +140,7 @@ namespace ThreeLD.Web.Controllers
 
             var currentUser =
                 this.UserManager.FindById(User.Identity.GetUserId());
-
+            
             var categories = this.events.GetAll()
                 .Where(e => e.IsApproved).Select(e => e.Category).Distinct();
 
@@ -149,7 +149,7 @@ namespace ThreeLD.Web.Controllers
                 User = currentUser, Categories = categories
             });
         }
-
+        
         [HttpPost]
         public ActionResult AddPreference(string preferenceCategory)
         {

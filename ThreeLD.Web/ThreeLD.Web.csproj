@@ -209,6 +209,9 @@
     <Content Include="Views\Account\AccountSettings.cshtml" />
     <Content Include="Views\Account\SignUp.cshtml" />
     <Content Include="Views\Editor\ViewProposedEvents.cshtml" />
+    <Content Include="Views\User\ViewEvents.cshtml" />
+    <Content Include="Views\Guest\ViewEvents.cshtml" />
+    <Content Include="Views\Editor\ViewEvents.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
