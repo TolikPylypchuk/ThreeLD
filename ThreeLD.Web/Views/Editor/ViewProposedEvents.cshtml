@@ -1,10 +1,11 @@
-﻿@using ThreeLD.DB.Models
-@model IEnumerable<ThreeLD.DB.Models.Event>
+﻿@model IEnumerable<ThreeLD.DB.Models.Event>
+
 @{
-    ViewBag.Title = "ViewProposedEvents";
+    ViewBag.Title = "Proposed Events";
 }
 
-<h2>ViewProposedEvents</h2>
+<h1>Proposed Events</h1>
+
 <div>
 	<table class="table table-bordered table-striped">
 		<thead>
@@ -33,19 +34,17 @@
 				<td>
 				@using (Html.BeginForm("ApproveEvent", "Editor"))
 				{
-					<button type="button" class="btn btn-success">Approve</button>
 					@Html.Hidden("id", e.Id)
+					<button type="submit" class="btn btn-success">Approve</button>
 				}
 				@using (Html.BeginForm("DeleteEvent", "Editor"))
 				{
-					<button type="button" class="btn btn-danger">Delete</button>
 					@Html.Hidden("id", e.Id)
+					<button type="submit" class="btn btn-danger">Delete</button>
 				}
 				</td>
 			</tr>
 		}
 		</tbody>
 	</table>
-
 </div>
-
