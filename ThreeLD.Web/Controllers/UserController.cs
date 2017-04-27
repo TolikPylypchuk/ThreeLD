@@ -1,15 +1,15 @@
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+
+using System;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 
 using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
 using ThreeLD.Web.Models.ViewModels;
-using System;
 
 namespace ThreeLD.Web.Controllers
 {
@@ -100,7 +100,7 @@ namespace ThreeLD.Web.Controllers
             this.TempData["message"] =
                 $"Event {chosenEvent.Name} has been bookmarked.";
             
-            return this.RedirectToAction(nameof(ViewEvents));
+            return this.RedirectToAction(nameof(this.ViewEvents));
         }
 
         [HttpPost]
@@ -124,7 +124,7 @@ namespace ThreeLD.Web.Controllers
             
             if (String.IsNullOrEmpty(returnURL))
             {
-                return this.RedirectToAction(nameof(ViewEvents));
+                return this.RedirectToAction(nameof(this.ViewEvents));
             }
 
             return this.Redirect(returnURL);
@@ -137,21 +137,11 @@ namespace ThreeLD.Web.Controllers
             var currentUser =
                 this.UserManager.FindById(User.Identity.GetUserId());
 
-            return View(new ProfileViewModel { User = currentUser });
-        }
-
-        [HttpGet]
-        public ViewResult ViewPreferences()
-        {
-            string id = User.Identity.GetUserId();
-
-            var model = new PreferencesViewModel();
-            model.Preferences = this.preferences.GetAll()
-                .Where(p => p.UserId == id).ToArray();
-            model.Categories = this.events.GetAll()
+            var categories = this.events.GetAll()
                 .Where(e => e.IsApproved).Select(e => e.Category).Distinct();
 
-            return this.View(model);
+            return View(new ProfileViewModel {
+                User = currentUser, Categories = categories });
         }
 
         [HttpPost]
@@ -159,7 +149,7 @@ namespace ThreeLD.Web.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View(nameof(ViewPreferences));
+                return this.View(nameof(this.Profile));
             }
             
 	        var newPreference = new Preference
@@ -175,7 +165,7 @@ namespace ThreeLD.Web.Controllers
                 $"Preference with category {newPreference.Category} " +
                  "has been created.";
 
-            return this.RedirectToAction(nameof(this.ViewPreferences));
+            return this.RedirectToAction(nameof(this.Profile));
         }
 
         [HttpPost]
@@ -198,7 +188,7 @@ namespace ThreeLD.Web.Controllers
                     "because it doesn't exist.";
             }
 
-            return this.RedirectToAction(nameof(this.ViewPreferences));
+            return this.RedirectToAction(nameof(this.Profile));
         }
     }
 }
