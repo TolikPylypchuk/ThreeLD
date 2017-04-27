@@ -1,10 +1,12 @@
 ﻿using System.Web;
 using System.Web.Mvc;
+using System.Threading.Tasks;
+
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+
 using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
-using Microsoft.AspNet.Identity;
-using System.Threading.Tasks;
 using ThreeLD.Web.Models.ViewModels;
 
 namespace ThreeLD.Web.Controllers
