@@ -2,6 +2,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -46,14 +47,16 @@ namespace ThreeLD.Web.Controllers
             var currentUser =
                 this.UserManager.FindById(User.Identity.GetUserId());
 
-            var model = new ViewEventsUserModel();
+            var model = new ViewEventsUserModel()
+            {
+                Events = new Dictionary<Event, bool>()
+            };
+
             foreach (var e in approvedEvents)
             {
                 model.Events.Add(
                     e, currentUser.BookmarkedEvents.Any(ev => ev.Id == e.Id));
             }
-
-            ViewBag.ReturnURL = "/User/ViewEvents";
 
             return this.View(model);
         }
@@ -68,6 +71,7 @@ namespace ThreeLD.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "User")]
         public ActionResult ProposeEvent(Event newEvent)
         {
             if (!this.ModelState.IsValid)
@@ -82,7 +86,7 @@ namespace ThreeLD.Web.Controllers
             this.events.Add(newEvent);
             this.events.Save();
 
-            return this.RedirectToAction("ViewEvents");
+            return this.RedirectToAction(nameof(this.ViewEvents));
         }
 
         [HttpPost]
@@ -136,14 +140,16 @@ namespace ThreeLD.Web.Controllers
 
             var currentUser =
                 this.UserManager.FindById(User.Identity.GetUserId());
-
+            
             var categories = this.events.GetAll()
                 .Where(e => e.IsApproved).Select(e => e.Category).Distinct();
 
-            return View(new ProfileViewModel {
-                User = currentUser, Categories = categories });
+            return View(new ProfileViewModel
+            {
+                User = currentUser, Categories = categories
+            });
         }
-
+        
         [HttpPost]
         public ActionResult AddPreference(ProfileViewModel model)
         {

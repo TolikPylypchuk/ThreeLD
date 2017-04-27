@@ -38,7 +38,7 @@
                 {
                 @Html.Hidden("id", p.Id)
                 <button type="submit" class="btn btn-link">
-                    <span class="glyphicons glyphicons-remove">
+                    <span class="glyphicon glyphicon-remove">
                     </span>
                 </button>
             }
@@ -49,20 +49,15 @@
 @using (Html.BeginForm("AddPreference", "User"))
 {
     <div class="form-group">
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
-                Choose Category
-                <span class="caret"></span>
-            </button>
-            @Html.DropDownListFor(
-                    m => m.SelectedCategory,
-                    Model.Categories.Select(c => new SelectListItem
-                    {
-                        Text = c,
-                        Value = c
-                    }))
-
-        </div>
+        @Html.DropDownListFor(
+                m => m.SelectedCategory,
+                Model.Categories.Select(c => new SelectListItem
+                {
+                    Text = c,
+                    Value = c
+                }),
+                "Choose category...",
+                new { @class = "form-control" })
         <button type="submit" class="btn btn-link">
             <span class="glyphicon glyphicon-plus"></span>
         </button>
@@ -70,7 +65,7 @@
 }
 
 @foreach (var p in Model.User.BookmarkedEvents)
-            {
+{
     <ul class="list-group">
         <li class="list-group-item">
             @p.Name

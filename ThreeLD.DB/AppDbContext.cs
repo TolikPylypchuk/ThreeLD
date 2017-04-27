@@ -2,7 +2,7 @@
 
 using Microsoft.AspNet.Identity.EntityFramework;
 
-using ThreeLD.DB.Infrastructure;
+// using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
 
 namespace ThreeLD.DB
@@ -13,10 +13,10 @@ namespace ThreeLD.DB
         {
         }
 
-        static AppDbContext()
-        {
-            Database.SetInitializer(new DbInit());
-        }
+        //static AppDbContext()
+        //{
+        //    Database.SetInitializer(new DbInit());
+        //}
 
         public static AppDbContext Create()
         {
