@@ -151,9 +151,9 @@ namespace ThreeLD.Web.Controllers
         }
         
         [HttpPost]
-        public ActionResult AddPreference(string preferenceCategory)
+        public ActionResult AddPreference(ProfileViewModel model)
         {
-            if (String.IsNullOrEmpty(preferenceCategory))
+            if (String.IsNullOrEmpty(model.SelectedCategory))
             {
                 this.TempData["error"] = "Choose a category.";
                 return this.View(nameof(this.Profile));
@@ -162,7 +162,7 @@ namespace ThreeLD.Web.Controllers
 	        var newPreference = new Preference
 	        {
 		        UserId = this.User.Identity.GetUserId(),
-		        Category = preferenceCategory
+		        Category = model.SelectedCategory
 	        };
 
             this.preferences.Add(newPreference);

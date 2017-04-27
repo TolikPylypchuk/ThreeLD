@@ -190,9 +190,9 @@
     <Compile Include="Infrastructure\IdentityHelpers.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\ViewModels\AdminUsersModel.cs" />
-    <Compile Include="Models\ViewModels\SignUpModel.cs" />
     <Compile Include="Models\ViewModels\LoginModel.cs" />
     <Compile Include="Models\ViewModels\ProfileViewModel.cs" />
+    <Compile Include="Models\ViewModels\SignUpModel.cs" />
     <Compile Include="Models\ViewModels\ViewEventsUserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -202,15 +202,15 @@
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
     <Content Include="Views\Shared\EditEvent.cshtml" />
-    <Content Include="Views\Admin\ViewUsers.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\AccountSettings.cshtml" />
     <Content Include="Views\Account\SignUp.cshtml" />
     <Content Include="Views\Editor\ViewProposedEvents.cshtml" />
     <Content Include="Views\User\ViewEvents.cshtml" />
     <Content Include="Views\Guest\ViewEvents.cshtml" />
+    <Content Include="Views\User\Profile.cshtml" />
     <Content Include="Views\Editor\ViewEvents.cshtml" />
+    <Content Include="Views\Admin\ViewUsers.cshtml" />
     <Content Include="Views\User\Profile.cshtml" />
     <Content Include="Views\Account\_Layout.cshtml" />
     <Content Include="Views\Account\_ViewStart.cshtml" />
