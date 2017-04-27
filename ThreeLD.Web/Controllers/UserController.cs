@@ -32,6 +32,13 @@ namespace ThreeLD.Web.Controllers
 
         [HttpGet]
         [Authorize(Roles ="User")]
+        public ActionResult Index()
+        {
+            return RedirectToAction(nameof(this.ViewEvents));
+        }
+
+        [HttpGet]
+        [Authorize(Roles ="User")]
         public ViewResult ViewEvents()
         {
             var approvedEvents = this.events.GetAll().Where(e => e.IsApproved);
@@ -130,8 +137,13 @@ namespace ThreeLD.Web.Controllers
         [HttpGet]
         public ViewResult ViewPreferences()
         {
-            return this.View(this.preferences.GetAll()
-                .Where(p => p.UserId == User.Identity.GetUserId()).ToArray());
+            var model = new PreferencesViewModel();
+            model.Preferences = this.preferences.GetAll()
+                .Where(p => p.UserId == User.Identity.GetUserId()).ToArray();
+            model.Categories = this.events.GetAll()
+                .Where(e => e.IsApproved).Select(e => e.Category).Distinct();
+
+            return this.View(model);
         }
 
         [HttpPost]
