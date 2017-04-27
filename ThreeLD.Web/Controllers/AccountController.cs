@@ -26,7 +26,10 @@ namespace ThreeLD.Web.Controllers
 		{
 			if (HttpContext.User.Identity.IsAuthenticated)
 			{
-				return RedirectToAction("ViewEvents", "Guest");
+				return RedirectToAction(
+                    "Index",
+                    UserManager.GetRoles(
+                        HttpContext.User.Identity.GetUserId())[0]);
 			}
 
 			ViewBag.returnUrl = returnUrl;

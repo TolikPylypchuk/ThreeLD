@@ -16,6 +16,11 @@ namespace ThreeLD.Web.Controllers
         private AppUserManager UserManager
                 => HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
 
+        public ActionResult Index()
+        {
+            return RedirectToAction(nameof(this.ViewUsers));
+        }
+
         [HttpGet]
         public ViewResult ViewUsers()
         {
@@ -48,7 +53,7 @@ namespace ThreeLD.Web.Controllers
         }
 
 		[HttpPost]
-		public async Task<ActionResult> Delete(string id)
+		public async Task<ActionResult> DeleteUser(string id)
 		{
 			User user = await UserManager.FindByIdAsync(id);
 
@@ -57,7 +62,7 @@ namespace ThreeLD.Web.Controllers
 				IdentityResult result = await UserManager.DeleteAsync(user);
 				if (result.Succeeded)
 				{
-					return RedirectToAction("Index");
+					return RedirectToAction(nameof(Index));
 				}
 				else
 				{
@@ -67,14 +72,6 @@ namespace ThreeLD.Web.Controllers
 			else
 			{
 				return View("Error", new string[] { "User Not Found" });
-			}
-		}
-
-		private void AddErrorsFromResult(IdentityResult result)
-		{
-			foreach (string error in result.Errors)
-			{
-				ModelState.AddModelError("", error);
 			}
 		}
 	}
