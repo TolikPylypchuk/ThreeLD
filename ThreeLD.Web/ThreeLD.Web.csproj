@@ -209,7 +209,6 @@
     <Content Include="Views\Account\SignUp.cshtml" />
     <Content Include="Views\Editor\ViewProposedEvents.cshtml" />
     <Content Include="Views\User\ViewEvents.cshtml" />
-    <Content Include="Views\Guest\ViewEvents.cshtml" />
     <Content Include="Views\Editor\ViewEvents.cshtml" />
     <Content Include="Views\User\Profile.cshtml" />
     <Content Include="Views\User\_Layout.cshtml" />
