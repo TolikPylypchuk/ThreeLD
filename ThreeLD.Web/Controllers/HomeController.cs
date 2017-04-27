@@ -1,22 +1,31 @@
-﻿using System.Web.Mvc;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Web;
+using System.Web.Mvc;
 
-using ThreeLD.DB.Models;
-using ThreeLD.DB.Repositories;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+
+using ThreeLD.DB.Infrastructure;
 
 namespace ThreeLD.Web.Controllers
 {
+	[ExcludeFromCodeCoverage]
     public class HomeController : Controller
 	{
-		private IRepository<Event> events;
+		private AppUserManager UserManager
+			=> HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
 
-		public HomeController(IRepository<Event> events)
+		public ActionResult Index()
 		{
-			this.events = events;
-		}
-        
-        public ActionResult Index()
-		{
+			if (HttpContext.User.Identity.IsAuthenticated)
+			{
+				return RedirectToAction(
+					"Index",
+					UserManager.GetRoles(
+						HttpContext.User.Identity.GetUserId())[0]);
+			}
+
 			return RedirectToAction("ViewEvents", "Guest");
 		}
-    }
+	}
 }
