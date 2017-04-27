@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -9,7 +10,6 @@ using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
 using ThreeLD.Web.Models.ViewModels;
-using System;
 
 namespace ThreeLD.Web.Controllers
 {
@@ -146,13 +146,18 @@ namespace ThreeLD.Web.Controllers
         {
             string id = User.Identity.GetUserId();
 
-            var model = new PreferencesViewModel();
-            model.Preferences = this.preferences.GetAll()
-                .Where(p => p.UserId == id).ToArray();
-            model.Categories = this.events.GetAll()
-                .Where(e => e.IsApproved).Select(e => e.Category).Distinct();
+	        var model = new PreferencesViewModel
+	        {
+		        Preferences = this.preferences.GetAll()
+			        .Where(p => p.UserId == id)
+			        .ToArray(),
+		        Categories = this.events.GetAll()
+			        .Where(e => e.IsApproved)
+			        .Select(e => e.Category)
+			        .Distinct()
+	        };
 
-            return this.View(model);
+	        return this.View(model);
         }
 
         [HttpPost]

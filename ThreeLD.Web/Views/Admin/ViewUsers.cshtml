@@ -1,6 +1,4 @@
-﻿@using ThreeLD.DB.Models
-
-@model ThreeLD.Web.Models.ViewModels.AdminUsersModel
+﻿@model ThreeLD.Web.Models.ViewModels.AdminUsersModel
 
 @{
 	ViewBag.Title = "Users";
@@ -18,7 +16,7 @@
 		}
 		else
 		{
-			foreach (User user in Model.Users.Keys)
+			foreach (var user in Model.Users.Keys)
 			{
 				<tr>
 					<td>@user.Id</td>
@@ -27,7 +25,7 @@
 					<td>@user.LastName</td>
 					<td>@user.Email</td>
 					<td>
-						@using (Html.BeginForm("Delete", "Admin",
+						@using (Html.BeginForm("DeleteUser", "Admin",
 							new { id = user.Id }))
 						{
 							<button class="btn btn-danger btn-xs"

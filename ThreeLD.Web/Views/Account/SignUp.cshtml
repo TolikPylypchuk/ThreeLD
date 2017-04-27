@@ -1,10 +1,10 @@
-﻿@model ThreeLD.Web.Models.ViewModels.CreateModel
+﻿@model ThreeLD.Web.Models.ViewModels.SignUpModel
 
 @{
-	ViewBag.Title = "SignUp";
+	ViewBag.Title = "Sign Up";
 }
 
-<h2>SignUp</h2>
+<h2>Sign Up</h2>
 
 @Html.ValidationSummary(false)
 
@@ -31,5 +31,11 @@
 		@Html.PasswordFor(x => x.Password, new { @class = "form-control" })
 	</div>
 	<button type="submit" class="btn btn-primary">Create</button>
-	@Html.ActionLink("Cancel", "ViewEvents", "Guest", new { @class = "btn btn-default" })
+
+	@Html.ActionLink(
+		"Cancel",
+		"ViewEvents",
+		"User",
+		null,
+		new { @class = "btn btn-default" })
 }
