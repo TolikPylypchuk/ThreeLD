@@ -94,7 +94,7 @@ namespace ThreeLD.Web.Controllers
             this.TempData["message"] =
                 $"Event {chosenEvent.Name} has been bookmarked.";
             
-            return this.RedirectToAction("ViewEvents", "Guest");
+            return this.RedirectToAction(nameof(ViewEvents));
         }
 
         [HttpPost]
