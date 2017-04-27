@@ -127,6 +127,7 @@
     <Compile Include="Editor\DeleteEventTests.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="User\RemovePreferenceTests.cs" />
+    <Compile Include="User\AddPreferenceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ThreeLD.DB\ThreeLD.DB.csproj">
