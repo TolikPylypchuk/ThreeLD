@@ -79,8 +79,7 @@ namespace ThreeLD.Web.Controllers
 			
 			this.TempData["message"] = $"{e.Name} has been created.";
 
-			return this.RedirectToAction(
-				nameof(GuestController.ViewEvents), "Guest");
+			return this.RedirectToAction(nameof(this.ViewEvents));
 		}
 
 		[HttpGet]
@@ -105,8 +104,7 @@ namespace ThreeLD.Web.Controllers
 			
 			this.TempData["message"] = $"{e.Name} has been updated.";
 
-			return this.RedirectToAction(
-				nameof(GuestController.ViewEvents), "Guest");
+			return this.RedirectToAction(nameof(this.ViewEvents));
 		}
 		
 		public ViewResult ViewProposedEvents()
@@ -152,8 +150,7 @@ namespace ThreeLD.Web.Controllers
 			
 			return e != null && !e.IsApproved
 				? this.RedirectToAction(nameof(this.ViewProposedEvents))
-				: this.RedirectToAction(
-					nameof(GuestController.ViewEvents), "Guest");
+				: this.RedirectToAction(nameof(this.ViewEvents));
 		}
 	}
 }
