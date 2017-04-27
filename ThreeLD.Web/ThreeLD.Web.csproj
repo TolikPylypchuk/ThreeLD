@@ -193,7 +193,6 @@
     <Compile Include="Models\ViewModels\AdminUsersModel.cs" />
     <Compile Include="Models\ViewModels\SignUpModel.cs" />
     <Compile Include="Models\ViewModels\LoginModel.cs" />
-    <Compile Include="Models\ViewModels\PreferencesViewModel.cs" />
     <Compile Include="Models\ViewModels\ProfileViewModel.cs" />
     <Compile Include="Models\ViewModels\ViewEventsUserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -214,7 +213,16 @@
     <Content Include="Views\Guest\ViewEvents.cshtml" />
     <Content Include="Views\Editor\ViewEvents.cshtml" />
     <Content Include="Views\User\Profile.cshtml" />
-    <Content Include="Views\User\ViewPreferences.cshtml" />
+    <Content Include="Views\User\_Layout.cshtml" />
+    <Content Include="Views\User\_ViewStart.cshtml" />
+    <Content Include="Views\Guest\_Layout.cshtml" />
+    <Content Include="Views\Guest\_ViewStart.cshtml" />
+    <Content Include="Views\Editor\_Layout.cshtml" />
+    <Content Include="Views\Editor\_ViewStart.cshtml" />
+    <Content Include="Views\Admin\_Layout.cshtml" />
+    <Content Include="Views\Admin\_ViewStart.cshtml" />
+    <Content Include="Views\Account\_Layout.cshtml" />
+    <Content Include="Views\Account\_ViewStart.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
