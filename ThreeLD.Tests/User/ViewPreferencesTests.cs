@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
 using ThreeLD.Web.Controllers;
+using ThreeLD.Web.Models.ViewModels;
 
 namespace ThreeLD.Tests.User
 {
@@ -16,10 +17,12 @@ namespace ThreeLD.Tests.User
     public class ViewPreferencesTests
     {
         private Mock<IPrincipal> mockPrincipal;
-        private Mock<IRepository<Preference>> mockRepository;
+        private Mock<IRepository<Preference>> preferencesMockRepository;
+        private Mock<IRepository<Event>> eventsMockRepository;
 
         private string username = "test@example.com";
         private Preference[] preferences;
+        private Event[] events;
 
         [TestInitialize]
         public void Init()
@@ -45,7 +48,35 @@ namespace ThreeLD.Tests.User
                     UserId = "anotherUserId"
                 }
             };
-            
+
+            this.events = new Event[]
+            {
+                new Event()
+                {
+                    Id = 1,
+                    Category = "test1",
+                    IsApproved = true
+                },
+                new Event()
+                {
+                    Id = 2,
+                    Category = "test2",
+                    IsApproved = true
+                },
+                new Event()
+                {
+                    Id = 3,
+                    Category = "test2",
+                    IsApproved = true
+                },
+                new Event()
+                {
+                    Id = 4,
+                    Category = "test3",
+                    IsApproved = false
+                }
+            };
+
             this.mockPrincipal = new Mock<IPrincipal>();
             var identity = new GenericIdentity(this.username);
             var nameIdentifierClaim = new Claim(
@@ -53,9 +84,13 @@ namespace ThreeLD.Tests.User
             identity.AddClaim(nameIdentifierClaim);
             this.mockPrincipal.Setup(x => x.Identity).Returns(identity);
 
-            this.mockRepository = new Mock<IRepository<Preference>>();
-            this.mockRepository.Setup(r => r.GetAll())
+            this.preferencesMockRepository = new Mock<IRepository<Preference>>();
+            this.preferencesMockRepository.Setup(r => r.GetAll())
                 .Returns(this.preferences.AsQueryable);
+
+            this.eventsMockRepository = new Mock<IRepository<Event>>();
+            this.eventsMockRepository.Setup(r => r.GetAll())
+                .Returns(this.events.AsQueryable);
         }
 
         [TestMethod]
@@ -67,15 +102,25 @@ namespace ThreeLD.Tests.User
                 .Returns(principal.Object);
 
             var controller =
-                new UserController(this.mockRepository.Object, null)
+                new UserController(
+                    this.preferencesMockRepository.Object,
+                    this.eventsMockRepository.Object)
                 {
                     ControllerContext = controllerContext.Object
                 };
+
             var viewResult = controller.ViewPreferences();
             
-            Assert.AreEqual(2, ((Preference[])viewResult.Model).Length);
+            Assert.AreEqual(
+                2, 
+                ((PreferencesViewModel)viewResult.Model).Preferences.Count());
+            Assert.AreEqual(
+                2,
+                ((PreferencesViewModel)viewResult.Model).Categories.Count());
 
-            this.mockRepository.Verify(r => r.GetAll(), Times.Once());
+            this.preferencesMockRepository
+                .Verify(r => r.GetAll(), Times.Once());
+            this.eventsMockRepository.Verify(r => r.GetAll(), Times.Once());
         }
     }
 }
