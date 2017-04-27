@@ -125,11 +125,13 @@
     <Compile Include="Editor\ProposedEventsTests.cs" />
     <Compile Include="Editor\CreateEventTests.cs" />
     <Compile Include="Guest\FilterEventsTests.cs" />
+    <Compile Include="Guest\ViewEventsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Editor\EditEventTests.cs" />
     <Compile Include="Editor\DeleteEventTests.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="User\RemovePreferenceTests.cs" />
+    <Compile Include="User\ProposeEventTests.cs" />
     <Compile Include="User\ViewPreferencesTests.cs" />
   </ItemGroup>
   <ItemGroup>
