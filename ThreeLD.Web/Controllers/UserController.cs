@@ -2,6 +2,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -46,7 +47,11 @@ namespace ThreeLD.Web.Controllers
             var currentUser =
                 this.UserManager.FindById(User.Identity.GetUserId());
 
-            var model = new ViewEventsUserModel();
+            var model = new ViewEventsUserModel()
+            {
+                Events = new Dictionary<Event, bool>()
+            };
+
             foreach (var e in approvedEvents)
             {
                 model.Events.Add(
