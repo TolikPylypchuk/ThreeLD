@@ -4,8 +4,8 @@ using ThreeLD.DB.Models;
 
 namespace ThreeLD.Web.Models.ViewModels
 {
-    public class ViewEventsUserModel
-	{
-		public Dictionary<Event, bool> Events { get; set; }
-	}
+    public class AdminUsersModel
+    {
+        public Dictionary<User, bool> Users { get; set; }
+    }
 }

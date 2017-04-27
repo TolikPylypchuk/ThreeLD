@@ -7,7 +7,7 @@ using ThreeLD.DB.Repositories;
 
 namespace ThreeLD.Web.Controllers
 {
-	[Authorize(Roles = "Editor")]
+    [Authorize(Roles = "Editor")]
 	public class EditorController : Controller
 	{
 		private IRepository<Event> events;

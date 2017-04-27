@@ -8,6 +8,8 @@ using Microsoft.AspNet.Identity.Owin;
 using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
+using ThreeLD.Web.Models.ViewModels;
+using System;
 
 namespace ThreeLD.Web.Controllers
 {
@@ -29,6 +31,34 @@ namespace ThreeLD.Web.Controllers
             => HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
 
         [HttpGet]
+        [Authorize(Roles ="User")]
+        public ActionResult Index()
+        {
+            return RedirectToAction(nameof(this.ViewEvents));
+        }
+
+        [HttpGet]
+        [Authorize(Roles ="User")]
+        public ViewResult ViewEvents()
+        {
+            var approvedEvents = this.events.GetAll().Where(e => e.IsApproved);
+
+            var currentUser =
+                this.UserManager.FindById(User.Identity.GetUserId());
+
+            var model = new ViewEventsUserModel();
+            foreach (var e in approvedEvents)
+            {
+                model.Events.Add(
+                    e, currentUser.BookmarkedEvents.Any(ev => ev.Id == e.Id));
+            }
+
+            ViewBag.ReturnURL = "/User/ViewEvents";
+
+            return this.View(model);
+        }
+
+        [HttpGet]
         [Authorize(Roles = "User")]
         public ViewResult ProposeEvent()
         {
@@ -38,6 +68,7 @@ namespace ThreeLD.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "User")]
         public ActionResult ProposeEvent(Event newEvent)
         {
             if (!this.ModelState.IsValid)
@@ -52,15 +83,15 @@ namespace ThreeLD.Web.Controllers
             this.events.Add(newEvent);
             this.events.Save();
 
-            return this.RedirectToAction("ViewEvents");
+            return this.RedirectToAction(nameof(this.ViewEvents));
         }
 
         [HttpPost]
         public ActionResult AddBookmark(int eventId)
         {
-            User currentUser =
+            var currentUser =
                 this.UserManager.FindById(User.Identity.GetUserId());
-            Event chosenEvent = this.events.GetById(eventId);
+            var chosenEvent = this.events.GetById(eventId);
 
             chosenEvent.BookmarkedBy.Add(currentUser);
             this.events.Save();
@@ -69,16 +100,16 @@ namespace ThreeLD.Web.Controllers
 
             this.TempData["message"] =
                 $"Event {chosenEvent.Name} has been bookmarked.";
-
-            return this.RedirectToAction("ViewEvents", "Guest");
+            
+            return this.RedirectToAction(nameof(this.ViewEvents));
         }
 
         [HttpPost]
-        public ActionResult RemoveBookmark(int eventId)
+        public ActionResult RemoveBookmark(int eventId, string returnURL)
         {
-            User currentUser =
+            var currentUser =
                 this.UserManager.FindById(User.Identity.GetUserId());
-            Event chosenEvent = this.events.GetById(eventId);
+            var chosenEvent = this.events.GetById(eventId);
 
             chosenEvent.BookmarkedBy.Remove(currentUser);
             int res = this.events.Save();
@@ -89,17 +120,39 @@ namespace ThreeLD.Web.Controllers
             {
                 this.TempData["message"] =
                     $"Bookmark on event {chosenEvent.Name} " +
-                    $"has been removed.";
+                     "has been removed.";
+            }
+            
+            if (String.IsNullOrEmpty(returnURL))
+            {
+                return this.RedirectToAction(nameof(ViewEvents));
             }
 
-            return this.RedirectToAction("ViewEvents", "Guest");
+            return this.Redirect(returnURL);
+        }
+        
+        public new ActionResult Profile()
+        {
+            ViewBag.ReturnURL = "/User/Profile";
+
+            var currentUser =
+                this.UserManager.FindById(User.Identity.GetUserId());
+
+            return View(new ProfileViewModel { User = currentUser });
         }
 
         [HttpGet]
         public ViewResult ViewPreferences()
         {
-            return this.View(this.preferences.GetAll()
-                .Where(p => p.UserId == User.Identity.GetUserId()).ToArray());
+            string id = User.Identity.GetUserId();
+
+            var model = new PreferencesViewModel();
+            model.Preferences = this.preferences.GetAll()
+                .Where(p => p.UserId == id).ToArray();
+            model.Categories = this.events.GetAll()
+                .Where(e => e.IsApproved).Select(e => e.Category).Distinct();
+
+            return this.View(model);
         }
 
         [HttpPost]
@@ -107,21 +160,21 @@ namespace ThreeLD.Web.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View("ViewPreferences");
+                return this.View(nameof(ViewPreferences));
             }
-
-            Preference newPreference = new Preference
-            {
-                UserId = this.User.Identity.GetUserId(),
-                Category = preferenceCategory
-            };
+            
+	        var newPreference = new Preference
+	        {
+		        UserId = this.User.Identity.GetUserId(),
+		        Category = preferenceCategory
+	        };
 
             this.preferences.Add(newPreference);
             this.preferences.Save();
 
             this.TempData["message"] =
                 $"Preference with category {newPreference.Category} " +
-                $"has been created.";
+                 "has been created.";
 
             return this.RedirectToAction(nameof(this.ViewPreferences));
         }
@@ -135,9 +188,15 @@ namespace ThreeLD.Web.Controllers
             if (res != 0)
             {
                 this.TempData["message"] =
-                    $"Preference with category " +
+                     "Preference with category " +
                     $"{this.preferences.GetById(id).Category} " +
-                    $"has been removed.";
+                     "has been removed.";
+            }
+            else
+            {
+                this.TempData["error"] = 
+                    "The specified preference can not be removed " +
+                    "because it doesn't exist.";
             }
 
             return this.RedirectToAction(nameof(this.ViewPreferences));

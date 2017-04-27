@@ -17,6 +17,11 @@ namespace ThreeLD.Web.Controllers
             this.events = events;
         }
 
+        public ActionResult Index()
+        {
+            return RedirectToAction(nameof(this.ViewEvents));
+        }
+
         [HttpGet]
         public ViewResult ViewEvents()
         {
@@ -50,7 +55,7 @@ namespace ThreeLD.Web.Controllers
                     }
             }
             
-            return this.View("ViewEvents", result);
+            return this.View(nameof(this.ViewEvents), result);
         }
     }
 }

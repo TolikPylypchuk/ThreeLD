@@ -1,0 +1,25 @@
+﻿@model ThreeLD.Web.Models.ViewModels.ProfileViewModel
+
+@{
+	ViewBag.Title = "Account Info";
+}
+
+<thead>
+    <tr>
+        <th>Login</th>
+    </tr>
+    <tr>
+        <th>First name</th>
+    </tr>
+    <tr>
+        <th> Last name</th>
+    </tr>
+    <tr>
+        <th>Email</th>
+    </tr>
+</thead>
+<tbody>
+        <tr>
+        </tr>
+</tbody>
+@Html.ActionLink("Sign Out", "Logout", "Account", null, new { @class = "btn btn-primary" })

@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity.Owin;
 using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
 using ThreeLD.Web.Models.ViewModels;
+using System.Collections.Generic;
 
 namespace ThreeLD.Web.Controllers
 {
@@ -17,46 +18,46 @@ namespace ThreeLD.Web.Controllers
                 => HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
 
         public ActionResult Index()
-		{
-			return View(UserManager.Users);
-		}
+        {
+            return RedirectToAction(nameof(this.ViewUsers));
+        }
 
-		public ActionResult Create()
-		{
-			return View();
-		}
+        [HttpGet]
+        public ViewResult ViewUsers()
+        {
+            var model = new AdminUsersModel
+            {
+                Users = new Dictionary<User, bool>()
+            };
+
+            foreach (var user in this.UserManager.Users)
+            {
+                model.Users.Add(user, this.UserManager.IsInRole(user.Id, "Editor"));
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult AssignEditor(string id)
+        {
+            UserManager.RemoveFromRole(id, "User");
+            UserManager.AddToRole(id, "Editor");
+
+            return RedirectToAction(nameof(ViewUsers));
+        }
+
+        [HttpPost]
+        public ActionResult UnassignEditor(string id)
+        {
+            UserManager.RemoveFromRole(id, "Editor");
+            UserManager.AddToRole(id, "User");
+
+            return RedirectToAction(nameof(ViewUsers));
+        }
 
 		[HttpPost]
-		public async Task<ActionResult> Create(CreateModel model)
-		{
-			if (ModelState.IsValid)
-			{
-				User user = new User
-                {
-                    UserName = model.UserName,
-					FirstName = model.FirstName,
-					LastName = model.LastName,
-					Email = model.Email
-				};
-
-				IdentityResult result = await UserManager.CreateAsync(user,
-				    model.Password);
-
-				if (result.Succeeded)
-				{
-					return RedirectToAction("Index");
-				}
-				else
-				{
-					AddErrorsFromResult(result);
-				}
-			}
-
-			return View(model);
-		}
-
-		[HttpPost]
-		public async Task<ActionResult> Delete(string id)
+		public async Task<ActionResult> DeleteUser(string id)
 		{
 			User user = await UserManager.FindByIdAsync(id);
 
@@ -65,7 +66,7 @@ namespace ThreeLD.Web.Controllers
 				IdentityResult result = await UserManager.DeleteAsync(user);
 				if (result.Succeeded)
 				{
-					return RedirectToAction("Index");
+					return RedirectToAction(nameof(Index));
 				}
 				else
 				{
@@ -75,83 +76,6 @@ namespace ThreeLD.Web.Controllers
 			else
 			{
 				return View("Error", new string[] { "User Not Found" });
-			}
-		}
-
-		public async Task<ActionResult> Edit(string id)
-		{
-			User user = await UserManager.FindByIdAsync(id);
-
-			if (user != null)
-			{
-				return View(user);
-			}
-			else
-			{
-				return RedirectToAction("Index");
-			}
-		}
-
-		[HttpPost]
-		public async Task<ActionResult> Edit(string id, string email, string password)
-		{
-			User user = await UserManager.FindByIdAsync(id);
-			if (user != null)
-			{
-				user.Email = email;
-				IdentityResult validEmail
-				= await UserManager.UserValidator.ValidateAsync(user);
-
-				if (!validEmail.Succeeded)
-				{
-					AddErrorsFromResult(validEmail);
-				}
-
-				IdentityResult validPass = null;
-
-				if (password != string.Empty)
-				{
-					validPass
-					    = await UserManager.PasswordValidator.ValidateAsync(password);
-					if (validPass.Succeeded)
-					{
-						user.PasswordHash =
-						UserManager.PasswordHasher.HashPassword(password);
-					}
-					else
-					{
-						AddErrorsFromResult(validPass);
-					}
-				}
-
-				if ((validEmail.Succeeded && validPass == null) || (validEmail.Succeeded
-				    && password != string.Empty && validPass.Succeeded))
-				{
-					IdentityResult result = await UserManager.UpdateAsync(user);
-
-					if (result.Succeeded)
-					{
-						return RedirectToAction("Index");
-					}
-					else
-					{
-						AddErrorsFromResult(result);
-					}
-				}
-			}
-			else
-			{
-				ModelState.AddModelError("", "User Not Found");
-			}
-
-			return View(user);
-		}
-
-		private void AddErrorsFromResult(IdentityResult result)
-		{
-			foreach (string error in result.Errors)
-			{
-				ModelState.AddModelError("", error);
 			}
 		}
 	}
