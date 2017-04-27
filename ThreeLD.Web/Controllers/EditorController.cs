@@ -7,7 +7,7 @@ using ThreeLD.DB.Repositories;
 
 namespace ThreeLD.Web.Controllers
 {
-	[Authorize(Roles = "Editor")]
+    [Authorize(Roles = "Editor")]
 	public class EditorController : Controller
 	{
 		private IRepository<Event> events;
@@ -30,9 +30,11 @@ namespace ThreeLD.Web.Controllers
 		{
 			if (!this.ModelState.IsValid)
 			{
+				this.ViewBag.Action = "Create";
 				return this.View(nameof(this.EditEvent), e);
 			}
-			
+
+			e.IsApproved = true;
 			this.events.Add(e);
 			this.events.Save();
 			
@@ -54,9 +56,11 @@ namespace ThreeLD.Web.Controllers
 		{
 			if (!this.ModelState.IsValid)
 			{
+				this.ViewBag.Action = "Edit";
 				return this.View(nameof(this.EditEvent), e);
 			}
-
+			
+			e.IsApproved = true;
 			this.events.Update(e);
 			this.events.Save();
 			

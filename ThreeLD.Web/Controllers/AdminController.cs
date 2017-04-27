@@ -2,8 +2,8 @@
 using System.Web.Mvc;
 using System.Threading.Tasks;
 
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;

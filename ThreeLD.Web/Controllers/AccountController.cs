@@ -81,12 +81,6 @@ namespace ThreeLD.Web.Controllers
 			return RedirectToAction("Index", "Home");
 		}
 
-		[Authorize]
-		public ActionResult AccountSettings()
-		{
-			return View(GetData("IndexLogin"));
-		}
-
 		[Authorize(Roles = "User")]
 		public ActionResult OtherAction()
 		{
@@ -104,7 +98,7 @@ namespace ThreeLD.Web.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult> SignUp(CreateModel model)
+		public async Task<ActionResult> SignUp(SignUpModel model)
 		{
 			if (ModelState.IsValid)
 			{
