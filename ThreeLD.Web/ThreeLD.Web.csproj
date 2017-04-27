@@ -214,6 +214,7 @@
     <Content Include="Views\User\ViewEvents.cshtml" />
     <Content Include="Views\Guest\ViewEvents.cshtml" />
     <Content Include="Views\User\Profile.cshtml" />
+    <Content Include="Views\User\ViewPreferences.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
