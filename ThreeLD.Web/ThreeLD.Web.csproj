@@ -212,6 +212,16 @@
     <Content Include="Views\Guest\ViewEvents.cshtml" />
     <Content Include="Views\Editor\ViewEvents.cshtml" />
     <Content Include="Views\User\Profile.cshtml" />
+    <Content Include="Views\Account\_Layout.cshtml" />
+    <Content Include="Views\Account\_ViewStart.cshtml" />
+    <Content Include="Views\Admin\_Layout.cshtml" />
+    <Content Include="Views\Admin\_ViewStart.cshtml" />
+    <Content Include="Views\Editor\_Layout.cshtml" />
+    <Content Include="Views\Editor\_ViewStart.cshtml" />
+    <Content Include="Views\Guest\_Layout.cshtml" />
+    <Content Include="Views\Guest\_ViewStart.cshtml" />
+    <Content Include="Views\User\_Layout.cshtml" />
+    <Content Include="Views\User\_ViewStart.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
