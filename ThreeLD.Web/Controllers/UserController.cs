@@ -137,9 +137,11 @@ namespace ThreeLD.Web.Controllers
         [HttpGet]
         public ViewResult ViewPreferences()
         {
+            string id = User.Identity.GetUserId();
+
             var model = new PreferencesViewModel();
             model.Preferences = this.preferences.GetAll()
-                .Where(p => p.UserId == User.Identity.GetUserId()).ToArray();
+                .Where(p => p.UserId == id).ToArray();
             model.Categories = this.events.GetAll()
                 .Where(e => e.IsApproved).Select(e => e.Category).Distinct();
 
