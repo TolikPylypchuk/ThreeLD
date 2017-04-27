@@ -32,7 +32,8 @@ namespace ThreeLD.Web.Controllers
 			{
 				return this.View(nameof(this.EditEvent), e);
 			}
-			
+
+			e.IsApproved = true;
 			this.events.Add(e);
 			this.events.Save();
 			
