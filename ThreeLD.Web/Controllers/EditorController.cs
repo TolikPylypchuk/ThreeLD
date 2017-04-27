@@ -1,9 +1,16 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+
+using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
+using ThreeLD.Web.Models.ViewModels;
 
 namespace ThreeLD.Web.Controllers
 {
@@ -18,6 +25,10 @@ namespace ThreeLD.Web.Controllers
 		}
 
 		[ExcludeFromCodeCoverage]
+		private AppUserManager UserManager
+			=> HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
+		
+		[ExcludeFromCodeCoverage]
 		public ActionResult Index()
 		{
 			return this.RedirectToAction(nameof(this.ViewEvents));
@@ -26,7 +37,23 @@ namespace ThreeLD.Web.Controllers
 		[ExcludeFromCodeCoverage]
 		public ViewResult ViewEvents()
 		{
-			return this.View(this.events.GetAll().Where(e => e.IsApproved));
+			var approvedEvents = this.events.GetAll().Where(e => e.IsApproved);
+
+			var currentUser =
+				this.UserManager.FindById(User.Identity.GetUserId());
+
+			var model = new ViewEventsUserModel
+			{
+				Events = new Dictionary<Event, bool>()
+			};
+
+			foreach (var e in approvedEvents)
+			{
+				model.Events.Add(
+					e, currentUser.BookmarkedEvents.Any(ev => ev.Id == e.Id));
+			}
+
+			return this.View(model);
 		}
 
 		[HttpGet]
