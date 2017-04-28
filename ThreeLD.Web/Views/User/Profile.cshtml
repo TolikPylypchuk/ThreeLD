@@ -8,7 +8,7 @@
 
 <div class="panel-body">
 	<div>
-		<table>
+		<table class="table table-bordered table-striped">
 			<tbody>
 			<tr>
 				<th>User Name</th>
@@ -80,21 +80,22 @@
 	<p>You don't have any bookmarks.</p>
 }
 
-@foreach (var p in Model.User.BookmarkedEvents)
-{
-	<ul class="list-group">
-		<li class="list-group-item">
-			@p.Name
-			@using (Html.BeginForm(
+<ul class="list-group">
+	@foreach (var e in Model.User.BookmarkedEvents)
+	{
+			<li class="list-group-item">
+				<a class="btn btn-link" href="@e.Url">@e.Name</a>
+				
+				@using (Html.BeginForm(
 					"RemoveBookmark",
 					"User",
-					new { eventId = p.Id, returnURL = ViewBag.ReturnURL }))
-			{
-				<button type="submit" class="btn btn-link">
-					<span class="glyphicons glyphicons-remove">
-					</span>
-				</button>
-			}
-		</li>
-	</ul>
-}
+					new {eventId = e.Id, returnURL = ViewBag.ReturnURL}))
+				{
+					<button type="submit" class="btn btn-danger btn-xs">
+						<span class="glyphicon glyphicon-remove">
+						</span>
+					</button>
+				}
+			</li>
+	}
+</ul>

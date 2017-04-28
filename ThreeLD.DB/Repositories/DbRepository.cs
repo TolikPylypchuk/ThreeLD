@@ -10,7 +10,6 @@ namespace ThreeLD.DB.Repositories
 	public class DbRepository<TEntity> : IRepository<TEntity>
 		where TEntity : EntityBase, new()
 	{
-		private bool disposedValue;
 		private AppDbContext context;
 		private DbSet<TEntity> table;
 
@@ -53,24 +52,5 @@ namespace ThreeLD.DB.Repositories
 		public int Save() => this.context.SaveChanges();
 
 		public Task<int> SaveAsync() => this.context.SaveChangesAsync();
-
-		public void Dispose()
-		{
-			this.Dispose(true);
-		}
-		
-		protected virtual void Dispose(bool disposing)
-		{
-			if (!disposedValue)
-			{
-				if (disposing)
-				{
-					this.Save();
-				}
-
-				this.disposedValue = true;
-			}
-		}
-
 	}
 }

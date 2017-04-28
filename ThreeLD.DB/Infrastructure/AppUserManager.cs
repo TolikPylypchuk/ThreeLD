@@ -12,22 +12,21 @@ namespace ThreeLD.DB.Infrastructure
 		public AppUserManager(IUserStore<User> store) : base(store)
 		{
 		}
-
+		
 		public static AppUserManager Create(
 			IdentityFactoryOptions<AppUserManager> options,
 			IOwinContext context)
 		{
-			AppDbContext db = context.Get<AppDbContext>();
-			AppUserManager manager =
-				new AppUserManager(new UserStore<User>(db))
+			var db = context.Get<AppDbContext>();
+			var manager = new AppUserManager(new UserStore<User>(db))
 			{
 				PasswordValidator = new PasswordValidator
 				{
 					RequiredLength = 6,
 					RequireNonLetterOrDigit = false,
 					RequireDigit = false,
-					RequireLowercase = true,
-					RequireUppercase = true
+					RequireLowercase = false,
+					RequireUppercase = false
 				}
 			};
 

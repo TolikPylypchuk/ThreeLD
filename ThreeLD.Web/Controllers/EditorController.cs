@@ -37,7 +37,10 @@ namespace ThreeLD.Web.Controllers
 		[ExcludeFromCodeCoverage]
 		public ViewResult ViewEvents()
 		{
-			var approvedEvents = this.events.GetAll().Where(e => e.IsApproved);
+			var approvedEvents =
+				this.events.GetAll()
+					.Where(e => e.IsApproved)
+					.OrderBy(e => e.DateTime);
 
 			var currentUser =
 				this.UserManager.FindById(User.Identity.GetUserId());

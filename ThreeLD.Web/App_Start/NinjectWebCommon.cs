@@ -12,7 +12,7 @@ using ThreeLD.Web.Infrastructure;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(
 	typeof(ThreeLD.Web.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(
+[assembly: WebActivatorEx.ApplicationShutdownMethod(
 	typeof(ThreeLD.Web.App_Start.NinjectWebCommon), "Stop")]
 
 namespace ThreeLD.Web.App_Start

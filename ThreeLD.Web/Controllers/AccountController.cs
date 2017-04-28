@@ -24,13 +24,13 @@ namespace ThreeLD.Web.Controllers
 		[HttpGet]
 		public ActionResult Login(string returnUrl)
 		{
-			if (HttpContext.User.Identity.IsAuthenticated)
+			if (this.HttpContext.User.Identity.IsAuthenticated)
 			{
 				return this.RedirectToAction(
 					nameof(HomeController.Index), "Home");
 			}
 
-			this.ViewBag.returnUrl = returnUrl;
+			this.ViewBag.ReturnURL = returnUrl;
 
 			return this.View();
 		}
@@ -81,7 +81,8 @@ namespace ThreeLD.Web.Controllers
 		public ActionResult Logout()
 		{
 			this.AuthManager.SignOut();
-			return this.RedirectToAction(nameof(HomeController.Index), "Home");
+			return this.RedirectToAction(
+				nameof(HomeController.Index), "Home");
 		}
         
 		[HttpGet]
@@ -89,7 +90,7 @@ namespace ThreeLD.Web.Controllers
 		{
 			if (this.HttpContext.User.Identity.IsAuthenticated)
 			{
-				return RedirectToAction(
+				return this.RedirectToAction(
 					nameof(HomeController.Index), "Home");
 			}
 
