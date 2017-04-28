@@ -154,12 +154,15 @@ namespace ThreeLD.Web.Controllers
 				this.events.GetAll()
 						   .Where(e => e.IsApproved)
 						   .Select(e => e.Category)
-						   .Distinct();
+						   .Distinct()
+						   .ToList();
 
 			return this.View(new ProfileViewModel
 			{
 				User = currentUser,
 				Categories = categories
+					.Where(c => currentUser.Preferences.All(p => p.Category != c))
+					.ToList()
 			});
 		}
         
@@ -194,9 +197,7 @@ namespace ThreeLD.Web.Controllers
 			this.preferences.Add(newPreference);
 			this.preferences.Save();
 
-			this.TempData["message"] =
-				$"Preference with category {newPreference.Category} " +
-					"has been created.";
+			this.TempData["message"] = "The preference has been added.";
 
 			return this.RedirectToAction(nameof(this.Profile));
 		}
@@ -209,16 +210,11 @@ namespace ThreeLD.Web.Controllers
 
 			if (res != 0)
 			{
-				this.TempData["message"] =
-						"Preference with category " +
-					$"{this.preferences.GetById(id).Category} " +
-						"has been removed.";
-			}
-			else
+				this.TempData["message"] = "The preference has been removed.";
+			} else
 			{
 				this.TempData["error"] = 
-					"The specified preference can not be removed " +
-					"because it doesn't exist.";
+					"The specified preference doesn't exist.";
 			}
 
 			return this.RedirectToAction(nameof(this.Profile));
