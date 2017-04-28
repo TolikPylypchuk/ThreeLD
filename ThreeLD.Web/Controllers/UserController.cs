@@ -17,19 +17,40 @@ namespace ThreeLD.Web.Controllers
     [Authorize(Roles = "User, Editor")]
     public class UserController : Controller
     {
+        private AppUserManager userManager;
         private IRepository<Preference> preferences;
         private IRepository<Event> events;
 
         public UserController(
             IRepository<Preference> preferences,
-            IRepository<Event> events)
+            IRepository<Event> events,
+            AppUserManager userManager = null)
         {
             this.preferences = preferences;
             this.events = events;
+
+            if (userManager == null)
+            {
+                this.userManager = HttpContext.GetOwinContext()
+                    .GetUserManager<AppUserManager>();
+            }
+            else
+            {
+                this.userManager = userManager;
+            }
         }
 
         private AppUserManager UserManager
-            => HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
+        {
+            get
+            {
+                return this.userManager;
+            }
+            set
+            {
+                this.userManager = value;
+            }
+        }
 
         [HttpGet]
         [Authorize(Roles ="User")]
