@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ThreeLD.DB.Repositories
 {
-	public interface IRepository<TEntity> : IDisposable
+	public interface IRepository<TEntity>
 	{
 		void Add(TEntity entity);
 		void AddRange(IEnumerable<TEntity> entities);

@@ -63,6 +63,20 @@
 	</div>
 
 	<div class="container body-content">
+		@if (TempData.Keys.Contains("message"))
+		{
+			<div class="alert alert-success">
+				<p>@TempData["message"]</p>
+			</div>
+		}
+
+		@if (TempData.Keys.Contains("error"))
+		{
+			<div class="alert alert-danger">
+				<p>@TempData["error"]</p>
+			</div>
+		}
+		
 		@RenderBody()
 
 		<hr />

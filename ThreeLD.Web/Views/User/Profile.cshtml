@@ -8,7 +8,7 @@
 
 <div class="panel-body">
 	<div>
-		<table>
+		<table class="table table-bordered table-striped">
 			<tbody>
 			<tr>
 				<th>User Name</th>
@@ -38,27 +38,29 @@
 	<p>You don't have any preferences.</p>
 }
 
-@foreach (var p in Model.User.Preferences)
-{
-	<ul class="list-group">
-		<li class="list-group-item">
-			@p.Category
-			@using (Html.BeginForm(
-				"RemovePreference", "User", new { id = p.Id }))
-			{
-				<button type="submit" class="btn btn-link">
-					<span class="glyphicon glyphicon-remove">
-					</span>
-				</button>
-			}
-		</li>
-	</ul>
-}
+<ul class="list-group">
+	@foreach (var p in Model.User.Preferences)
+	{
+			<li class="list-group-item">
+				@p.Category
+				@using (Html.BeginForm(
+					"RemovePreference", "User", new { id = p.Id }))
+				{
+					<button type="submit" class="btn btn-link">
+						<span class="glyphicon glyphicon-remove">
+						</span>
+					</button>
+				}
+			</li>
+	}
+</ul>
 
 @using (Html.BeginForm("AddPreference", "User"))
 {
 	<div class="form-group">
-		@Html.DropDownListFor(
+		@if (Model.Categories.Any())
+		{
+			@Html.DropDownListFor(
 				m => m.SelectedCategory,
 				Model.Categories.Select(c => new SelectListItem
 				{
@@ -66,10 +68,14 @@
 					Value = c
 				}),
 				"Choose category...",
-				new { @class = "form-control" })
-		<button type="submit" class="btn btn-link">
-			<span class="glyphicon glyphicon-plus"></span>
-		</button>
+				new {@class = "form-control"})
+			<button type="submit" class="btn btn-link">
+				<span class="glyphicon glyphicon-plus"></span>
+			</button>
+		} else
+		{
+			<p>You prefer every category out there.</p>
+		}
 	</div>
 }
 
@@ -80,21 +86,22 @@
 	<p>You don't have any bookmarks.</p>
 }
 
-@foreach (var p in Model.User.BookmarkedEvents)
-{
-	<ul class="list-group">
-		<li class="list-group-item">
-			@p.Name
-			@using (Html.BeginForm(
+<ul class="list-group">
+	@foreach (var e in Model.User.BookmarkedEvents)
+	{
+			<li class="list-group-item">
+				<a class="btn btn-link" href="@e.Url">@e.Name</a>
+				
+				@using (Html.BeginForm(
 					"RemoveBookmark",
 					"User",
-					new { eventId = p.Id, returnURL = ViewBag.ReturnURL }))
-			{
-				<button type="submit" class="btn btn-link">
-					<span class="glyphicons glyphicons-remove">
-					</span>
-				</button>
-			}
-		</li>
-	</ul>
-}
+					new {eventId = e.Id, returnURL = ViewBag.ReturnURL}))
+				{
+					<button type="submit" class="btn btn-danger btn-xs">
+						<span class="glyphicon glyphicon-remove">
+						</span>
+					</button>
+				}
+			</li>
+	}
+</ul>

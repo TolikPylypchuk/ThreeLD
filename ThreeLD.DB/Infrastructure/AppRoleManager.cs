@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -13,7 +12,7 @@ namespace ThreeLD.DB.Infrastructure
 	public class AppRoleManager : RoleManager<AppRole>, IDisposable
 	{
 		public AppRoleManager(RoleStore<AppRole> store)
-		: base(store)
+			: base(store)
 		{
 		}
 
