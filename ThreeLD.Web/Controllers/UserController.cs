@@ -12,6 +12,7 @@ using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
 using ThreeLD.Web.Models.ViewModels;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ThreeLD.Web.Controllers
 {
@@ -24,28 +25,20 @@ namespace ThreeLD.Web.Controllers
 
         public UserController(
             IRepository<Preference> preferences,
-            IRepository<Event> events,
-            AppUserManager userManager = null)
+            IRepository<Event> events)
         {
             this.preferences = preferences;
             this.events = events;
-
-            if (userManager == null)
-            {
-                this.userManager = HttpContext.GetOwinContext()
-                    .GetUserManager<AppUserManager>();
-            }
-            else
-            {
-                this.userManager = userManager;
-            }
         }
 
-        private AppUserManager UserManager
+
+        [ExcludeFromCodeCoverage]
+        public AppUserManager UserManager
         {
             get
             {
-                return this.userManager;
+                return this.userManager ?? HttpContext.GetOwinContext()
+                    .GetUserManager<AppUserManager>();
             }
             set
             {

@@ -61,10 +61,10 @@ namespace ThreeLD.Tests.User
                 .Returns(this.mockPrincipal.Object);
 
             var controller =
-                new UserController(
-                    null, mockRepository.Object, userManager.Object)
+                new UserController(null, mockRepository.Object)
                 {
-                    ControllerContext = controllerContext.Object
+                    ControllerContext = controllerContext.Object,
+                    UserManager = userManager.Object
                 };
 
             var viewResult = controller.ViewEvents();
