@@ -228,5 +228,28 @@ namespace ThreeLD.Web.Controllers
 
 			return this.RedirectToAction(nameof(this.Profile));
 		}
+
+        public ActionResult ViewPreferences()
+        {
+            var approvedEvents = this.events.GetAll().Where(e => e.IsApproved);
+
+            var currentUser =
+                this.UserManager.FindById(User.Identity.GetUserId());
+
+            var preferences = currentUser.Preferences.ToList();
+
+            var model = new ViewPreferencesModel()
+            {
+                EventsByPreferences = new Dictionary<string, List<Event>>()
+            };
+
+            foreach (var preference in preferences)
+            {
+                var eventsByPreference = approvedEvents.Where(e => e.Category == preference.Category).ToList();
+                model.EventsByPreferences.Add(preference.Category, eventsByPreference);
+            }
+
+            return this.View(model);
+        }
 	}
 }
