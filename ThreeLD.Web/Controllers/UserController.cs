@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -32,6 +33,7 @@ namespace ThreeLD.Web.Controllers
 
         [HttpGet]
         [Authorize(Roles ="User")]
+        [ExcludeFromCodeCoverage]
         public ActionResult Index()
         {
             return RedirectToAction(nameof(this.ViewEvents));

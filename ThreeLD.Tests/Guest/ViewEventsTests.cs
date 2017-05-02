@@ -13,7 +13,7 @@ namespace ThreeLD.Tests.Guest
         [TestMethod]
         public void ViewEventsGetTest()
         {
-            GuestController controller = new GuestController
+           
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Web;
 using System.Web.Mvc;
 using System.Threading.Tasks;
 
@@ -39,19 +40,21 @@ namespace ThreeLD.Web.Controllers
         }
 
         [HttpPost]
+        [ExcludeFromCodeCoverage]
         public ActionResult AssignEditor(string id)
         {
-            UserManager.RemoveFromRole(id, "User");
-            UserManager.AddToRole(id, "Editor");
+            this.UserManager.RemoveFromRole(id, "User");
+            this.UserManager.AddToRole(id, "Editor");
 
             return RedirectToAction(nameof(ViewUsers));
         }
 
         [HttpPost]
+        [ExcludeFromCodeCoverage]
         public ActionResult UnassignEditor(string id)
         {
-            UserManager.RemoveFromRole(id, "Editor");
-            UserManager.AddToRole(id, "User");
+            this.UserManager.RemoveFromRole(id, "Editor");
+            this.UserManager.AddToRole(id, "User");
 
             return RedirectToAction(nameof(ViewUsers));
         }
