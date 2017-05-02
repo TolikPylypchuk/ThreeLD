@@ -31,20 +31,20 @@
                 <td>@e.Key.Category</td>
                 <td><a href="@e.Key.Url" class="btn btn-link">Link</a></td>
 	            <td>
-			        @if (e.Value)
+			        @if (!e.Value)
 			        {
 				        using (Html.BeginForm(
-					        "AddBookmark", "User", new {id = e.Key.Id}))
+					        "AddBookmark", "User", new { eventId = e.Key.Id }))
 				        {
 					        <button type="submit" class="btn btn-info">
 						        <span class="glyphicon glyphicon-heart"></span>
 					        </button>
-				        }
-			        } else
-			        {
-				        using (Html.BeginForm(
-					        "RemoveBookmark", "User", new {id = e.Key.Id}))
-				        {
+						}
+					} else
+					{
+						using (Html.BeginForm(
+							"RemoveBookmark", "User", new { eventId = e.Key.Id }))
+						{
 					        <button type="submit" class="btn btn-info">
 						        <span class="glyphicon glyphicon-heart-empty"></span>
 					        </button>
