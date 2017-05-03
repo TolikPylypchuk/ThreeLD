@@ -109,10 +109,19 @@
     <Compile Include="Migrations\201704211410410_IsApprovedFieldAdd.Designer.cs">
       <DependentUpon>201704211410410_IsApprovedFieldAdd.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705021205255_CreatedByAndProposedByFieldsAdded.cs" />
+    <Compile Include="Migrations\201705021205255_CreatedByAndProposedByFieldsAdded.Designer.cs">
+      <DependentUpon>201705021205255_CreatedByAndProposedByFieldsAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705030452254_NotificationModelAdded.cs" />
+    <Compile Include="Migrations\201705030452254_NotificationModelAdded.Designer.cs">
+      <DependentUpon>201705030452254_NotificationModelAdded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppRole.cs" />
     <Compile Include="Models\EntityBase.cs" />
     <Compile Include="Models\Event.cs" />
+    <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Preference.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -128,6 +137,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704211410410_IsApprovedFieldAdd.resx">
       <DependentUpon>201704211410410_IsApprovedFieldAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705021205255_CreatedByAndProposedByFieldsAdded.resx">
+      <DependentUpon>201705021205255_CreatedByAndProposedByFieldsAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705030452254_NotificationModelAdded.resx">
+      <DependentUpon>201705030452254_NotificationModelAdded.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
