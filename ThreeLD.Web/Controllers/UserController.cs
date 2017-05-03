@@ -227,7 +227,11 @@ namespace ThreeLD.Web.Controllers
         [Authorize(Roles ="User")]
         public ViewResult ViewNotifications()
         {
-            var model = new NotificationsViewModel();
+            var model = new NotificationsViewModel()
+            {
+                UnreadNotifications = new List<Notification>(),
+                ReadNotifications = new List<Notification>()
+            };
 
             string userId = this.User.Identity.GetUserId();
 
@@ -246,7 +250,7 @@ namespace ThreeLD.Web.Controllers
                 }
             }
 
-            return this.View();
+            return this.View(model);
         }
 
         [HttpPost]
