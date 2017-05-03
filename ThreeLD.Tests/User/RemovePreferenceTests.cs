@@ -53,9 +53,7 @@ namespace ThreeLD.Tests.User
             Assert.AreEqual(0, preferences.Count);
             Assert.IsNotNull(controller.TempData["message"]);
             Assert.IsNull(controller.TempData["error"]);
-
-            mockRepository.Verify(
-                r => r.GetById(preferenceToRemoveId), Times.Once());
+            
             mockRepository.Verify(
                 r => r.Delete(preferenceToRemoveId), Times.Once());
             mockRepository.Verify(r => r.Save(), Times.Once());
@@ -101,9 +99,7 @@ namespace ThreeLD.Tests.User
             Assert.AreEqual(1, preferences.Count);
             Assert.IsNull(controller.TempData["message"]);
             Assert.IsNotNull(controller.TempData["error"]);
-
-            mockRepository.Verify(
-                r => r.GetById(preferenceToRemoveId), Times.Never());
+            
             mockRepository.Verify(
                 r => r.Delete(preferenceToRemoveId), Times.Once());
             mockRepository.Verify(r => r.Save(), Times.Once());
