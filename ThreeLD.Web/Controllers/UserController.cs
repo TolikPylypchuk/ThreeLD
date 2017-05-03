@@ -260,6 +260,7 @@ namespace ThreeLD.Web.Controllers
                 if (!notification.IsRead)
                 {
                     notification.IsRead = true;
+                    this.notifications.Save();
 
                     this.TempData["message"] =
                         "The notification has been checked as read.";
