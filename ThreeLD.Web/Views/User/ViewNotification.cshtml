@@ -1,0 +1,37 @@
+﻿@model ThreeLD.Web.Models.ViewModels.NotificationsViewModel
+
+@{
+    ViewBag.Title = "ViewNotification";
+}
+
+<h2>View Notification</h2>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            @foreach (var n in Model.UnreadNotifications)
+            {
+                <ul class="list-group">
+                    <li class="list-group-item">@n.Message</li>
+                </ul>
+            }
+          </div>
+            <div class="col">
+            @foreach (var n in Model.UnreadNotifications)
+            {
+                @using (Html.BeginForm("CheckAsRead", "User", new { notificationId = @n.Id }))
+                {
+                    <button type="submit" class="btn btn-info">
+                        <span class="halfling halfling-eye-open"></span>
+                    </button>
+                }
+            }
+            </div>
+        </div>
+    </div>
+
+    @foreach (var n in Model.ReadNotifications)
+    {
+        <ul class="list-group">
+            <li class="list-group-item">@n.Message</li>
+        </ul>
+    }
