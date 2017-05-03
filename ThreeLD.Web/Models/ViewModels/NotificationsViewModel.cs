@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
 using ThreeLD.DB.Models;
-
 
 namespace ThreeLD.Web.Models.ViewModels
 {
