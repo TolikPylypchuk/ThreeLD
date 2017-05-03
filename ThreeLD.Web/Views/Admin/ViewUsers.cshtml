@@ -33,48 +33,53 @@
 				<td>@info.Key.LastName</td>
 				<td>@info.Key.Email</td>
 				<td>
-					@if (!Model.Admins.Contains(info.Key.Id))
-					{
-						if (!info.Value)
-						{
-							using (Html.BeginForm(
-								"AssignEditor",
-								"Admin",
-								new { id = info.Key.Id }))
+					<div class="row">
+						<div class="col-xs-6">
+							@if (!Model.Admins.Contains(info.Key.Id))
 							{
-								<button class="btn btn-primary btn-xs"
-								        type="submit">
-									Assign Editor
-								</button>
+								if (!info.Value)
+								{
+									using (Html.BeginForm(
+										"AssignEditor",
+										"Admin",
+										new {id = info.Key.Id}))
+									{
+										<button class="btn btn-primary btn-xs"
+										        type="submit">
+											Assign Editor
+										</button>
+									}
+								} else
+								{
+									using (Html.BeginForm(
+										"UnassignEditor",
+										"Admin",
+										new {id = info.Key.Id}))
+									{
+										<button class="btn btn-info btn-xs"
+										        type="submit">
+											Unassign Editor
+										</button>
+									}
+								}
 							}
-						} else
-						{
-							using (Html.BeginForm(
-								"UnassignEditor",
-								"Admin",
-								new { id = info.Key.Id }))
+						</div>
+						<div class="col-xs-6">
+							@if (info.Key.Id != Model.CurrentUserId)
 							{
-								<button class="btn btn-info btn-xs"
-								        type="submit">
-									Unassign Editor
-								</button>
+								using (Html.BeginForm(
+									"DeleteUser",
+									"Admin",
+									new { id = info.Key.Id }))
+								{
+									<button class="btn btn-danger btn-xs"
+											type="submit">
+										Delete
+									</button>
+								}
 							}
-						}
-					}
-					
-					@if (info.Key.Id != Model.CurrentUserId)
-					{
-						using (Html.BeginForm(
-							 "DeleteUser",
-							 "Admin",
-							 new { id = info.Key.Id }))
-						{
-							<button class="btn btn-danger btn-xs"
-							        type="submit">
-								Delete
-							</button>
-						}
-					}
+						</div>
+					</div>
 				</td>
 			</tr>
 		}

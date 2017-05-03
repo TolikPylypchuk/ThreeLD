@@ -18,11 +18,6 @@ namespace ThreeLD.DB
         //    Database.SetInitializer(new DbInit());
         //}
 
-        public static AppDbContext Create()
-        {
-            return new AppDbContext();
-        }
-
         public DbSet<Event> Events { get; set; }
         public DbSet<Preference> Preferences { get; set; }
         public DbSet<Notification> Notifications { get; set; }
