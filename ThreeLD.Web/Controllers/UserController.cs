@@ -153,6 +153,7 @@ namespace ThreeLD.Web.Controllers
 			return this.Redirect(returnURL);
 		}
         
+        [HttpGet]
 		public new ActionResult Profile()
 		{
 			ViewBag.ReturnURL = "/User/Profile";
@@ -264,7 +265,7 @@ namespace ThreeLD.Web.Controllers
 
         [HttpPost]
         [Authorize(Roles ="User")]
-        public ActionResult CheckAsRead(int notificationId)
+        public ActionResult CheckNotificationAsRead(int notificationId)
         {
             var notification = this.notifications.GetById(notificationId);
             

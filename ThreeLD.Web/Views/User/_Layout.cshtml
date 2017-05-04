@@ -41,6 +41,10 @@
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
+                    <li>
+                        @Html.ActionLink(
+                            "My Notification", "ViewNotifications", "User", null, null)
+                    </li>
 					<li>
 						@Html.ActionLink(
 							"My Profile", "Profile", "User", null, null)
