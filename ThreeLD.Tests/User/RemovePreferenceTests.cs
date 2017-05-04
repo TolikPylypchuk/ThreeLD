@@ -13,7 +13,6 @@ using ThreeLD.Web.Controllers;
 namespace ThreeLD.Tests.User
 {
     [TestClass]
-    [SuppressMessage("ReSharper", "UnusedVariable")]
     public class RemovePreferenceTests
     {
         [TestMethod]

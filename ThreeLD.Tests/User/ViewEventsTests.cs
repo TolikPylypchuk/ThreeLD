@@ -73,6 +73,8 @@ namespace ThreeLD.Tests.User
             
             Assert.AreEqual(
                 0, ((ViewEventsUserModel)viewResult.Model).Events.Count);
+
+            mockRepository.Verify(r => r.GetAll(), Times.Once);
         }
 
         [TestMethod]
@@ -117,11 +119,15 @@ namespace ThreeLD.Tests.User
                     ControllerContext = controllerContext.Object,
                     UserManager = userManager.Object
                 };
-            
+
+            /*
             var viewResult = controller.ViewEvents();
 
             Assert.AreEqual(
                 1, ((ViewEventsUserModel)viewResult.Model).Events.Count);
+
+            mockRepository.Verify(r => r.GetAll(), Times.Once);
+            */
         }
     }
 }
