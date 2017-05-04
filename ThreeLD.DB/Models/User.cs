@@ -17,5 +17,13 @@ namespace ThreeLD.DB.Models
 
 		public virtual ICollection<Preference> Preferences { get; set; } =
 			new HashSet<Preference>();
-	}
+
+        public virtual ICollection<Notification>
+            IncomingNotifications { get; set; } =
+                new HashSet<Notification>();
+
+        public virtual ICollection<Notification> 
+            OutcomingNotifications { get; set; } =
+                new HashSet<Notification>();
+    }
 }

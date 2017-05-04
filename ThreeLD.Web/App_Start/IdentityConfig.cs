@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Web.Mvc;
 
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
@@ -16,7 +17,8 @@ namespace ThreeLD.Web
     {
         public void Configuration(IAppBuilder app)
         {
-            app.CreatePerOwinContext(AppDbContext.Create);
+            app.CreatePerOwinContext(
+				DependencyResolver.Current.GetService<AppDbContext>);
             app.CreatePerOwinContext<AppUserManager>(AppUserManager.Create);
             app.CreatePerOwinContext<AppRoleManager>(AppRoleManager.Create);
 

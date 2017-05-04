@@ -1,8 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Web.Mvc;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Moq;
-using System.Collections.Generic;
-using System.Web.Mvc;
 
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
@@ -11,6 +13,7 @@ using ThreeLD.Web.Controllers;
 namespace ThreeLD.Tests.User
 {
     [TestClass]
+    [SuppressMessage("ReSharper", "UnusedVariable")]
     public class RemovePreferenceTests
     {
         [TestMethod]
@@ -28,20 +31,20 @@ namespace ThreeLD.Tests.User
                 }
             };
 
-            Mock<IRepository<Preference>> mockRepository = 
+            Mock<IRepository<Preference>> mockRepository =
                 new Mock<IRepository<Preference>>();
 
             mockRepository.Setup(r => r.GetById(preferenceToRemoveId))
                 .Returns(preferences[0]);
             mockRepository.Setup(r => r.Delete(preferenceToRemoveId))
-                .Callback(() => 
+                .Callback(() =>
                     preferences.RemoveAll(p => p.Id == preferenceToRemoveId));
             mockRepository.Setup(r => r.Save()).Returns(1);
 
             var controllerContext = new Mock<ControllerContext>();
 
             var controller =
-                new UserController(mockRepository.Object, null)
+                new UserController(mockRepository.Object, null, null)
                 {
                     ControllerContext = controllerContext.Object
                 };
@@ -53,7 +56,7 @@ namespace ThreeLD.Tests.User
             Assert.AreEqual(0, preferences.Count);
             Assert.IsNotNull(controller.TempData["message"]);
             Assert.IsNull(controller.TempData["error"]);
-            
+
             mockRepository.Verify(
                 r => r.Delete(preferenceToRemoveId), Times.Once());
             mockRepository.Verify(r => r.Save(), Times.Once());
@@ -87,7 +90,7 @@ namespace ThreeLD.Tests.User
             var controllerContext = new Mock<ControllerContext>();
 
             var controller =
-                new UserController(mockRepository.Object, null)
+                new UserController(mockRepository.Object, null, null)
                 {
                     ControllerContext = controllerContext.Object
                 };
@@ -99,7 +102,7 @@ namespace ThreeLD.Tests.User
             Assert.AreEqual(1, preferences.Count);
             Assert.IsNull(controller.TempData["message"]);
             Assert.IsNotNull(controller.TempData["error"]);
-            
+
             mockRepository.Verify(
                 r => r.Delete(preferenceToRemoveId), Times.Once());
             mockRepository.Verify(r => r.Save(), Times.Once());

@@ -22,16 +22,18 @@ namespace ThreeLD.Web.Controllers
         private AppUserManager userManager;
         private IRepository<Preference> preferences;
         private IRepository<Event> events;
+        private IRepository<Notification> notifications;
 
         public UserController(
             IRepository<Preference> preferences,
-            IRepository<Event> events)
+            IRepository<Event> events,
+            IRepository<Notification> notifications)
         {
             this.preferences = preferences;
             this.events = events;
+            this.notifications = notifications;
         }
-
-
+        
         [ExcludeFromCodeCoverage]
         public AppUserManager UserManager
         {
@@ -48,6 +50,7 @@ namespace ThreeLD.Web.Controllers
 
         [HttpGet]
         [Authorize(Roles ="User")]
+        [ExcludeFromCodeCoverage]
         public ActionResult Index()
         {
             return RedirectToAction(nameof(this.ViewEvents));
@@ -228,5 +231,65 @@ namespace ThreeLD.Web.Controllers
 
 			return this.RedirectToAction(nameof(this.Profile));
 		}
-	}
+
+        [HttpGet]
+        [Authorize(Roles ="User")]
+        public ViewResult ViewNotifications()
+        {
+            var model = new NotificationsViewModel()
+            {
+                UnreadNotifications = new List<Notification>(),
+                ReadNotifications = new List<Notification>()
+            };
+
+            string userId = this.User.Identity.GetUserId();
+
+            var userNotifications = this.notifications.GetAll()
+                .Where(n => n.To == userId).ToList();
+
+            foreach (var n in userNotifications)
+            {
+                if (!n.IsRead)
+                {
+                    model.UnreadNotifications.Add(n);
+                }
+                else
+                {
+                    model.ReadNotifications.Add(n);
+                }
+            }
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles ="User")]
+        public ActionResult CheckAsRead(int notificationId)
+        {
+            var notification = this.notifications.GetById(notificationId);
+            
+            if (notification != null)
+            {
+                if (!notification.IsRead)
+                {
+                    notification.IsRead = true;
+                    this.notifications.Save();
+
+                    this.TempData["message"] =
+                        "The notification has been checked as read.";
+                }
+                else
+                {
+                    this.TempData["error"] =
+                        "The notification is already checked as read.";
+                }
+            }
+            else
+            {
+                this.TempData["error"] = "The notification doesn't exist.";
+            }
+
+            return RedirectToAction(nameof(this.ViewNotifications));
+        }
+    }
 }
