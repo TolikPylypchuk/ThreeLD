@@ -19,7 +19,8 @@ namespace ThreeLD.Web.Controllers
 	[Authorize(Roles = "User, Editor")]
 	public class UserController : Controller
 	{
-		private IRepository<Preference> preferences;
+        private AppUserManager userManager;
+        private IRepository<Preference> preferences;
 		private IRepository<Event> events;
         private IRepository<Notification> notifications;
 
@@ -33,11 +34,21 @@ namespace ThreeLD.Web.Controllers
             this.notifications = notifications;
 		}
 
-		private AppUserManager UserManager
-			=> this.HttpContext.GetOwinContext()
-				   .GetUserManager<AppUserManager>();
+        [ExcludeFromCodeCoverage]
+        public AppUserManager UserManager
+        {
+            get
+            {
+                return this.userManager ?? HttpContext.GetOwinContext()
+                    .GetUserManager<AppUserManager>();
+            }
+            set
+            {
+                this.userManager = value;
+            }
+        }
 
-		[HttpGet]
+        [HttpGet]
 		[Authorize(Roles ="User")]
         [ExcludeFromCodeCoverage]
         public ActionResult Index()
@@ -46,50 +57,51 @@ namespace ThreeLD.Web.Controllers
 		}
 
         [HttpGet]
-		[Authorize(Roles ="User")]
-		public ViewResult ViewEvents()
-		{
-			var approvedEvents =
-				this.events.GetAll()
-						   .Where(e => e.IsApproved)
-						   .OrderBy(e => e.DateTime);
+        [Authorize(Roles = "User")]
+        public ViewResult ViewEvents()
+        {
+            var approvedEvents =
+                this.events.GetAll()
+                           .Where(e => e.IsApproved)
+                           .OrderBy(e => e.DateTime);
 
-			var currentUser =
-				this.UserManager.FindById(User.Identity.GetUserId());
+            var currentUser =
+            this.UserManager.FindById(User.Identity.GetUserId());
 
-			var model = new ViewEventsUserModel()
-			{
-				Events = new Dictionary<Event, bool>()
-			};
+            var model = new ViewEventsUserModel()
+            {
+                Events = new Dictionary<Event, bool>()
+            };
 
-			currentUser.BookmarkedEvents.AsQueryable().Load();
+            currentUser.BookmarkedEvents.AsQueryable().Load();
 
-			foreach (var e in approvedEvents)
-			{
-				model.Events.Add(
-					e, currentUser.BookmarkedEvents.Any(ev => ev.Id == e.Id));
-			}
+            foreach (var e in approvedEvents)
+            {
+                model.Events.Add(
+                    e, currentUser.BookmarkedEvents.Any(ev => ev.Id == e.Id));
+            }
 
-			return this.View(model);
-		}
+            return this.View(model);
+        }
 
-		[HttpGet]
-		[Authorize(Roles = "User")]
-		public ViewResult ProposeEvent()
-		{
-			this.ViewBag.Action = "Propose";
-			this.ViewBag.Role = "User";
-			return this.View("EditEvent", new Event());
-		}
+        [HttpGet]
+        [Authorize(Roles = "User")]
+        public ViewResult ProposeEvent()
+        {
+            this.ViewBag.Action = "Propose";
+	        this.ViewBag.Role = "User";
+            return this.View("EditEvent", new Event());
+        }
 
-		[HttpPost]
-		[Authorize(Roles = "User")]
-		public ActionResult ProposeEvent(Event newEvent)
-		{
-			if (!this.ModelState.IsValid)
-			{
-				this.ViewBag.Action = "Propose";
-				this.ViewBag.Role = "User";
+        [HttpPost]
+        [Authorize(Roles = "User")]
+        public ActionResult ProposeEvent(Event newEvent)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                this.ViewBag.Action = "Propose";
+	            this.ViewBag.Role = "User";
+
 				return this.View(nameof(EditorController.EditEvent), newEvent);
 			}
 
@@ -224,7 +236,7 @@ namespace ThreeLD.Web.Controllers
 
 			return this.RedirectToAction(nameof(this.Profile));
 		}
-
+        
         [HttpGet]
         [Authorize(Roles ="User")]
         public ViewResult ViewNotifications()
@@ -284,5 +296,29 @@ namespace ThreeLD.Web.Controllers
 
             return RedirectToAction(nameof(this.ViewNotifications));
         }
-    }
+
+        public ActionResult ViewPreferedEvents()
+        {
+            var approvedEvents = this.events.GetAll().Where(e => e.IsApproved);
+
+            var currentUser =
+                this.UserManager.FindById(User.Identity.GetUserId());
+
+            var preferences = currentUser.Preferences.ToList();
+
+            var model = new ViewPreferencesModel()
+            {
+                EventsByPreferences = new Dictionary<string, List<Event>>()
+            };
+
+            foreach (var preference in preferences)
+            {
+                var eventsByPreference = approvedEvents.Where(
+                    e => e.Category == preference.Category).ToList();
+                model.EventsByPreferences.Add(preference.Category, eventsByPreference);
+            }
+
+            return this.View(model);
+        }
+	}
 }

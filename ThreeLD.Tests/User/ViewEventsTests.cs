@@ -63,7 +63,7 @@ namespace ThreeLD.Tests.User
                 .Returns(this.mockPrincipal.Object);
 
             var controller =
-                new UserController(null, mockRepository.Object)
+                new UserController(null, mockRepository.Object, null)
                 {
                     ControllerContext = controllerContext.Object,
                     UserManager = userManager.Object
@@ -106,13 +106,13 @@ namespace ThreeLD.Tests.User
                 (Task<IdentityResult>)userStore.Object.CreateAsync(user);
 
             var userManager = new Mock<AppUserManager>(userStore.Object);
-
+            
             var controllerContext = new Mock<ControllerContext>();
             controllerContext.SetupGet(x => x.HttpContext.User)
                 .Returns(this.mockPrincipal.Object);
 
             var controller =
-                new UserController(null, mockRepository.Object)
+                new UserController(null, mockRepository.Object, null)
                 {
                     ControllerContext = controllerContext.Object,
                     UserManager = userManager.Object
@@ -122,6 +122,9 @@ namespace ThreeLD.Tests.User
 
             Assert.AreEqual(
                 1, ((ViewEventsUserModel)viewResult.Model).Events.Count);
+            
+            Assert.AreEqual(
+                0, ((ViewEventsUserModel)viewResult.Model).Events.Count);
         }
     }
 }
