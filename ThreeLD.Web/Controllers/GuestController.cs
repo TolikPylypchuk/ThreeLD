@@ -33,7 +33,8 @@ namespace ThreeLD.Web.Controllers
             }*/
 
             return this.View(this.events.GetAll()
-                .Where(e => e.IsApproved == true));
+			        .Where(e => e.IsApproved)
+			        .OrderBy(e => e.DateTime));
         }
 
         [HttpPost]

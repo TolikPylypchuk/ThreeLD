@@ -18,12 +18,25 @@ namespace ThreeLD.DB
         //    Database.SetInitializer(new DbInit());
         //}
 
-        public static AppDbContext Create()
-        {
-            return new AppDbContext();
-        }
-
         public DbSet<Event> Events { get; set; }
         public DbSet<Preference> Preferences { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Notification>()
+                        .HasRequired(n => n.User)
+                        .WithMany(u => u.IncomingNotifications)
+                        .HasForeignKey(n => n.To)
+                        .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Notification>()
+                        .HasRequired(n => n.Editor)
+                        .WithMany(u => u.OutcomingNotifications)
+                        .HasForeignKey(n => n.From)
+                        .WillCascadeOnDelete(false);
+        }
     }
 }

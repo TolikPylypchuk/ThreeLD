@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -14,97 +16,108 @@ using ThreeLD.Web.Models.ViewModels;
 
 namespace ThreeLD.Web.Controllers
 {
-    [Authorize(Roles = "User, Editor")]
-    public class UserController : Controller
-    {
-        private IRepository<Preference> preferences;
-        private IRepository<Event> events;
+	[Authorize(Roles = "User, Editor")]
+	public class UserController : Controller
+	{
+		private IRepository<Preference> preferences;
+		private IRepository<Event> events;
+        private IRepository<Notification> notifications;
 
         public UserController(
-            IRepository<Preference> preferences,
-            IRepository<Event> events)
-        {
-            this.preferences = preferences;
-            this.events = events;
-        }
+			IRepository<Preference> preferences,
+			IRepository<Event> events,
+            IRepository<Notification> notifications)
+		{
+			this.preferences = preferences;
+			this.events = events;
+            this.notifications = notifications;
+		}
 
-        private AppUserManager UserManager
-            => HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
+		private AppUserManager UserManager
+			=> this.HttpContext.GetOwinContext()
+				   .GetUserManager<AppUserManager>();
 
-        [HttpGet]
-        [Authorize(Roles ="User")]
+		[HttpGet]
+		[Authorize(Roles ="User")]
         [ExcludeFromCodeCoverage]
         public ActionResult Index()
-        {
-            return RedirectToAction(nameof(this.ViewEvents));
-        }
+		{
+			return this.RedirectToAction(nameof(this.ViewEvents));
+		}
 
         [HttpGet]
-        [Authorize(Roles ="User")]
-        public ViewResult ViewEvents()
-        {
-            var approvedEvents = this.events.GetAll().Where(e => e.IsApproved);
+		[Authorize(Roles ="User")]
+		public ViewResult ViewEvents()
+		{
+			var approvedEvents =
+				this.events.GetAll()
+						   .Where(e => e.IsApproved)
+						   .OrderBy(e => e.DateTime);
 
-            var currentUser =
-                this.UserManager.FindById(User.Identity.GetUserId());
+			var currentUser =
+				this.UserManager.FindById(User.Identity.GetUserId());
 
-            var model = new ViewEventsUserModel();
-            foreach (var e in approvedEvents)
-            {
-                model.Events.Add(
-                    e, currentUser.BookmarkedEvents.Any(ev => ev.Id == e.Id));
-            }
+			var model = new ViewEventsUserModel()
+			{
+				Events = new Dictionary<Event, bool>()
+			};
 
-            ViewBag.ReturnURL = "/User/ViewEvents";
+			currentUser.BookmarkedEvents.AsQueryable().Load();
 
-            return this.View(model);
-        }
+			foreach (var e in approvedEvents)
+			{
+				model.Events.Add(
+					e, currentUser.BookmarkedEvents.Any(ev => ev.Id == e.Id));
+			}
 
-        [HttpGet]
-        [Authorize(Roles = "User")]
-        public ViewResult ProposeEvent()
-        {
-            ViewBag.Action = "Propose";
+			return this.View(model);
+		}
 
-            return this.View("EditEvent", new Event());
-        }
+		[HttpGet]
+		[Authorize(Roles = "User")]
+		public ViewResult ProposeEvent()
+		{
+			this.ViewBag.Action = "Propose";
+			this.ViewBag.Role = "User";
+			return this.View("EditEvent", new Event());
+		}
 
-        [HttpPost]
-        [Authorize(Roles = "User")]
-        public ActionResult ProposeEvent(Event newEvent)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                ViewBag.Action = "Propose";
+		[HttpPost]
+		[Authorize(Roles = "User")]
+		public ActionResult ProposeEvent(Event newEvent)
+		{
+			if (!this.ModelState.IsValid)
+			{
+				this.ViewBag.Action = "Propose";
+				this.ViewBag.Role = "User";
+				return this.View(nameof(EditorController.EditEvent), newEvent);
+			}
 
-                return this.View(nameof(EditorController.EditEvent), newEvent);
-            }
+			newEvent.IsApproved = false;
 
-            newEvent.IsApproved = false;
+			this.events.Add(newEvent);
+			this.events.Save();
 
-            this.events.Add(newEvent);
-            this.events.Save();
+			return this.RedirectToAction(nameof(this.ViewEvents));
+		}
 
-            return this.RedirectToAction(nameof(this.ViewEvents));
-        }
+		[HttpPost]
+		public ActionResult AddBookmark(int eventId)
+		{
+			var currentUser =
+				this.UserManager.FindById(this.User.Identity.GetUserId());
 
-        [HttpPost]
-        public ActionResult AddBookmark(int eventId)
-        {
-            var currentUser =
-                this.UserManager.FindById(User.Identity.GetUserId());
-            var chosenEvent = this.events.GetById(eventId);
+			var e = this.events.GetById(eventId);
+			
+			currentUser.BookmarkedEvents.Add(e);
 
-            chosenEvent.BookmarkedBy.Add(currentUser);
-            this.events.Save();
-
-            currentUser.BookmarkedEvents.Add(chosenEvent);
-
-            this.TempData["message"] =
-                $"Event {chosenEvent.Name} has been bookmarked.";
+			this.UserManager.Update(currentUser);
+			
+			this.TempData["message"] =
+				$"Event {e.Name} has been bookmarked.";
             
-            return this.RedirectToAction(nameof(this.ViewEvents));
-        }
+			return this.RedirectToAction(nameof(this.ViewEvents));
+		}
 
         [HttpPost]
         public ActionResult RemoveBookmark(int eventId, string returnURL)
@@ -124,89 +137,152 @@ namespace ThreeLD.Web.Controllers
                     $"Bookmark on event {chosenEvent.Name} " +
                      "has been removed.";
             }
-            
+
             if (String.IsNullOrEmpty(returnURL))
             {
-                return this.RedirectToAction(nameof(ViewEvents));
+                return this.RedirectToAction(nameof(this.ViewEvents));
             }
 
             return this.Redirect(returnURL);
-        }
+		}
         
-        public new ActionResult Profile()
-        {
-            ViewBag.ReturnURL = "/User/Profile";
+		public new ActionResult Profile()
+		{
+			ViewBag.ReturnURL = "/User/Profile";
 
-            var currentUser =
-                this.UserManager.FindById(User.Identity.GetUserId());
+			var currentUser =
+				this.UserManager.FindById(this.User.Identity.GetUserId());
+			
+			currentUser.Preferences.AsQueryable().Load();
+            
+			var categories =
+				this.events.GetAll()
+						   .Where(e => e.IsApproved)
+						   .Select(e => e.Category)
+						   .Distinct()
+						   .ToList();
 
-            return View(new ProfileViewModel { User = currentUser });
-        }
+			return this.View(new ProfileViewModel
+			{
+				User = currentUser,
+				Categories = categories
+					.Where(c => currentUser.Preferences.All(p => p.Category != c))
+					.ToList()
+			});
+		}
+        
+		[HttpPost]
+		public ActionResult AddPreference(ProfileViewModel model)
+		{
+			string category = model.SelectedCategory;
+
+			if (String.IsNullOrEmpty(category))
+			{
+				this.TempData["error"] = "Choose the category.";
+				return this.View(nameof(this.Profile));
+			}
+
+			string userId = this.User.Identity.GetUserId();
+
+			if (this.preferences.GetAll().Count(
+				p => p.Category == category && p.UserId == userId) != 0)
+			{
+				this.TempData["error"] = $"Category {category} is already " +
+					"assigned as preferred. Choose an unassigned one.";
+
+				return this.View(nameof(this.Profile));
+			}
+
+			var newPreference = new Preference
+			{
+				UserId = userId,
+				Category = category
+			};
+
+			this.preferences.Add(newPreference);
+			this.preferences.Save();
+
+			this.TempData["message"] = "The preference has been added.";
+
+			return this.RedirectToAction(nameof(this.Profile));
+		}
+
+		[HttpPost]
+		public ActionResult RemovePreference(int id)
+		{
+			this.preferences.Delete(id);
+			int res = this.preferences.Save();
+
+			if (res != 0)
+			{
+				this.TempData["message"] = "The preference has been removed.";
+			} else
+			{
+				this.TempData["error"] = 
+					"The specified preference doesn't exist.";
+			}
+
+			return this.RedirectToAction(nameof(this.Profile));
+		}
 
         [HttpGet]
-        public ViewResult ViewPreferences()
+        [Authorize(Roles ="User")]
+        public ViewResult ViewNotifications()
         {
-            string id = User.Identity.GetUserId();
-
-	        var model = new PreferencesViewModel
-	        {
-		        Preferences = this.preferences.GetAll()
-			        .Where(p => p.UserId == id)
-			        .ToArray(),
-		        Categories = this.events.GetAll()
-			        .Where(e => e.IsApproved)
-			        .Select(e => e.Category)
-			        .Distinct()
-	        };
-
-	        return this.View(model);
-        }
-
-        [HttpPost]
-        public ActionResult AddPreference(string preferenceCategory)
-        {
-            if (!this.ModelState.IsValid)
+            var model = new NotificationsViewModel()
             {
-                return this.View(nameof(ViewPreferences));
+                UnreadNotifications = new List<Notification>(),
+                ReadNotifications = new List<Notification>()
+            };
+
+            string userId = this.User.Identity.GetUserId();
+
+            var userNotifications = this.notifications.GetAll()
+                .Where(n => n.To == userId).ToList();
+
+            foreach (var n in userNotifications)
+            {
+                if (!n.IsRead)
+                {
+                    model.UnreadNotifications.Add(n);
+                }
+                else
+                {
+                    model.ReadNotifications.Add(n);
+                }
             }
-            
-	        var newPreference = new Preference
-	        {
-		        UserId = this.User.Identity.GetUserId(),
-		        Category = preferenceCategory
-	        };
 
-            this.preferences.Add(newPreference);
-            this.preferences.Save();
-
-            this.TempData["message"] =
-                $"Preference with category {newPreference.Category} " +
-                 "has been created.";
-
-            return this.RedirectToAction(nameof(this.ViewPreferences));
+            return this.View(model);
         }
 
         [HttpPost]
-        public ActionResult RemovePreference(int id)
+        [Authorize(Roles ="User")]
+        public ActionResult CheckAsRead(int notificationId)
         {
-            this.preferences.Delete(id);
-            int res = this.preferences.Save();
-
-            if (res != 0)
+            var notification = this.notifications.GetById(notificationId);
+            
+            if (notification != null)
             {
-                this.TempData["message"] =
-                     "Preference with category " +
-                    $"{this.preferences.GetById(id).Category} " +
-                     "has been removed.";
+                if (!notification.IsRead)
+                {
+                    notification.IsRead = true;
+                    this.notifications.Save();
+
+                    this.TempData["message"] =
+                        "The notification has been checked as read.";
+                }
+                else
+                {
+                    this.TempData["error"] =
+                        "The notification is already checked as read.";
+                }
             }
             else
             {
-                this.TempData["error"] = 
-                    "The specified preference can not be removed " +
-                    "because it doesn't exist.";
+                this.TempData["error"] = "The notification doesn't exist.";
             }
 
-            return this.RedirectToAction(nameof(this.ViewPreferences));
+            return RedirectToAction(nameof(this.ViewNotifications));
         }
     }
 }

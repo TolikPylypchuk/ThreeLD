@@ -21,88 +21,88 @@ namespace ThreeLD.Web.Controllers
 		private AppUserManager UserManager
 			=> HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
 
-        [HttpGet]
+		[HttpGet]
 		public ActionResult Login(string returnUrl)
 		{
-			if (HttpContext.User.Identity.IsAuthenticated)
+			if (this.HttpContext.User.Identity.IsAuthenticated)
 			{
-				return RedirectToAction(
-                    "Index",
-                    UserManager.GetRoles(
-                        HttpContext.User.Identity.GetUserId())[0]);
+				return this.RedirectToAction(
+					nameof(HomeController.Index), "Home");
 			}
 
-			ViewBag.returnUrl = returnUrl;
+			this.ViewBag.ReturnURL = returnUrl;
 
-			return View();
+			return this.View();
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> Login(LoginModel details, string returnUrl)
+		public async Task<ActionResult> Login(
+			LoginModel details, string returnUrl)
 		{
-			if (ModelState.IsValid)
+			if (this.ModelState.IsValid)
 			{
 				var user = await UserManager.FindAsync(
-                    details.UserName, details.Password);
+					details.UserName, details.Password);
 
 				if (user == null)
 				{
-					ModelState.AddModelError("", "Invalid name or password.");
-				}
-				else
+					this.ModelState.AddModelError(
+						"", "Invalid name or password.");
+				} else
 				{
-					var ident = await UserManager.CreateIdentityAsync(
-                        user, DefaultAuthenticationTypes.ApplicationCookie);
+					var ident = await this.UserManager.CreateIdentityAsync(
+						user, DefaultAuthenticationTypes.ApplicationCookie);
 
-					AuthManager.SignOut();
-					AuthManager.SignIn(
-                        new AuthenticationProperties
-					    {
-						    IsPersistent = false
-					    },
-                        ident);
+					this.AuthManager.SignOut();
+					this.AuthManager.SignIn(
+						new AuthenticationProperties
+						{
+							IsPersistent = false
+						},
+						ident);
 
 					if (String.IsNullOrEmpty(returnUrl))
 					{
-						return RedirectToAction(
-                            "Index", UserManager.GetRoles(user.Id)[0]);
+						return this.RedirectToAction(
+							nameof(HomeController.Index), "Home");
 					}
 
-					return Redirect(returnUrl);
+					return this.Redirect(returnUrl);
 				}
 			}
 
-			ViewBag.returnUrl = returnUrl;
+			this.ViewBag.returnUrl = returnUrl;
 
-			return View(details);
+			return this.View(details);
 		}
 
 		[Authorize]
 		public ActionResult Logout()
 		{
-			AuthManager.SignOut();
-			return RedirectToAction("Index", "Home");
+			this.AuthManager.SignOut();
+			return this.RedirectToAction(
+				nameof(HomeController.Index), "Home");
 		}
         
-        [HttpGet]
+		[HttpGet]
 		public ActionResult SignUp()
 		{
-            if (HttpContext.User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction(
-                    nameof(UserController.ViewEvents), "User");
-            }
+			if (this.HttpContext.User.Identity.IsAuthenticated)
+			{
+				return this.RedirectToAction(
+					nameof(HomeController.Index), "Home");
+			}
 
-            return View();
+			return this.View();
 		}
 
 		[HttpPost]
 		public async Task<ActionResult> SignUp(SignUpModel model)
 		{
-			if (ModelState.IsValid)
+			if (this.ModelState.IsValid)
 			{
-				User user = new User
+				var user = new User
 				{
 					UserName = model.UserName,
 					FirstName = model.FirstName,
@@ -110,36 +110,44 @@ namespace ThreeLD.Web.Controllers
 					Email = model.Email
 				};
 
-				var result = await UserManager.CreateAsync(
-                    user, model.Password);
+				var result = await this.UserManager.CreateAsync(
+					user, model.Password);
 
 				if (result.Succeeded)
 				{
-                    var ident = await UserManager.CreateIdentityAsync(
-                        user, DefaultAuthenticationTypes.ApplicationCookie);
+					result = await this.UserManager.AddToRoleAsync(
+						user.Id, "User");
 
-                    AuthManager.SignIn(
-                        new AuthenticationProperties
-                        {
-                            IsPersistent = true
-                        },
-                        ident);
+					if (result.Succeeded)
+					{
+						var ident = await this.UserManager.CreateIdentityAsync(
+							user, DefaultAuthenticationTypes.ApplicationCookie);
 
-                    return RedirectToAction(
-                        nameof(UserController.ViewEvents), "User");
+						this.AuthManager.SignIn(
+							new AuthenticationProperties
+							{
+								IsPersistent = true
+							},
+							ident);
+
+						return this.RedirectToAction(
+							nameof(UserController.Index), "User");
+					}
+
+					await this.UserManager.DeleteAsync(user);
 				}
 
-				AddErrorsFromResult(result);
+				this.AddErrorsFromResult(result);
 			}
 
-			return View(model);
+			return this.View(model);
 		}
 
 		private void AddErrorsFromResult(IdentityResult result)
 		{
 			foreach (string error in result.Errors)
 			{
-				ModelState.AddModelError("", error);
+				this.ModelState.AddModelError("", error);
 			}
 		}
 	}

@@ -4,38 +4,84 @@
 	ViewBag.Title = "Users";
 }
 
-<div class="panel panel-primary">
-	<div class="panel-heading">
-		User Accounts
-	</div>
-	<table class="table table-striped">
-		<tr><th>ID</th><th>UserName</th><th>FirstName</th><th>LastName</th><th>Email</th></tr>
-		@if (!Model.Users.Any())
+<h1>User Accounts</h1>
+
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>User Name</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Email</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	@if (!Model.Users.Any())
+	{
+		<tr>
+			<td colspan="6" class="text-center">No User Accounts</td>
+		</tr>
+	} else
+	{
+		foreach (var info in Model.Users)
 		{
-			<tr><td colspan="3" class="text-center">No User Accounts</td></tr>
+			<tr>
+				<td>@info.Key.Id</td>
+				<td>@info.Key.UserName</td>
+				<td>@info.Key.FirstName</td>
+				<td>@info.Key.LastName</td>
+				<td>@info.Key.Email</td>
+				<td>
+					<div class="row">
+						<div class="col-xs-6">
+							@if (!Model.Admins.Contains(info.Key.Id))
+							{
+								if (!info.Value)
+								{
+									using (Html.BeginForm(
+										"AssignEditor",
+										"Admin",
+										new {id = info.Key.Id}))
+									{
+										<button class="btn btn-primary btn-xs"
+										        type="submit">
+											Assign Editor
+										</button>
+									}
+								} else
+								{
+									using (Html.BeginForm(
+										"UnassignEditor",
+										"Admin",
+										new {id = info.Key.Id}))
+									{
+										<button class="btn btn-info btn-xs"
+										        type="submit">
+											Unassign Editor
+										</button>
+									}
+								}
+							}
+						</div>
+						<div class="col-xs-6">
+							@if (info.Key.Id != Model.CurrentUserId)
+							{
+								using (Html.BeginForm(
+									"DeleteUser",
+									"Admin",
+									new { id = info.Key.Id }))
+								{
+									<button class="btn btn-danger btn-xs"
+											type="submit">
+										Delete
+									</button>
+								}
+							}
+						</div>
+					</div>
+				</td>
+			</tr>
 		}
-		else
-		{
-			foreach (var user in Model.Users.Keys)
-			{
-				<tr>
-					<td>@user.Id</td>
-					<td>@user.UserName</td>
-					<td>@user.FirstName</td>
-					<td>@user.LastName</td>
-					<td>@user.Email</td>
-					<td>
-						@using (Html.BeginForm("DeleteUser", "Admin",
-							new { id = user.Id }))
-						{
-							<button class="btn btn-danger btn-xs"
-							        type="submit">
-								Delete
-							</button>
-						}
-					</td>
-				</tr>
-			}
-		}
-	</table>
-</div>
+	}
+</table>

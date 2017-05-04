@@ -13,7 +13,6 @@ namespace ThreeLD.Tests.Guest
         [TestMethod]
         public void ViewEventsGetTest()
         {
-           
         }
     }
 }

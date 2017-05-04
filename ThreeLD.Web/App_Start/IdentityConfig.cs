@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Web.Mvc;
 
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
@@ -9,14 +10,15 @@ using Owin;
 using ThreeLD.DB;
 using ThreeLD.DB.Infrastructure;
 
-namespace ThreeLD.Web.App_Start
+namespace ThreeLD.Web
 {
 	[ExcludeFromCodeCoverage]
     public class IdentityConfig
     {
         public void Configuration(IAppBuilder app)
         {
-            app.CreatePerOwinContext(AppDbContext.Create);
+            app.CreatePerOwinContext(
+				DependencyResolver.Current.GetService<AppDbContext>);
             app.CreatePerOwinContext<AppUserManager>(AppUserManager.Create);
             app.CreatePerOwinContext<AppRoleManager>(AppRoleManager.Create);
 

@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Threading.Tasks;
@@ -9,34 +11,45 @@ using Microsoft.AspNet.Identity.Owin;
 using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
 using ThreeLD.Web.Models.ViewModels;
-using System.Collections.Generic;
 
 namespace ThreeLD.Web.Controllers
 {
 	public class AdminController : Controller
 	{
         private AppUserManager UserManager
-                => HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
+            => this.HttpContext.GetOwinContext()
+				   .GetUserManager<AppUserManager>();
 
-        public ActionResult Index()
+		private AppRoleManager RoleManager
+			=> this.HttpContext.GetOwinContext()
+				.GetUserManager<AppRoleManager>();
+
+		public ActionResult Index()
         {
-            return RedirectToAction(nameof(this.ViewUsers));
+            return this.RedirectToAction(nameof(this.ViewUsers));
         }
 
         [HttpGet]
         public ViewResult ViewUsers()
         {
+	        var role = this.RoleManager.FindByName("Admin");
+
             var model = new AdminUsersModel
             {
-                Users = new Dictionary<User, bool>()
+                Users = new Dictionary<User, bool>(),
+				Admins = this.UserManager.Users
+					.Where(user => user.Roles.Any(r => r.RoleId == role.Id))
+					.Select(user => user.Id),
+				CurrentUserId = this.HttpContext.User.Identity.GetUserId()
             };
 
             foreach (var user in this.UserManager.Users)
             {
-                model.Users.Add(user, this.UserManager.IsInRole(user.Id, "Editor"));
+                model.Users.Add(
+					user, this.UserManager.IsInRole(user.Id, "Editor"));
             }
 
-            return View(model);
+            return this.View(model);
         }
 
         [HttpPost]
@@ -46,7 +59,7 @@ namespace ThreeLD.Web.Controllers
             this.UserManager.RemoveFromRole(id, "User");
             this.UserManager.AddToRole(id, "Editor");
 
-            return RedirectToAction(nameof(ViewUsers));
+            return this.RedirectToAction(nameof(ViewUsers));
         }
 
         [HttpPost]
@@ -62,24 +75,20 @@ namespace ThreeLD.Web.Controllers
 		[HttpPost]
 		public async Task<ActionResult> DeleteUser(string id)
 		{
-			User user = await UserManager.FindByIdAsync(id);
+			var user = await UserManager.FindByIdAsync(id);
 
 			if (user != null)
 			{
-				IdentityResult result = await UserManager.DeleteAsync(user);
+				var result = await UserManager.DeleteAsync(user);
 				if (result.Succeeded)
 				{
 					return RedirectToAction(nameof(Index));
 				}
-				else
-				{
-					return View("Error", result.Errors);
-				}
+				
+				return View("Error", result.Errors);
 			}
-			else
-			{
-				return View("Error", new string[] { "User Not Found" });
-			}
+
+			return View("Error", new[] { "User Not Found" });
 		}
 	}
 }

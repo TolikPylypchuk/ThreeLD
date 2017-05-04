@@ -1,6 +1,9 @@
 ﻿@model ThreeLD.DB.Models.Event
 
 @{
+	Layout = ViewBag.Role != null
+		? $"~/Views/{ViewBag.Role}/_Layout.cshtml"
+		:  "~/Views/Shared/_Layout.cshtml";
 	ViewBag.Title = $"{ViewBag.Action} an Event";
 }
 

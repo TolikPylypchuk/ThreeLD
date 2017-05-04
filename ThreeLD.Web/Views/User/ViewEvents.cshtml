@@ -1,13 +1,12 @@
 ﻿@model ThreeLD.Web.Models.ViewModels.ViewEventsUserModel
 
 @{
-    ViewBag.Title = "View Events User";
+    ViewBag.Title = "View Events";
 }
 
 <h1>Events</h1>
 
 <table class="table table-bordered table-striped">
-<<<<<<< HEAD
     <thead>
         <tr>
             <th>Name</th>
@@ -31,78 +30,28 @@
                 <td>@e.Key.Description</td>
                 <td>@e.Key.Category</td>
                 <td><a href="@e.Key.Url" class="btn btn-link">Link</a></td>
-                <td>
-                    @if (e.Value)
-                    {
-                        using (Html.BeginForm("AddBookmark", "User"))
-                        {
-                            <button type="submit" class="btn btn-info">
-                                <span class="glyphicon glyphicon-heart"></span>
-                            </button>
-                            @Html.Hidden("eventId", e.Key.Id)
-                        }
-                    }
-                    else
-                    {
-                        using (Html.BeginForm("RemoveBookmark", "User"))
-                        {
-                            <button type="submit" class="btn btn-info">
-                                <span class="glyphicon glyphicon-heart-empty"></span>
-                            </button>
-                            @Html.Hidden("eventId", e.Key.Id)
-                        }
-                    }
-                </td>
-            </tr>}
-    </tbody>
-=======
-	<thead>
-	<tr>
-		<th>Name</th>
-		<th>Date and Time</th>
-		<th>Duration</th>
-		<th>Address</th>
-		<th>Description</th>
-		<th>Category</th>
-		<th>URL</th>
-		<th>Bookmark</th>
-
-	</tr>
-	</thead>
-	<tbody>
-	@foreach (var e in Model.Events)
-	{
-		<tr>
-			<td>@e.Key.Name</td>
-			<td>@e.Key.DateTime</td>
-			<td>@e.Key.Duration</td>
-			<td>@e.Key.Address</td>
-			<td>@e.Key.Description</td>
-			<td>@e.Key.Category</td>
-			<td><a href="@e.Key.Url" class="btn btn-link">Link</a></td>
-			<td>
-				@if (e.Value)
-				{
-					using (Html.BeginForm("AddBookmark", "User"))
-					{
-						 <button type="submit" class="btn btn-info">
-							 <span class="glyphicon glyphicon-heart"></span>
-						 </button>
-						@Html.Hidden("eventId", e.Key.Id)
-					}
-				} else
-				{
-					using (Html.BeginForm("RemoveBookmark", "User"))
-					{
-						<button type="submit" class="btn btn-info">
-							<span class="glyphicon glyphicon-heart-empty"></span>
-						</button>
-						@Html.Hidden("eventId", e.Key.Id)
-					}
-				}
-			</td>
-		</tr>
-	}
+			    <td>
+				    @if (!e.Value)
+				    {
+					    using (Html.BeginForm(
+                            "AddBookmark", "User", new { eventId = e.Key.Id }))
+					    {
+						     <button type="submit" class="btn btn-info">
+							     <span class="glyphicon glyphicon-heart"></span>
+						     </button>
+					    }
+				    } else
+				    {
+					    using (Html.BeginForm(
+                            "RemoveBookmark", "User", new { eventId = e.Key.Id }))
+					    {
+						    <button type="submit" class="btn btn-info">
+							    <span class="glyphicon glyphicon-heart-empty"></span>
+						    </button>
+					    }
+				    }
+			    </td>
+		    </tr>
+	    }
 	</tbody>
->>>>>>> b822cbecf04e1d9d238414e005b0b8ba65efc04b
 </table>

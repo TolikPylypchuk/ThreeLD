@@ -37,7 +37,10 @@ namespace ThreeLD.Web.Controllers
 		[ExcludeFromCodeCoverage]
 		public ViewResult ViewEvents()
 		{
-			var approvedEvents = this.events.GetAll().Where(e => e.IsApproved);
+			var approvedEvents =
+				this.events.GetAll()
+					.Where(e => e.IsApproved)
+					.OrderBy(e => e.DateTime);
 
 			var currentUser =
 				this.UserManager.FindById(User.Identity.GetUserId());
@@ -61,6 +64,7 @@ namespace ThreeLD.Web.Controllers
 		public ViewResult CreateEvent()
 		{
 			this.ViewBag.Action = "Create";
+			this.ViewBag.Role = "Editor";
 			return this.View(nameof(this.EditEvent), new Event());
 		}
 		
@@ -70,6 +74,7 @@ namespace ThreeLD.Web.Controllers
 			if (!this.ModelState.IsValid)
 			{
 				this.ViewBag.Action = "Create";
+				this.ViewBag.Role = "Editor";
 				return this.View(nameof(this.EditEvent), e);
 			}
 
@@ -79,14 +84,14 @@ namespace ThreeLD.Web.Controllers
 			
 			this.TempData["message"] = $"{e.Name} has been created.";
 
-			return this.RedirectToAction(
-				nameof(GuestController.ViewEvents), "Guest");
+			return this.RedirectToAction(nameof(this.ViewEvents));
 		}
 
 		[HttpGet]
 		public ViewResult EditEvent(int id)
 		{
 			this.ViewBag.Action = "Edit";
+			this.ViewBag.Role = "Editor";
 			return this.View(this.events.GetById(id));
 		}
 
@@ -96,6 +101,7 @@ namespace ThreeLD.Web.Controllers
 			if (!this.ModelState.IsValid)
 			{
 				this.ViewBag.Action = "Edit";
+				this.ViewBag.Role = "Editor";
 				return this.View(nameof(this.EditEvent), e);
 			}
 			
@@ -105,8 +111,7 @@ namespace ThreeLD.Web.Controllers
 			
 			this.TempData["message"] = $"{e.Name} has been updated.";
 
-			return this.RedirectToAction(
-				nameof(GuestController.ViewEvents), "Guest");
+			return this.RedirectToAction(nameof(this.ViewEvents));
 		}
 		
 		public ViewResult ViewProposedEvents()
@@ -152,8 +157,7 @@ namespace ThreeLD.Web.Controllers
 			
 			return e != null && !e.IsApproved
 				? this.RedirectToAction(nameof(this.ViewProposedEvents))
-				: this.RedirectToAction(
-					nameof(GuestController.ViewEvents), "Guest");
+				: this.RedirectToAction(nameof(this.ViewEvents));
 		}
 	}
 }
