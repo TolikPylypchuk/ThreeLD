@@ -220,7 +220,7 @@
     <Content Include="Views\Editor\_ViewStart.cshtml" />
     <Content Include="Views\Admin\_Layout.cshtml" />
     <Content Include="Views\Admin\_ViewStart.cshtml" />
-    <Content Include="Views\User\ViewNotification.cshtml" />
+    <Content Include="Views\User\ViewNotifications.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

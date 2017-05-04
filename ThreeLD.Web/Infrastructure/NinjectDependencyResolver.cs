@@ -42,7 +42,11 @@ namespace ThreeLD.Web.Infrastructure
 					   .To<DbRepository<Preference>>()
 					   .InRequestScope();
 
-			this.kernel.Bind<AppDbContext>()
+            this.kernel.Bind<IRepository<Notification>>()
+                       .To<DbRepository<Notification>>()
+                       .InRequestScope();
+
+            this.kernel.Bind<AppDbContext>()
 					   .ToSelf()
 					   .InRequestScope();
 		}
