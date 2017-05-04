@@ -128,6 +128,7 @@
     <Compile Include="Editor\DeleteEventTests.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="User\RemovePreferenceTests.cs" />
+    <Compile Include="User\ProposeEventTests.cs" />
     <Compile Include="User\AddPreferenceTests.cs" />
     <Compile Include="User\CheckNotificationAsReadTests.cs" />
     <Compile Include="User\ViewEventsTests.cs" />

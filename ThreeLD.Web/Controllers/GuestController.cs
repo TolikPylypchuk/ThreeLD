@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -17,6 +18,7 @@ namespace ThreeLD.Web.Controllers
             this.events = events;
         }
 
+        [ExcludeFromCodeCoverage]
         public ActionResult Index()
         {
             return RedirectToAction(nameof(this.ViewEvents));
@@ -25,6 +27,11 @@ namespace ThreeLD.Web.Controllers
         [HttpGet]
         public ViewResult ViewEvents()
         {
+            /*if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                return this.View(nameof(Index), "Home");
+            }*/
+
             return this.View(this.events.GetAll()
 			        .Where(e => e.IsApproved)
 			        .OrderBy(e => e.DateTime));
