@@ -106,6 +106,7 @@ namespace ThreeLD.Web.Controllers
 			}
 
 			newEvent.IsApproved = false;
+            newEvent.ProposedBy = this.User.Identity.GetUserId();
 
 			this.events.Add(newEvent);
 			this.events.Save();
