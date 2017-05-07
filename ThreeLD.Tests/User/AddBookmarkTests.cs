@@ -55,6 +55,7 @@ namespace ThreeLD.Tests.User
             Assert.IsNotNull(controller.TempData["error"]);
 
             mockRepository.Verify(r => r.GetById(It.IsAny<int>()), Times.Once);
+            mockRepository.Verify(r => r.Save(), Times.Never);
         }
 
         [TestMethod]
