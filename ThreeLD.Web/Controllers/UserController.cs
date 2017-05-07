@@ -50,6 +50,7 @@ namespace ThreeLD.Web.Controllers
 
         [HttpGet]
         [Authorize(Roles = "User")]
+        [ExcludeFromCodeCoverage]
         public ActionResult Index()
         {
             return this.RedirectToAction(nameof(this.ViewEvents));
@@ -121,12 +122,25 @@ namespace ThreeLD.Web.Controllers
 
             var e = this.events.GetById(eventId);
 
+            currentUser.BookmarkedEvents.AsQueryable().Load();
+            e.BookmarkedBy.AsQueryable().Load();
+
             currentUser.BookmarkedEvents.Add(e);
+            e.BookmarkedBy.Add(currentUser);
 
             this.UserManager.Update(currentUser);
+            int res = this.events.Save();
 
-            this.TempData["message"] =
-                $"Event {e.Name} has been bookmarked.";
+            if (res != 0)
+            {
+                this.TempData["message"] =
+                  $"Event {e.Name} has been bookmarked.";
+            }
+            else
+            {
+                this.TempData["error"] =
+                  $"Event {e.Name} has already been bookmarked.";
+            }
 
             return this.RedirectToAction(nameof(this.ViewEvents));
         }
@@ -138,16 +152,26 @@ namespace ThreeLD.Web.Controllers
                 this.UserManager.FindById(User.Identity.GetUserId());
             var chosenEvent = this.events.GetById(eventId);
 
-            chosenEvent.BookmarkedBy.Remove(currentUser);
-            int res = this.events.Save();
+            currentUser.BookmarkedEvents.AsQueryable().Load();
+            chosenEvent.BookmarkedBy.AsQueryable().Load();
 
+            chosenEvent.BookmarkedBy.Remove(currentUser);
             currentUser.BookmarkedEvents.Remove(chosenEvent);
+
+            this.UserManager.Update(currentUser);
+            int res = this.events.Save();
 
             if (res != 0)
             {
                 this.TempData["message"] =
                     $"Bookmark on event {chosenEvent.Name} " +
                      "has been removed.";
+            }
+            else
+            {
+                this.TempData["error"] =
+                  $"Bookmark on event {chosenEvent.Name} " +
+                     "doesn't exist.";
             }
 
             if (String.IsNullOrEmpty(returnURL))

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Moq;
@@ -33,7 +32,6 @@ namespace ThreeLD.Tests.User
                 ClaimTypes.NameIdentifier, this.username);
             identity.AddClaim(nameIdentifierClaim);
             this.mockPrincipal.Setup(x => x.Identity).Returns(identity);
-            
         }
 
         [TestMethod]
