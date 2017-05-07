@@ -33,6 +33,31 @@ namespace ThreeLD.Tests.User
         }
 
         [TestMethod]
+        public void AddBookmarkForNonExistentEventTest()
+        {
+            var mockRepository = new Mock<IRepository<Event>>();
+            mockRepository.Setup(r => r.GetById(It.IsAny<int>()))
+                .Returns((Event)null);
+
+            var controllerContext = new Mock<ControllerContext>();
+            controllerContext.SetupGet(x => x.HttpContext.User)
+                .Returns(this.mockPrincipal.Object);
+
+            var controller =
+                new UserController(null, mockRepository.Object, null)
+                {
+                    ControllerContext = controllerContext.Object,
+                };
+            
+            controller.AddBookmark(0);
+            
+            Assert.IsNull(controller.TempData["message"]);
+            Assert.IsNotNull(controller.TempData["error"]);
+
+            mockRepository.Verify(r => r.GetById(It.IsAny<int>()), Times.Once);
+        }
+
+        [TestMethod]
         public void AddNonExistentBookmarkTest()
         {
             const int eventId = 1;

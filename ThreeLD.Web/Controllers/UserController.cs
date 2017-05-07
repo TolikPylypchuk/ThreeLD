@@ -117,31 +117,38 @@ namespace ThreeLD.Web.Controllers
         [HttpPost]
         public ActionResult AddBookmark(int eventId)
         {
-            var currentUser =
-                this.UserManager.FindById(this.User.Identity.GetUserId());
-
             var e = this.events.GetById(eventId);
 
-            currentUser.BookmarkedEvents.AsQueryable().Load();
-            e.BookmarkedBy.AsQueryable().Load();
-
-            currentUser.BookmarkedEvents.Add(e);
-            e.BookmarkedBy.Add(currentUser);
-
-            this.UserManager.Update(currentUser);
-            int res = this.events.Save();
-
-            if (res != 0)
+            if (e == null)
             {
-                this.TempData["message"] =
-                  $"Event {e.Name} has been bookmarked.";
+                this.TempData["error"] =
+                         $"Event with id {eventId} doesn't exist.";
             }
             else
             {
-                this.TempData["error"] =
-                  $"Event {e.Name} has already been bookmarked.";
-            }
+                var currentUser =
+                    this.UserManager.FindById(this.User.Identity.GetUserId());
 
+                currentUser.BookmarkedEvents.AsQueryable().Load();
+                e.BookmarkedBy.AsQueryable().Load();
+
+                currentUser.BookmarkedEvents.Add(e);
+                e.BookmarkedBy.Add(currentUser);
+
+                this.UserManager.Update(currentUser);
+                int res = this.events.Save();
+
+                if (res != 0)
+                {
+                    this.TempData["message"] =
+                      $"Event {e.Name} has been bookmarked.";
+                }
+                else
+                {
+                    this.TempData["error"] =
+                      $"Event {e.Name} has already been bookmarked.";
+                }
+            }
             return this.RedirectToAction(nameof(this.ViewEvents));
         }
 

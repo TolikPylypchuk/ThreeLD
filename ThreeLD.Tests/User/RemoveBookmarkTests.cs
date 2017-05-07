@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -128,6 +129,145 @@ namespace ThreeLD.Tests.User
 
             Assert.IsNotNull(controller.TempData["message"]);
             Assert.IsNull(controller.TempData["error"]);
+
+            mockRepository.Verify(r => r.GetById(It.IsAny<int>()), Times.Once);
+            mockRepository.Verify(r => r.Save(), Times.Once);
+        }
+
+        [TestMethod]
+        public void RemoveBookmarkNullReturnURLTest()
+        {
+            const int eventId = 1;
+            var eventToRemove = new Event()
+            {
+                Id = eventId,
+                BookmarkedBy = new List<DB.Models.User>()
+            };
+
+            DB.Models.User user = new DB.Models.User()
+            {
+                Id = this.username,
+                BookmarkedEvents = new List<Event>() { }
+            };
+
+            var mockRepository = new Mock<IRepository<Event>>();
+            mockRepository.Setup(r => r.GetById(It.IsAny<int>()))
+                .Returns(eventToRemove);
+            mockRepository.Setup(r => r.Save()).Returns(0);
+
+            var userManager = new Mock<AppUserManager>(
+                new UserStore<DB.Models.User>());
+            userManager.Setup(m => m.FindByIdAsync(It.IsAny<string>()))
+                .Returns(Task.FromResult(user));
+
+            var controllerContext = new Mock<ControllerContext>();
+            controllerContext.SetupGet(x => x.HttpContext.User)
+                .Returns(this.mockPrincipal.Object);
+
+            var controller =
+                new UserController(null, mockRepository.Object, null)
+                {
+                    ControllerContext = controllerContext.Object,
+                    UserManager = userManager.Object
+                };
+            
+            RedirectToRouteResult res = (RedirectToRouteResult)controller
+                .RemoveBookmark(eventId, null);
+
+            Assert.AreEqual("ViewEvents", res.RouteValues["action"]);
+
+            mockRepository.Verify(r => r.GetById(It.IsAny<int>()), Times.Once);
+            mockRepository.Verify(r => r.Save(), Times.Once);
+        }
+
+        [TestMethod]
+        public void RemoveBookmarkIsEmptyReturnURLTest()
+        {
+            const int eventId = 1;
+            var eventToRemove = new Event()
+            {
+                Id = eventId,
+                BookmarkedBy = new List<DB.Models.User>()
+            };
+
+            DB.Models.User user = new DB.Models.User()
+            {
+                Id = this.username,
+                BookmarkedEvents = new List<Event>() { }
+            };
+
+            var mockRepository = new Mock<IRepository<Event>>();
+            mockRepository.Setup(r => r.GetById(It.IsAny<int>()))
+                .Returns(eventToRemove);
+            mockRepository.Setup(r => r.Save()).Returns(0);
+
+            var userManager = new Mock<AppUserManager>(
+                new UserStore<DB.Models.User>());
+            userManager.Setup(m => m.FindByIdAsync(It.IsAny<string>()))
+                .Returns(Task.FromResult(user));
+
+            var controllerContext = new Mock<ControllerContext>();
+            controllerContext.SetupGet(x => x.HttpContext.User)
+                .Returns(this.mockPrincipal.Object);
+
+            var controller =
+                new UserController(null, mockRepository.Object, null)
+                {
+                    ControllerContext = controllerContext.Object,
+                    UserManager = userManager.Object
+                };
+
+            RedirectToRouteResult res = (RedirectToRouteResult)controller
+                .RemoveBookmark(eventId, String.Empty);
+
+            Assert.AreEqual("ViewEvents", res.RouteValues["action"]);
+
+            mockRepository.Verify(r => r.GetById(It.IsAny<int>()), Times.Once);
+            mockRepository.Verify(r => r.Save(), Times.Once);
+        }
+
+        [TestMethod]
+        public void RemoveBookmarkNotNullOrIsEmptyReturnURLTest()
+        {
+            const int eventId = 1;
+            var eventToRemove = new Event()
+            {
+                Id = eventId,
+                BookmarkedBy = new List<DB.Models.User>()
+            };
+
+            DB.Models.User user = new DB.Models.User()
+            {
+                Id = this.username,
+                BookmarkedEvents = new List<Event>() { }
+            };
+
+            var mockRepository = new Mock<IRepository<Event>>();
+            mockRepository.Setup(r => r.GetById(It.IsAny<int>()))
+                .Returns(eventToRemove);
+            mockRepository.Setup(r => r.Save()).Returns(0);
+
+            var userManager = new Mock<AppUserManager>(
+                new UserStore<DB.Models.User>());
+            userManager.Setup(m => m.FindByIdAsync(It.IsAny<string>()))
+                .Returns(Task.FromResult(user));
+
+            var controllerContext = new Mock<ControllerContext>();
+            controllerContext.SetupGet(x => x.HttpContext.User)
+                .Returns(this.mockPrincipal.Object);
+
+            var controller =
+                new UserController(null, mockRepository.Object, null)
+                {
+                    ControllerContext = controllerContext.Object,
+                    UserManager = userManager.Object
+                };
+
+            string url = "someURL";
+            RedirectResult res = (RedirectResult)controller
+                .RemoveBookmark(eventId, url);
+
+            Assert.AreEqual(url, res.Url);
 
             mockRepository.Verify(r => r.GetById(It.IsAny<int>()), Times.Once);
             mockRepository.Verify(r => r.Save(), Times.Once);
