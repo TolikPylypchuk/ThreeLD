@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Moq;
@@ -32,6 +33,7 @@ namespace ThreeLD.Tests.User
                 ClaimTypes.NameIdentifier, this.username);
             identity.AddClaim(nameIdentifierClaim);
             this.mockPrincipal.Setup(x => x.Identity).Returns(identity);
+            
         }
 
         [TestMethod]
@@ -46,17 +48,11 @@ namespace ThreeLD.Tests.User
 
             var mockRepository = new Mock<IRepository<Event>>();
             mockRepository.Setup(r => r.GetAll()).Returns(events.AsQueryable);
-
-            var userStore = new Mock<IUserStore<DB.Models.User>>();
-            userStore.Setup(x => x.CreateAsync(user))
-             .Returns(Task.FromResult(IdentityResult.Success));
-            userStore.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
-                .ReturnsAsync(user);
-
-            Task<IdentityResult> tt =
-                (Task<IdentityResult>)userStore.Object.CreateAsync(user);
-
-            var userManager = new Mock<AppUserManager>(userStore.Object);
+            
+            var userManager = new Mock<AppUserManager>(
+                new UserStore<DB.Models.User>());
+            userManager.Setup(m => m.FindByIdAsync(It.IsAny<string>()))
+                .Returns(Task.FromResult(user));
 
             var controllerContext = new Mock<ControllerContext>();
             controllerContext.SetupGet(x => x.HttpContext.User)
@@ -68,15 +64,13 @@ namespace ThreeLD.Tests.User
                     ControllerContext = controllerContext.Object,
                     UserManager = userManager.Object
                 };
-
-            /*
+            
             var viewResult = controller.ViewEvents();
             
             Assert.AreEqual(
                 0, ((ViewEventsUserModel)viewResult.Model).Events.Count);
 
             mockRepository.Verify(r => r.GetAll(), Times.Once);
-            */
         }
 
         [TestMethod]
@@ -99,18 +93,12 @@ namespace ThreeLD.Tests.User
 
             var mockRepository = new Mock<IRepository<Event>>();
             mockRepository.Setup(r => r.GetAll()).Returns(events.AsQueryable);
-
-            var userStore = new Mock<IUserStore<DB.Models.User>>();
-            userStore.Setup(x => x.CreateAsync(user))
-             .Returns(Task.FromResult(IdentityResult.Success));
-            userStore.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
-                .ReturnsAsync(user);
-
-            Task<IdentityResult> tt =
-                (Task<IdentityResult>)userStore.Object.CreateAsync(user);
-
-            var userManager = new Mock<AppUserManager>(userStore.Object);
             
+            var userManager = new Mock<AppUserManager>(
+                new UserStore<DB.Models.User>());
+            userManager.Setup(m => m.FindByIdAsync(It.IsAny<string>()))
+                .Returns(Task.FromResult(user));
+
             var controllerContext = new Mock<ControllerContext>();
             controllerContext.SetupGet(x => x.HttpContext.User)
                 .Returns(this.mockPrincipal.Object);
@@ -121,15 +109,15 @@ namespace ThreeLD.Tests.User
                     ControllerContext = controllerContext.Object,
                     UserManager = userManager.Object
                 };
-            
-            /*
+
+
             var viewResult = controller.ViewEvents();
 
             Assert.AreEqual(
                 1, ((ViewEventsUserModel)viewResult.Model).Events.Count);
 
             mockRepository.Verify(r => r.GetAll(), Times.Once);
-            */
+
         }
     }
 }
