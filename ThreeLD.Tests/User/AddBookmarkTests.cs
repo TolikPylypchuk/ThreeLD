@@ -46,7 +46,7 @@ namespace ThreeLD.Tests.User
             var controller =
                 new UserController(null, mockRepository.Object, null)
                 {
-                    ControllerContext = controllerContext.Object,
+                    ControllerContext = controllerContext.Object
                 };
             
             controller.AddBookmark(0);

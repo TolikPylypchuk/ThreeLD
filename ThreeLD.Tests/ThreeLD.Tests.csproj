@@ -139,6 +139,7 @@
     <Compile Include="User\CheckNotificationAsReadTests.cs" />
     <Compile Include="User\AddBookmarkTests.cs" />
     <Compile Include="User\RemoveBookmarkTests.cs" />
+    <Compile Include="User\ProfileTests.cs" />
     <Compile Include="User\ViewNotificationsTests.cs" />
     <Compile Include="User\ViewEventsTests.cs" />
   </ItemGroup>

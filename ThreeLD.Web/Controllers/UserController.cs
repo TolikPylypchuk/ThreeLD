@@ -190,7 +190,7 @@ namespace ThreeLD.Web.Controllers
         }
 
         [HttpGet]
-        public new ActionResult Profile()
+        public new ViewResult Profile()
         {
             ViewBag.ReturnURL = "/User/Profile";
 
@@ -211,7 +211,8 @@ namespace ThreeLD.Web.Controllers
                 User = currentUser,
                 Categories = categories
                     .Where(c => currentUser.Preferences.All(p => p.Category != c))
-                    .ToList()
+                    .ToList(),
+                SelectedCategory = null
             });
         }
 
