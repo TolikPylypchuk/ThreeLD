@@ -127,6 +127,8 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="Editor\ProposedEventsTests.cs" />
     <Compile Include="Editor\CreateEventTests.cs" />
+    <Compile Include="Editor\NotificationTests.cs" />
+    <Compile Include="Editor\ViewEventsTests.cs" />
     <Compile Include="Guest\FilterEventsTests.cs" />
     <Compile Include="Guest\ViewEventsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
