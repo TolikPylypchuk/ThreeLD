@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Web;
@@ -18,10 +19,14 @@ namespace ThreeLD.Web.Controllers
 	public class EditorController : Controller
 	{
 		private IRepository<Event> events;
+		private IRepository<Notification> notifications;
 
-		public EditorController(IRepository<Event> events)
+		public EditorController(
+			IRepository<Event> events,
+			IRepository<Notification> notifications)
 		{
 			this.events = events;
+			this.notifications = notifications;
 		}
 
 		[ExcludeFromCodeCoverage]
@@ -106,10 +111,26 @@ namespace ThreeLD.Web.Controllers
 			}
 			
 			e.IsApproved = true;
+
 			this.events.Update(e);
 			this.events.Save();
-			
-			this.TempData["message"] = $"{e.Name} has been updated.";
+
+			string message = $"{e.Name} has been updated.";
+
+			this.TempData["message"] = message;
+
+			if (!String.IsNullOrEmpty(e.ProposedBy))
+			{
+				this.notifications.Add(new Notification
+				{
+					From = this.User.Identity.GetUserId(),
+					To = e.ProposedBy,
+					IsRead = false,
+					Message = message
+				});
+
+				this.notifications.Save();
+			}
 
 			return this.RedirectToAction(nameof(this.ViewEvents));
 		}
@@ -133,7 +154,22 @@ namespace ThreeLD.Web.Controllers
 				this.events.Update(e);
 				this.events.Save();
 
-				this.TempData["message"] = $"{e.Name} has been approved.";
+				string message = $"{e.Name} has been approved.";
+
+				this.TempData["message"] = message;
+
+				if (!String.IsNullOrEmpty(e.ProposedBy))
+				{
+					this.notifications.Add(new Notification
+					{
+						From = this.User.Identity.GetUserId(),
+						To = e.ProposedBy,
+						IsRead = false,
+						Message = message
+					});
+
+					this.notifications.Save();
+				}
 			}
 
 			return this.RedirectToAction(nameof(this.ViewProposedEvents));
@@ -151,8 +187,23 @@ namespace ThreeLD.Web.Controllers
 			{
 				this.events.Delete(e);
 				this.events.Save();
-				
-				this.TempData["message"] = $"{e.Name} has been deleted.";
+
+				string message = $"{e.Name} has been deleted.";
+
+				this.TempData["message"] = message;
+
+				if (!String.IsNullOrEmpty(e.ProposedBy))
+				{
+					this.notifications.Add(new Notification
+					{
+						From = this.User.Identity.GetUserId(),
+						To = e.ProposedBy,
+						IsRead = false,
+						Message = message
+					});
+
+					this.notifications.Save();
+				}
 			}
 			
 			return e != null && !e.IsApproved
