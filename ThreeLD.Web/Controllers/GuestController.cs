@@ -41,14 +41,14 @@ namespace ThreeLD.Web.Controllers
         public ViewResult FilterEvents(
             string categories, DateTime? start, DateTime? end)
         {
-            List<Event> result = new List<Event>();
+            var result = new List<Event>();
 
             var categoriesArray = categories.Split(',');
 
             foreach (string category in categoriesArray)
             {
-                var currentEvents = this.events.GetAll()
-                    .Where(e => e.IsApproved == true)
+	            var currentEvents = this.events.GetAll()
+                    .Where(e => e.IsApproved)
                     .Where(e => e.Category == category)
                     .Where(e =>
                         (start == null ||
@@ -56,11 +56,8 @@ namespace ThreeLD.Web.Controllers
                         (end == null ||
                          DateTime.Compare(e.DateTime, end.Value) <= 0))
                     .ToList();
-                
-                    foreach (Event currentEvent in currentEvents)
-                    {
-                        result.Add(currentEvent);
-                    }
+
+	            result.AddRange(currentEvents);
             }
             
             return this.View(nameof(this.ViewEvents), result);

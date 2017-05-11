@@ -37,15 +37,9 @@ namespace ThreeLD.Web.Controllers
 		[ExcludeFromCodeCoverage]
 		public AppUserManager UserManager
 		{
-			get
-			{
-				return this.userManager ?? HttpContext.GetOwinContext()
+			get => this.userManager ?? HttpContext.GetOwinContext()
 					.GetUserManager<AppUserManager>();
-			}
-			set
-			{
-				this.userManager = value;
-			}
+			set => this.userManager = value;
 		}
 
 		[HttpGet]
@@ -266,7 +260,7 @@ namespace ThreeLD.Web.Controllers
 		[Authorize(Roles = "User")]
 		public ViewResult ViewNotifications()
 		{
-			var model = new NotificationsViewModel()
+			var model = new NotificationsViewModel
 			{
 				UnreadNotifications = new List<Notification>(),
 				ReadNotifications = new List<Notification>()
@@ -323,25 +317,26 @@ namespace ThreeLD.Web.Controllers
 		}
 
 		[HttpGet]
-		public ActionResult ViewPreferedEvents()
+		public ActionResult ViewPreferredEvents()
 		{
 			var approvedEvents = this.events.GetAll().Where(e => e.IsApproved);
 
 			var currentUser =
 				this.UserManager.FindById(User.Identity.GetUserId());
 
-			var preferences = currentUser.Preferences.ToList();
+			var currentUserPreferences = currentUser.Preferences.ToList();
 
-			var model = new ViewPreferencesModel()
+			var model = new ViewPreferencesModel
 			{
 				EventsByPreferences = new Dictionary<string, List<Event>>()
 			};
 
-			foreach (var preference in preferences)
+			foreach (var preference in currentUserPreferences)
 			{
 				var eventsByPreference = approvedEvents.Where(
 					e => e.Category == preference.Category).ToList();
-				model.EventsByPreferences.Add(preference.Category, eventsByPreference);
+				model.EventsByPreferences.Add(
+					preference.Category, eventsByPreference);
 			}
 
 			return this.View(model);
