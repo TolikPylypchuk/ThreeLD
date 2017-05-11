@@ -51,17 +51,17 @@ namespace ThreeLD.Tests.Editor
 				Category = "Test"
 			};
 			
-			var mock = new Mock<IRepository<Event>>();
-			mock.Setup(repo => repo.GetById(eventToUpdate.Id))
+			var mockEvents = new Mock<IRepository<Event>>();
+			mockEvents.Setup(repo => repo.GetById(eventToUpdate.Id))
 				.Returns(eventToUpdate);
 
-			var controller = new EditorController(mock.Object, null);
+			var controller = new EditorController(mockEvents.Object, null);
 
 			var result = controller.EditEvent(eventToUpdate.Id);
 
 			Assert.AreSame(eventToUpdate, (Event)result.Model);
 
-			mock.Verify(repo => repo.GetById(eventToUpdate.Id), Times.Once());
+			mockEvents.Verify(repo => repo.GetById(eventToUpdate.Id), Times.Once());
 		}
 
 		[TestMethod]
@@ -94,12 +94,19 @@ namespace ThreeLD.Tests.Editor
 				}
 			};
 
-			var mock = new Mock<IRepository<Event>>();
-			mock.Setup(repo => repo.Update(eventToUpdate))
+			var mockEvents = new Mock<IRepository<Event>>();
+			mockEvents.Setup(repo => repo.Update(eventToUpdate))
 				.Callback(() => events[0] = eventToUpdate);
-			mock.Setup(repo => repo.Save()).Returns(1);
+			mockEvents.Setup(repo => repo.Save()).Returns(1);
 
-			var controller = new EditorController(mock.Object, null);
+			var mockContext = new Mock<ControllerContext>();
+			mockContext.SetupGet(c => c.HttpContext.User)
+				.Returns(this.mockPrincipal.Object);
+
+			var controller = new EditorController(mockEvents.Object, null)
+			{
+				ControllerContext = mockContext.Object
+			};
 
 			controller.Validate(eventToUpdate);
 
@@ -109,8 +116,8 @@ namespace ThreeLD.Tests.Editor
 
 			Assert.AreSame(eventToUpdate, events[0]);
 
-			mock.Verify(repo => repo.Update(eventToUpdate), Times.Once());
-			mock.Verify(repo => repo.Save(), Times.Once());
+			mockEvents.Verify(repo => repo.Update(eventToUpdate), Times.Once());
+			mockEvents.Verify(repo => repo.Save(), Times.Once());
 		}
 
 		[TestMethod]
@@ -127,11 +134,18 @@ namespace ThreeLD.Tests.Editor
 				Category = "Test"
 			};
 
-			var mock = new Mock<IRepository<Event>>();
-			mock.Setup(repo => repo.Update(eventToUpdate));
-			mock.Setup(repo => repo.Save()).Returns(1);
+			var mockEvents = new Mock<IRepository<Event>>();
+			mockEvents.Setup(repo => repo.Update(eventToUpdate));
+			mockEvents.Setup(repo => repo.Save()).Returns(1);
 
-			var controller = new EditorController(mock.Object, null);
+			var mockContext = new Mock<ControllerContext>();
+			mockContext.SetupGet(c => c.HttpContext.User)
+				.Returns(this.mockPrincipal.Object);
+
+			var controller = new EditorController(mockEvents.Object, null)
+			{
+				ControllerContext = mockContext.Object
+			};
 
 			controller.Validate(eventToUpdate);
 
@@ -167,12 +181,12 @@ namespace ThreeLD.Tests.Editor
 
 			var events = new[] { originalEvent };
 
-			var mock = new Mock<IRepository<Event>>();
-			mock.Setup(repo => repo.Update(eventToUpdate))
+			var mockEvents = new Mock<IRepository<Event>>();
+			mockEvents.Setup(repo => repo.Update(eventToUpdate))
 				.Callback(() => events[0] = eventToUpdate);
-			mock.Setup(repo => repo.Save()).Returns(1);
+			mockEvents.Setup(repo => repo.Save()).Returns(1);
 
-			var controller = new EditorController(mock.Object, null);
+			var controller = new EditorController(mockEvents.Object, null);
 
 			controller.Validate(eventToUpdate);
 
@@ -185,8 +199,8 @@ namespace ThreeLD.Tests.Editor
 			Assert.AreSame(originalEvent, events[0]);
 			Assert.AreSame(eventToUpdate, viewResult.Model);
 
-			mock.Verify(repo => repo.Update(eventToUpdate), Times.Never());
-			mock.Verify(repo => repo.Save(), Times.Never());
+			mockEvents.Verify(repo => repo.Update(eventToUpdate), Times.Never());
+			mockEvents.Verify(repo => repo.Save(), Times.Never());
 		}
 	}
 }
