@@ -35,7 +35,7 @@ namespace ThreeLD.Tests.Editor
 				ClaimTypes.NameIdentifier, userId);
 			identity.AddClaim(nameIdentifierClaim);
 
-			this.mockPrincipal.Setup(x => x.Identity)
+			this.mockPrincipal.Setup(p => p.Identity)
 				.Returns(identity);
 		}
 
