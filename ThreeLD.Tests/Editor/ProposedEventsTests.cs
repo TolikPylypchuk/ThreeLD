@@ -51,7 +51,7 @@ namespace ThreeLD.Tests.Editor
 			var mock = new Mock<IRepository<Event>>();
 			mock.Setup(repo => repo.GetAll()).Returns(events.AsQueryable());
 
-			var controller = new EditorController(mock.Object);
+			var controller = new EditorController(mock.Object, null);
 
 			var result = controller.ViewProposedEvents();
 
@@ -87,7 +87,7 @@ namespace ThreeLD.Tests.Editor
 			mock.Setup(repo => repo.GetById(id)).Returns(eventToApprove);
 			mock.Setup(repo => repo.Save()).Returns(1);
 
-			var controller = new EditorController(mock.Object);
+			var controller = new EditorController(mock.Object, null);
 
 			var result = controller.ApproveEvent(id);
 
@@ -109,7 +109,7 @@ namespace ThreeLD.Tests.Editor
 			var mock = new Mock<IRepository<Event>>();
 			mock.Setup(repo => repo.GetById(id)).Returns((Event)null);
 
-			var controller = new EditorController(mock.Object);
+			var controller = new EditorController(mock.Object, null);
 
 			var result = controller.ApproveEvent(id);
 

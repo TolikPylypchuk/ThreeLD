@@ -35,12 +35,12 @@ namespace ThreeLD.Tests.Editor
 				Category = "Test"
 			};
 
-			var mock = new Mock<IRepository<Event>>();
-			mock.Setup(repo => repo.Add(eventToAdd))
+			var mockEvents = new Mock<IRepository<Event>>();
+			mockEvents.Setup(repo => repo.Add(eventToAdd))
 				.Callback(() => events.Add(eventToAdd));
-			mock.Setup(repo => repo.Save()).Returns(1);
-
-			var controller = new EditorController(mock.Object);
+			mockEvents.Setup(repo => repo.Save()).Returns(1);
+			
+			var controller = new EditorController(mockEvents.Object, null);
 
 			controller.Validate(eventToAdd);
 
@@ -50,8 +50,8 @@ namespace ThreeLD.Tests.Editor
 
 			var addedEvent = events.FirstOrDefault();
 
-			mock.Verify(repo => repo.Add(eventToAdd), Times.Once());
-			mock.Verify(repo => repo.Save(), Times.Once());
+			mockEvents.Verify(repo => repo.Add(eventToAdd), Times.Once());
+			mockEvents.Verify(repo => repo.Save(), Times.Once());
 
 			Assert.AreSame(eventToAdd, addedEvent);
 		}
@@ -70,11 +70,11 @@ namespace ThreeLD.Tests.Editor
 				Category = "Test"
 			};
 
-			var mock = new Mock<IRepository<Event>>();
-			mock.Setup(repo => repo.Update(eventToAdd));
-			mock.Setup(repo => repo.Save()).Returns(1);
+			var mockEvents = new Mock<IRepository<Event>>();
+			mockEvents.Setup(repo => repo.Update(eventToAdd));
+			mockEvents.Setup(repo => repo.Save()).Returns(1);
 
-			var controller = new EditorController(mock.Object);
+			var controller = new EditorController(mockEvents.Object, null);
 
 			controller.Validate(eventToAdd);
 
@@ -95,10 +95,10 @@ namespace ThreeLD.Tests.Editor
 				Url = "https://www.event1.test.com"
 			};
 			
-			var mock = new Mock<IRepository<Event>>();
-			mock.Setup(repo => repo.Save()).Returns(1);
+			var mockEvents = new Mock<IRepository<Event>>();
+			mockEvents.Setup(repo => repo.Save()).Returns(1);
 
-			var controller = new EditorController(mock.Object);
+			var controller = new EditorController(mockEvents.Object, null);
 
 			controller.Validate(eventToAdd);
 
@@ -110,8 +110,8 @@ namespace ThreeLD.Tests.Editor
 
 			Assert.AreSame(eventToAdd, viewResult.Model);
 
-			mock.Verify(repo => repo.Add(eventToAdd), Times.Never());
-			mock.Verify(repo => repo.Save(), Times.Never());
+			mockEvents.Verify(repo => repo.Add(eventToAdd), Times.Never());
+			mockEvents.Verify(repo => repo.Save(), Times.Never());
 		}
 	}
 }

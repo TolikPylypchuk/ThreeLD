@@ -36,7 +36,7 @@ namespace ThreeLD.Tests.Editor
 			mock.Setup(repo => repo.GetById(eventToUpdate.Id))
 				.Returns(eventToUpdate);
 
-			var controller = new EditorController(mock.Object);
+			var controller = new EditorController(mock.Object, null);
 
 			var result = controller.EditEvent(eventToUpdate.Id);
 
@@ -80,7 +80,7 @@ namespace ThreeLD.Tests.Editor
 				.Callback(() => events[0] = eventToUpdate);
 			mock.Setup(repo => repo.Save()).Returns(1);
 
-			var controller = new EditorController(mock.Object);
+			var controller = new EditorController(mock.Object, null);
 
 			controller.Validate(eventToUpdate);
 
@@ -112,7 +112,7 @@ namespace ThreeLD.Tests.Editor
 			mock.Setup(repo => repo.Update(eventToUpdate));
 			mock.Setup(repo => repo.Save()).Returns(1);
 
-			var controller = new EditorController(mock.Object);
+			var controller = new EditorController(mock.Object, null);
 
 			controller.Validate(eventToUpdate);
 
@@ -153,7 +153,7 @@ namespace ThreeLD.Tests.Editor
 				.Callback(() => events[0] = eventToUpdate);
 			mock.Setup(repo => repo.Save()).Returns(1);
 
-			var controller = new EditorController(mock.Object);
+			var controller = new EditorController(mock.Object, null);
 
 			controller.Validate(eventToUpdate);
 
