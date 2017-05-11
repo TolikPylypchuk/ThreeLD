@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Web.Mvc;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -17,6 +19,23 @@ namespace ThreeLD.Tests.Editor
 	[SuppressMessage("ReSharper", "UnusedVariable")]
 	public class EditEventTests
 	{
+		private Mock<IPrincipal> mockPrincipal;
+		private const string userId = "a";
+
+		[TestInitialize]
+		public void Init()
+		{
+			this.mockPrincipal = new Mock<IPrincipal>();
+			var identity = new GenericIdentity(userId);
+
+			var nameIdentifierClaim = new Claim(
+				ClaimTypes.NameIdentifier, userId);
+			identity.AddClaim(nameIdentifierClaim);
+
+			this.mockPrincipal.Setup(x => x.Identity)
+				.Returns(identity);
+		}
+
 		[TestMethod]
 		public void EditEventGetTest()
 		{

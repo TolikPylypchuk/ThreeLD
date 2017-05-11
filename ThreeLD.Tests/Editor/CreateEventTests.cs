@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Web.Mvc;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -19,6 +21,23 @@ namespace ThreeLD.Tests.Editor
 	[SuppressMessage("ReSharper", "UnusedVariable")]
 	public class CreateEventTests
 	{
+		private Mock<IPrincipal> mockPrincipal;
+		private const string userId = "a";
+
+		[TestInitialize]
+		public void Init()
+		{
+			this.mockPrincipal = new Mock<IPrincipal>();
+			var identity = new GenericIdentity(userId);
+
+			var nameIdentifierClaim = new Claim(
+				ClaimTypes.NameIdentifier, userId);
+			identity.AddClaim(nameIdentifierClaim);
+
+			this.mockPrincipal.Setup(x => x.Identity)
+				.Returns(identity);
+		}
+
 		[TestMethod]
 		public void CreateEventPostValidTest()
 		{
@@ -39,8 +58,15 @@ namespace ThreeLD.Tests.Editor
 			mockEvents.Setup(repo => repo.Add(eventToAdd))
 				.Callback(() => events.Add(eventToAdd));
 			mockEvents.Setup(repo => repo.Save()).Returns(1);
-			
-			var controller = new EditorController(mockEvents.Object, null);
+
+			var mockContext = new Mock<ControllerContext>();
+			mockContext.SetupGet(c => c.HttpContext.User)
+				.Returns(this.mockPrincipal.Object);
+
+			var controller = new EditorController(mockEvents.Object, null)
+			{
+				ControllerContext = mockContext.Object
+			};
 
 			controller.Validate(eventToAdd);
 
@@ -54,6 +80,7 @@ namespace ThreeLD.Tests.Editor
 			mockEvents.Verify(repo => repo.Save(), Times.Once());
 
 			Assert.AreSame(eventToAdd, addedEvent);
+			Assert.AreEqual(userId, addedEvent.CreatedBy);
 		}
 
 		[TestMethod]
@@ -74,8 +101,15 @@ namespace ThreeLD.Tests.Editor
 			mockEvents.Setup(repo => repo.Update(eventToAdd));
 			mockEvents.Setup(repo => repo.Save()).Returns(1);
 
-			var controller = new EditorController(mockEvents.Object, null);
+			var mockContext = new Mock<ControllerContext>();
+			mockContext.SetupGet(c => c.HttpContext.User)
+				.Returns(this.mockPrincipal.Object);
 
+			var controller = new EditorController(mockEvents.Object, null)
+			{
+				ControllerContext = mockContext.Object
+			};
+			
 			controller.Validate(eventToAdd);
 
 			var result = controller.CreateEvent(eventToAdd);
