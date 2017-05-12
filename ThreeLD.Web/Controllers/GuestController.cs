@@ -43,7 +43,7 @@ namespace ThreeLD.Web.Controllers
 
             foreach(var i in categories)
             {
-                dict.Add(i, false);
+                dict.Add(i, true);
             }
 
             var model = new FilterEventsModel()
