@@ -1,0 +1,61 @@
+﻿@model ThreeLD.Web.Models.ViewModels.ViewPreferencesModel
+
+@{
+    ViewBag.Title = "ViewPreferedEvents";
+}
+
+<h1>Events</h1>
+@foreach (var item in Model.EventsByPreferences)
+{
+    <h2>@item.Key</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date and Time</th>
+                <th>Duration</th>
+                <th>Address</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>URL</th>
+                <th>Bookmark</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in item.Value)
+            {
+                <tr>
+                    <td>@e.Key.Name</td>
+                    <td>@e.Key.DateTime</td>
+                    <td>@e.Key.Duration</td>
+                    <td>@e.Key.Address</td>
+                    <td>@e.Key.Description</td>
+                    <td>@e.Key.Category</td>
+                    <td><a href="@e.Key.Url" class="btn btn-link">Link</a></td>
+                    <td>
+                        @if (!e.Value)
+                        {
+                            using (Html.BeginForm(
+                                "AddBookmark", "User", new { eventId = e.Key.Id }))
+                            {
+                                <button type="submit" class="btn btn-info">
+                                    <span class="glyphicon glyphicon-heart"></span>
+                                </button>
+                            }
+                        }
+                        else
+                        {
+                            using (Html.BeginForm(
+                                "RemoveBookmark", "User", new { eventId = e.Key.Id }))
+                            {
+                                <button type="submit" class="btn btn-info">
+                                    <span class="glyphicon glyphicon-heart-empty"></span>
+                                </button>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

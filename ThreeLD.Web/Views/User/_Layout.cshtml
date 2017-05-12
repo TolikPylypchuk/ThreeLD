@@ -38,9 +38,21 @@
 							null,
 							null)
 					</li>
+                    <li>
+                        @Html.ActionLink(
+                            "View Preferred Events",
+                            "ViewPreferredEvents",
+                            "User",
+                            null,
+                            null)
+                    </li>
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
+                    <li>
+                        @Html.ActionLink(
+                            "My Notifications", "ViewNotifications", "User", null, null)
+                    </li>
 					<li>
 						@Html.ActionLink(
 							"My Profile", "Profile", "User", null, null)
@@ -57,15 +69,21 @@
 	<div class="container body-content">
 		@if (TempData.Keys.Contains("message"))
 		{
-			<div class="alert alert-success">
-				<p>@TempData["message"]</p>
+			<div class="alert alert-success alert-dismissable">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">
+					<i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
+				</a>
+				@TempData["message"]
 			</div>
 		}
 
 		@if (TempData.Keys.Contains("error"))
 		{
-			<div class="alert alert-danger">
-				<p>@TempData["error"]</p>
+			<div class="alert alert-danger alert-dismissable">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">
+					<i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
+				</a>
+				@TempData["error"]
 			</div>
 		}
 

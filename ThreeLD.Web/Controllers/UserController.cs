@@ -19,40 +19,45 @@ namespace ThreeLD.Web.Controllers
 	[Authorize(Roles = "User, Editor")]
 	public class UserController : Controller
 	{
+		private AppUserManager userManager;
 		private IRepository<Preference> preferences;
 		private IRepository<Event> events;
-        private IRepository<Notification> notifications;
+		private IRepository<Notification> notifications;
 
-        public UserController(
+		public UserController(
 			IRepository<Preference> preferences,
 			IRepository<Event> events,
-            IRepository<Notification> notifications)
+			IRepository<Notification> notifications)
 		{
 			this.preferences = preferences;
 			this.events = events;
-            this.notifications = notifications;
+			this.notifications = notifications;
 		}
 
-		private AppUserManager UserManager
-			=> this.HttpContext.GetOwinContext()
-				   .GetUserManager<AppUserManager>();
+		[ExcludeFromCodeCoverage]
+		public AppUserManager UserManager
+		{
+			get => this.userManager ?? HttpContext.GetOwinContext()
+					.GetUserManager<AppUserManager>();
+			set => this.userManager = value;
+		}
 
 		[HttpGet]
-		[Authorize(Roles ="User")]
-        [ExcludeFromCodeCoverage]
-        public ActionResult Index()
+		[Authorize(Roles = "User")]
+		[ExcludeFromCodeCoverage]
+		public ActionResult Index()
 		{
 			return this.RedirectToAction(nameof(this.ViewEvents));
 		}
 
-        [HttpGet]
-		[Authorize(Roles ="User")]
+		[HttpGet]
+		[Authorize(Roles = "User")]
 		public ViewResult ViewEvents()
 		{
 			var approvedEvents =
 				this.events.GetAll()
-						   .Where(e => e.IsApproved)
-						   .OrderBy(e => e.DateTime);
+							.Where(e => e.IsApproved)
+							.OrderBy(e => e.DateTime);
 
 			var currentUser =
 				this.UserManager.FindById(User.Identity.GetUserId());
@@ -90,10 +95,12 @@ namespace ThreeLD.Web.Controllers
 			{
 				this.ViewBag.Action = "Propose";
 				this.ViewBag.Role = "User";
+
 				return this.View(nameof(EditorController.EditEvent), newEvent);
 			}
 
 			newEvent.IsApproved = false;
+			newEvent.ProposedBy = this.User.Identity.GetUserId();
 
 			this.events.Add(newEvent);
 			this.events.Save();
@@ -104,73 +111,96 @@ namespace ThreeLD.Web.Controllers
 		[HttpPost]
 		public ActionResult AddBookmark(int eventId)
 		{
-			var currentUser =
-				this.UserManager.FindById(this.User.Identity.GetUserId());
-
 			var e = this.events.GetById(eventId);
-			
-			currentUser.BookmarkedEvents.Add(e);
 
-			this.UserManager.Update(currentUser);
-			
-			this.TempData["message"] =
-				$"Event {e.Name} has been bookmarked.";
-            
+			if (e == null)
+			{
+				this.TempData["error"] =
+							$"Event with id {eventId} doesn't exist.";
+			} else
+			{
+				var currentUser =
+					this.UserManager.FindById(this.User.Identity.GetUserId());
+				
+				currentUser.BookmarkedEvents.Add(e);
+				e.BookmarkedBy.Add(currentUser);
+
+				int res = this.events.Save();
+
+				if (res != 0)
+				{
+					this.TempData["message"] =
+						$"Event {e.Name} has been bookmarked.";
+				}
+				else
+				{
+					this.TempData["error"] =
+						$"Event {e.Name} has already been bookmarked.";
+				}
+			}
 			return this.RedirectToAction(nameof(this.ViewEvents));
 		}
 
-        [HttpPost]
-        public ActionResult RemoveBookmark(int eventId, string returnURL)
-        {
-            var currentUser =
-                this.UserManager.FindById(User.Identity.GetUserId());
-            var chosenEvent = this.events.GetById(eventId);
+		[HttpPost]
+		public ActionResult RemoveBookmark(int eventId, string returnURL)
+		{
+			var currentUser =
+				this.UserManager.FindById(User.Identity.GetUserId());
+			var chosenEvent = this.events.GetById(eventId);
+			
+			chosenEvent.BookmarkedBy.Remove(currentUser);
+			currentUser.BookmarkedEvents.Remove(chosenEvent);
 
-            chosenEvent.BookmarkedBy.Remove(currentUser);
-            int res = this.events.Save();
+			int res = this.events.Save();
 
-            currentUser.BookmarkedEvents.Remove(chosenEvent);
+			if (res != 0)
+			{
+				this.TempData["message"] =
+					$"Bookmark on event {chosenEvent.Name} " +
+						"has been removed.";
+			}
+			else
+			{
+				this.TempData["error"] =
+					$"Bookmark on event {chosenEvent.Name} " +
+						"doesn't exist.";
+			}
 
-            if (res != 0)
-            {
-                this.TempData["message"] =
-                    $"Bookmark on event {chosenEvent.Name} " +
-                     "has been removed.";
-            }
+			if (String.IsNullOrEmpty(returnURL))
+			{
+				return this.RedirectToAction(nameof(this.ViewEvents));
+			}
 
-            if (String.IsNullOrEmpty(returnURL))
-            {
-                return this.RedirectToAction(nameof(this.ViewEvents));
-            }
-
-            return this.Redirect(returnURL);
+			return this.Redirect(returnURL);
 		}
-        
-		public new ActionResult Profile()
+
+		[HttpGet]
+		public new ViewResult Profile()
 		{
 			ViewBag.ReturnURL = "/User/Profile";
 
 			var currentUser =
 				this.UserManager.FindById(this.User.Identity.GetUserId());
-			
+
 			currentUser.Preferences.AsQueryable().Load();
-            
+
 			var categories =
 				this.events.GetAll()
-						   .Where(e => e.IsApproved)
-						   .Select(e => e.Category)
-						   .Distinct()
-						   .ToList();
+							.Where(e => e.IsApproved)
+							.Select(e => e.Category)
+							.Distinct()
+							.ToList();
 
 			return this.View(new ProfileViewModel
 			{
 				User = currentUser,
 				Categories = categories
 					.Where(c => currentUser.Preferences.All(p => p.Category != c))
-					.ToList()
+					.ToList(),
+				SelectedCategory = null
 			});
 		}
-        
+
 		[HttpPost]
 		public ActionResult AddPreference(ProfileViewModel model)
 		{
@@ -216,73 +246,108 @@ namespace ThreeLD.Web.Controllers
 			if (res != 0)
 			{
 				this.TempData["message"] = "The preference has been removed.";
-			} else
+			}
+			else
 			{
-				this.TempData["error"] = 
+				this.TempData["error"] =
 					"The specified preference doesn't exist.";
 			}
 
 			return this.RedirectToAction(nameof(this.Profile));
 		}
 
-        [HttpGet]
-        [Authorize(Roles ="User")]
-        public ViewResult ViewNotifications()
-        {
-            var model = new NotificationsViewModel()
-            {
-                UnreadNotifications = new List<Notification>(),
-                ReadNotifications = new List<Notification>()
-            };
+		[HttpGet]
+		[Authorize(Roles = "User")]
+		public ViewResult ViewNotifications()
+		{
+			var model = new NotificationsViewModel
+			{
+				UnreadNotifications = new List<Notification>(),
+				ReadNotifications = new List<Notification>()
+			};
 
-            string userId = this.User.Identity.GetUserId();
+			string userId = this.User.Identity.GetUserId();
 
-            var userNotifications = this.notifications.GetAll()
-                .Where(n => n.To == userId).ToList();
+			var userNotifications = this.notifications.GetAll()
+				.Where(n => n.To == userId).ToList();
 
-            foreach (var n in userNotifications)
-            {
-                if (!n.IsRead)
+			foreach (var n in userNotifications)
+			{
+				if (!n.IsRead)
+				{
+					model.UnreadNotifications.Add(n);
+				}
+				else
+				{
+					model.ReadNotifications.Add(n);
+				}
+			}
+
+			return this.View(model);
+		}
+
+		[HttpPost]
+		[Authorize(Roles = "User")]
+		public ActionResult CheckNotificationAsRead(int notificationId)
+		{
+			var notification = this.notifications.GetById(notificationId);
+
+			if (notification != null)
+			{
+				if (!notification.IsRead)
+				{
+					notification.IsRead = true;
+					this.notifications.Save();
+
+					this.TempData["message"] =
+						"The notification has been checked as read.";
+				}
+				else
+				{
+					this.TempData["error"] =
+						"The notification is already checked as read.";
+				}
+			}
+			else
+			{
+				this.TempData["error"] = "The notification doesn't exist.";
+			}
+
+			return RedirectToAction(nameof(this.ViewNotifications));
+		}
+
+		[HttpGet]
+		public ActionResult ViewPreferredEvents()
+		{
+			var approvedEvents = this.events.GetAll().Where(e => e.IsApproved);
+
+			var currentUser =
+				this.UserManager.FindById(User.Identity.GetUserId());
+
+			var currentUserPreferences = currentUser.Preferences.ToList();
+
+			var model = new ViewPreferencesModel
+			{
+				EventsByPreferences = new Dictionary<string, Dictionary<Event, bool>>()
+			};
+
+			foreach (var preference in currentUserPreferences)
+			{
+				var eventsByPreference = approvedEvents.Where(
+					e => e.Category == preference.Category);
+
+                var eventsDict = new Dictionary<Event, bool>();
+                
+                foreach (var e in eventsByPreference)
                 {
-                    model.UnreadNotifications.Add(n);
+                    eventsDict.Add(e, currentUser.BookmarkedEvents.Any(ev => ev.Id == e.Id));
                 }
-                else
-                {
-                    model.ReadNotifications.Add(n);
-                }
-            }
 
-            return this.View(model);
-        }
+				model.EventsByPreferences.Add(
+					preference.Category, eventsDict);
+			}
 
-        [HttpPost]
-        [Authorize(Roles ="User")]
-        public ActionResult CheckAsRead(int notificationId)
-        {
-            var notification = this.notifications.GetById(notificationId);
-            
-            if (notification != null)
-            {
-                if (!notification.IsRead)
-                {
-                    notification.IsRead = true;
-                    this.notifications.Save();
-
-                    this.TempData["message"] =
-                        "The notification has been checked as read.";
-                }
-                else
-                {
-                    this.TempData["error"] =
-                        "The notification is already checked as read.";
-                }
-            }
-            else
-            {
-                this.TempData["error"] = "The notification doesn't exist.";
-            }
-
-            return RedirectToAction(nameof(this.ViewNotifications));
-        }
-    }
+			return this.View(model);
+		}
+	}
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Moq;
@@ -17,111 +17,155 @@ using ThreeLD.Web.Models.ViewModels;
 
 namespace ThreeLD.Tests.User
 {
-    [TestClass]
-    public class ViewEventsTests
-    {
-        private Mock<IPrincipal> mockPrincipal;
-        private string username = "test@example.com";
+	[TestClass]
+	public class ViewEventsTests
+	{
+		private Mock<IPrincipal> mockPrincipal;
+		private string username = "test@example.com";
 
-        [TestInitialize]
-        public void Init()
-        {
-            this.mockPrincipal = new Mock<IPrincipal>();
-            var identity = new GenericIdentity(this.username);
-            var nameIdentifierClaim = new Claim(
-                ClaimTypes.NameIdentifier, this.username);
-            identity.AddClaim(nameIdentifierClaim);
-            this.mockPrincipal.Setup(x => x.Identity).Returns(identity);
-        }
+		[TestInitialize]
+		public void Init()
+		{
+			this.mockPrincipal = new Mock<IPrincipal>();
+			var identity = new GenericIdentity(this.username);
+			var nameIdentifierClaim = new Claim(
+				ClaimTypes.NameIdentifier, this.username);
+			identity.AddClaim(nameIdentifierClaim);
+			this.mockPrincipal.Setup(x => x.Identity).Returns(identity);
+		}
 
-        [TestMethod]
-        public void ViewEventsNoApprovedEventsTest()
-        {
-            Event[] events = new Event[] { };
+		[TestMethod]
+		public void ViewEventsNoApprovedEventsTest()
+		{
+			var events = new Event[] { };
 
-            DB.Models.User user = new DB.Models.User()
-            {
-                Id = this.username
-            };
+			var user = new DB.Models.User()
+			{
+				Id = this.username
+			};
 
-            var mockRepository = new Mock<IRepository<Event>>();
-            mockRepository.Setup(r => r.GetAll()).Returns(events.AsQueryable);
-
-            var userStore = new Mock<IUserStore<DB.Models.User>>();
-            userStore.Setup(x => x.CreateAsync(user))
-             .Returns(Task.FromResult(IdentityResult.Success));
-            userStore.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
-                .ReturnsAsync(user);
-
-            Task<IdentityResult> tt =
-                (Task<IdentityResult>)userStore.Object.CreateAsync(user);
-
-            var userManager = new Mock<AppUserManager>(userStore.Object);
-
-            var controllerContext = new Mock<ControllerContext>();
-            controllerContext.SetupGet(x => x.HttpContext.User)
-                .Returns(this.mockPrincipal.Object);
-
-            var controller =
-                new UserController(null, mockRepository.Object)
-                {
-                    ControllerContext = controllerContext.Object,
-                    UserManager = userManager.Object
-                };
-
-            var viewResult = controller.ViewEvents();
+			var mockRepository = new Mock<IRepository<Event>>();
+			mockRepository.Setup(r => r.GetAll()).Returns(events.AsQueryable);
             
-            Assert.AreEqual(
-                0, ((ViewEventsUserModel)viewResult.Model).Events.Count);
-        }
+			var userManager = new Mock<AppUserManager>(
+				new UserStore<DB.Models.User>());
+			userManager.Setup(m => m.FindByIdAsync(It.IsAny<string>()))
+				.Returns(Task.FromResult(user));
 
-        [TestMethod]
-        public void ViewEventsNonBookmarkedEventTest()
-        {
-            DB.Models.User user = new DB.Models.User()
-            {
-                Id = this.username
-            };
+			var controllerContext = new Mock<ControllerContext>();
+			controllerContext.SetupGet(x => x.HttpContext.User)
+				.Returns(this.mockPrincipal.Object);
 
-            Event bookmarkedEvent = new Event()
-            {
-                IsApproved = true,
-                BookmarkedBy = new List<DB.Models.User>() { user }
-            };
+			var controller =
+				new UserController(null, mockRepository.Object, null)
+				{
+					ControllerContext = controllerContext.Object,
+					UserManager = userManager.Object
+				};
+            
+			var viewResult = controller.ViewEvents();
+            
+			Assert.AreEqual(
+				0, ((ViewEventsUserModel)viewResult.Model).Events.Count);
 
-            user.BookmarkedEvents = new List<Event>() { bookmarkedEvent };
+			mockRepository.Verify(r => r.GetAll(), Times.Once);
+		}
 
-            Event[] events = new Event[] { bookmarkedEvent };
+		[TestMethod]
+		public void ViewEventsBookmarkedEventTest()
+		{
+			var user = new DB.Models.User
+			{
+				Id = this.username
+			};
 
-            var mockRepository = new Mock<IRepository<Event>>();
-            mockRepository.Setup(r => r.GetAll()).Returns(events.AsQueryable);
+			Event bookmarkedEvent = new Event()
+			{
+				IsApproved = true,
+				BookmarkedBy = new List<DB.Models.User>{ user }
+			};
 
-            var userStore = new Mock<IUserStore<DB.Models.User>>();
-            userStore.Setup(x => x.CreateAsync(user))
-             .Returns(Task.FromResult(IdentityResult.Success));
-            userStore.Setup(x => x.FindByIdAsync(It.IsAny<string>()))
-                .ReturnsAsync(user);
+			user.BookmarkedEvents = new List<Event>{ bookmarkedEvent };
 
-            Task<IdentityResult> tt =
-                (Task<IdentityResult>)userStore.Object.CreateAsync(user);
+			var events = new[] { bookmarkedEvent };
 
-            var userManager = new Mock<AppUserManager>(userStore.Object);
+			var mockRepository = new Mock<IRepository<Event>>();
+			mockRepository.Setup(r => r.GetAll()).Returns(events.AsQueryable);
+            
+			var userManager = new Mock<AppUserManager>(
+				new UserStore<DB.Models.User>());
+			userManager.Setup(m => m.FindByIdAsync(It.IsAny<string>()))
+				.Returns(Task.FromResult(user));
 
-            var controllerContext = new Mock<ControllerContext>();
-            controllerContext.SetupGet(x => x.HttpContext.User)
-                .Returns(this.mockPrincipal.Object);
+			var controllerContext = new Mock<ControllerContext>();
+			controllerContext.SetupGet(x => x.HttpContext.User)
+				.Returns(this.mockPrincipal.Object);
 
-            var controller =
-                new UserController(null, mockRepository.Object)
-                {
-                    ControllerContext = controllerContext.Object,
-                    UserManager = userManager.Object
-                };
+			var controller =
+				new UserController(null, mockRepository.Object, null)
+				{
+					ControllerContext = controllerContext.Object,
+					UserManager = userManager.Object
+				};
 
-            var viewResult = controller.ViewEvents();
 
-            Assert.AreEqual(
-                1, ((ViewEventsUserModel)viewResult.Model).Events.Count);
-        }
-    }
+			var viewResult = controller.ViewEvents();
+
+			Assert.AreEqual(
+				1, ((ViewEventsUserModel)viewResult.Model).Events.Count);
+			Assert.IsTrue(((ViewEventsUserModel)viewResult.Model)
+				.Events.ToArray()[0].Value);
+
+			mockRepository.Verify(r => r.GetAll(), Times.Once);
+
+		}
+
+		[TestMethod]
+		public void ViewEventsNonBookmarkedEventTest()
+		{
+			var user = new DB.Models.User
+			{
+				Id = this.username
+			};
+
+			Event bookmarkedEvent = new Event
+			{
+				IsApproved = true,
+				BookmarkedBy = new List<DB.Models.User>()
+			};
+
+			user.BookmarkedEvents = new List<Event>();
+
+			var events = new[] { bookmarkedEvent };
+
+			var mockRepository = new Mock<IRepository<Event>>();
+			mockRepository.Setup(r => r.GetAll()).Returns(events.AsQueryable);
+
+			var userManager = new Mock<AppUserManager>(
+				new UserStore<DB.Models.User>());
+			userManager.Setup(m => m.FindByIdAsync(It.IsAny<string>()))
+				.Returns(Task.FromResult(user));
+
+			var controllerContext = new Mock<ControllerContext>();
+			controllerContext.SetupGet(x => x.HttpContext.User)
+				.Returns(this.mockPrincipal.Object);
+
+			var controller =
+				new UserController(null, mockRepository.Object, null)
+				{
+					ControllerContext = controllerContext.Object,
+					UserManager = userManager.Object
+				};
+			
+			var viewResult = controller.ViewEvents();
+
+			Assert.AreEqual(
+				1, ((ViewEventsUserModel)viewResult.Model).Events.Count);
+			Assert.IsFalse(((ViewEventsUserModel)viewResult.Model)
+				.Events.ToArray()[0].Value);
+
+			mockRepository.Verify(r => r.GetAll(), Times.Once);
+
+		}
+	}
 }

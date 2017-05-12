@@ -63,13 +63,10 @@
 				            }
 			            </div>
 			            <div class="col-xs-4">
-							@using (Html.BeginForm(
-								"EditEvent", "Editor", new { id = e.Key.Id }))
-							{
-								<button type="submit" class="btn btn-link">
-									<span class="glyphicon glyphicon-pencil"></span>
-								</button>
-							}
+							<a href="@Url.Action("EditEvent", new { id = e.Key.Id })"
+							   class="btn btn-link">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</a>
 						</div>
 		            </div>
 				</td>

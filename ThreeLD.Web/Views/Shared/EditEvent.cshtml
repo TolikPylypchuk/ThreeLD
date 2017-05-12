@@ -48,6 +48,11 @@
 
 		@Html.HiddenFor(m => m.Id)
 
-		<input type="submit" value="Submit">
+		if (!String.IsNullOrEmpty(Model.ProposedBy))
+		{
+			Html.HiddenFor(m => m.ProposedBy);
+		}
+
+		<input type="submit" value="Submit" />
 	}
 </div>

@@ -1,10 +1,10 @@
 ﻿@model ThreeLD.Web.Models.ViewModels.NotificationsViewModel
 
 @{
-    ViewBag.Title = "My notifications";
+    ViewBag.Title = "My Notifications";
 }
 
-<h2>View Notification</h2>
+<h2>My Notifications</h2>
 <div class="container">
     <div class="row">
         <div class="col">
@@ -18,10 +18,10 @@
         <div class="col">
             @foreach (var n in Model.UnreadNotifications)
             {
-                using (Html.BeginForm("CheckAsRead", "User", new { notificationId = n.Id }))
+                using (Html.BeginForm("CheckNotificationAsRead", "User", new { notificationId = n.Id }))
                 {
                     <button type="submit" class="btn btn-info">
-                        <span class="halfling halfling-eye-open"></span>
+                        Check all as read
                     </button>
                 }
             }

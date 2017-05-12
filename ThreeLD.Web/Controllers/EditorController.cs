@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -18,24 +20,33 @@ namespace ThreeLD.Web.Controllers
 	public class EditorController : Controller
 	{
 		private IRepository<Event> events;
+		private IRepository<Notification> notifications;
+		private AppUserManager userManager;
 
-		public EditorController(IRepository<Event> events)
+		public EditorController(
+			IRepository<Event> events,
+			IRepository<Notification> notifications)
 		{
 			this.events = events;
+			this.notifications = notifications;
 		}
 
 		[ExcludeFromCodeCoverage]
-		private AppUserManager UserManager
-			=> HttpContext.GetOwinContext().GetUserManager<AppUserManager>();
-		
+		public AppUserManager UserManager
+		{
+			get => this.userManager ?? this.HttpContext.GetOwinContext()
+					.GetUserManager<AppUserManager>();
+			set => this.userManager = value;
+		}
+
 		[ExcludeFromCodeCoverage]
 		public ActionResult Index()
 		{
 			return this.RedirectToAction(nameof(this.ViewEvents));
 		}
 
-		[ExcludeFromCodeCoverage]
-		public ViewResult ViewEvents()
+		[HttpGet]
+		public async Task<ViewResult> ViewEvents()
 		{
 			var approvedEvents =
 				this.events.GetAll()
@@ -43,7 +54,8 @@ namespace ThreeLD.Web.Controllers
 					.OrderBy(e => e.DateTime);
 
 			var currentUser =
-				this.UserManager.FindById(User.Identity.GetUserId());
+				await this.UserManager.FindByIdAsync(
+					this.User.Identity.GetUserId());
 
 			var model = new ViewEventsUserModel
 			{
@@ -79,6 +91,7 @@ namespace ThreeLD.Web.Controllers
 			}
 
 			e.IsApproved = true;
+			e.CreatedBy = this.User.Identity.GetUserId();
 			this.events.Add(e);
 			this.events.Save();
 			
@@ -88,6 +101,7 @@ namespace ThreeLD.Web.Controllers
 		}
 
 		[HttpGet]
+		[ExcludeFromCodeCoverage]
 		public ViewResult EditEvent(int id)
 		{
 			this.ViewBag.Action = "Edit";
@@ -106,10 +120,26 @@ namespace ThreeLD.Web.Controllers
 			}
 			
 			e.IsApproved = true;
+			e.CreatedBy = this.User.Identity.GetUserId();
 			this.events.Update(e);
 			this.events.Save();
-			
-			this.TempData["message"] = $"{e.Name} has been updated.";
+
+			string message = $"{e.Name} has been updated.";
+
+			this.TempData["message"] = message;
+
+			if (!String.IsNullOrEmpty(e.ProposedBy))
+			{
+				this.notifications.Add(new Notification
+				{
+					From = this.User.Identity.GetUserId(),
+					To = e.ProposedBy,
+					IsRead = false,
+					Message = message
+				});
+
+				this.notifications.Save();
+			}
 
 			return this.RedirectToAction(nameof(this.ViewEvents));
 		}
@@ -129,11 +159,29 @@ namespace ThreeLD.Web.Controllers
 				this.TempData["error"] = "The specified event doesn't exist.";
 			} else
 			{
+				string currentUserId = this.User.Identity.GetUserId();
+				
 				e.IsApproved = true;
+				e.CreatedBy = currentUserId;
 				this.events.Update(e);
 				this.events.Save();
 
-				this.TempData["message"] = $"{e.Name} has been approved.";
+				string message = $"{e.Name} has been approved.";
+
+				this.TempData["message"] = message;
+
+				if (!String.IsNullOrEmpty(e.ProposedBy))
+				{
+					this.notifications.Add(new Notification
+					{
+						From = currentUserId,
+						To = e.ProposedBy,
+						IsRead = false,
+						Message = message
+					});
+
+					this.notifications.Save();
+				}
 			}
 
 			return this.RedirectToAction(nameof(this.ViewProposedEvents));
@@ -151,8 +199,23 @@ namespace ThreeLD.Web.Controllers
 			{
 				this.events.Delete(e);
 				this.events.Save();
-				
-				this.TempData["message"] = $"{e.Name} has been deleted.";
+
+				string message = $"{e.Name} has been deleted.";
+
+				this.TempData["message"] = message;
+
+				if (!String.IsNullOrEmpty(e.ProposedBy))
+				{
+					this.notifications.Add(new Notification
+					{
+						From = this.User.Identity.GetUserId(),
+						To = e.ProposedBy,
+						IsRead = false,
+						Message = message
+					});
+
+					this.notifications.Save();
+				}
 			}
 			
 			return e != null && !e.IsApproved

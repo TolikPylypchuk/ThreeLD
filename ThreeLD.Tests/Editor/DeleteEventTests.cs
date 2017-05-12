@@ -36,14 +36,15 @@ namespace ThreeLD.Tests.Editor
 			};
 
 			var events = new List<Event> { ev };
-
-			var mock = new Mock<IRepository<Event>>();
-			mock.Setup(repo => repo.GetById(id)).Returns(events[0]);
-			mock.Setup(repo => repo.Delete(ev))
+			
+			var mockEvents = new Mock<IRepository<Event>>();
+			mockEvents.Setup(repo => repo.GetById(id)).Returns(events[0]);
+			mockEvents.Setup(repo => repo.Delete(ev))
 				.Callback(() => events.RemoveAll(e => e.Id == ev.Id));
-			mock.Setup(repo => repo.Save()).Returns(1);
+			mockEvents.Setup(repo => repo.Save()).Returns(1);
 
-			var controller = new EditorController(mock.Object);
+			var controller = new EditorController(
+				mockEvents.Object, null);
 			
 			var result = controller.DeleteEvent(id);
 
@@ -51,9 +52,9 @@ namespace ThreeLD.Tests.Editor
 			Assert.IsNotNull(controller.TempData["message"]);
 			Assert.IsNull(controller.TempData["error"]);
 
-			mock.Verify(repo => repo.GetById(id), Times.Once());
-			mock.Verify(repo => repo.Delete(ev), Times.Once());
-			mock.Verify(repo => repo.Save(), Times.Once());
+			mockEvents.Verify(repo => repo.GetById(id), Times.Once());
+			mockEvents.Verify(repo => repo.Delete(ev), Times.Once());
+			mockEvents.Verify(repo => repo.Save(), Times.Once());
 		}
 
 		[TestMethod]
@@ -79,7 +80,7 @@ namespace ThreeLD.Tests.Editor
 			var mock = new Mock<IRepository<Event>>();
 			mock.Setup(repo => repo.GetById(id)).Returns((Event)null);
 
-			var controller = new EditorController(mock.Object);
+			var controller = new EditorController(mock.Object, null);
 			
 			var result = controller.DeleteEvent(id);
 
@@ -118,7 +119,7 @@ namespace ThreeLD.Tests.Editor
 				.Callback(() => events.RemoveAll(e => e.Id == ev.Id));
 			mock.Setup(repo => repo.Save()).Returns(1);
 
-			var controller = new EditorController(mock.Object);
+			var controller = new EditorController(mock.Object, null);
 
 			var result = controller.DeleteEvent(id);
 

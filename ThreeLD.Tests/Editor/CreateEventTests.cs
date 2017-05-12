@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Web.Mvc;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -17,8 +19,26 @@ namespace ThreeLD.Tests.Editor
 	[TestClass]
 	[SuppressMessage("ReSharper", "ImplicitlyCapturedClosure")]
 	[SuppressMessage("ReSharper", "UnusedVariable")]
+	[SuppressMessage("ReSharper", "InconsistentNaming")]
 	public class CreateEventTests
 	{
+		private Mock<IPrincipal> mockPrincipal;
+		private const string userId = "a";
+
+		[TestInitialize]
+		public void Init()
+		{
+			this.mockPrincipal = new Mock<IPrincipal>();
+			var identity = new GenericIdentity(userId);
+
+			var nameIdentifierClaim = new Claim(
+				ClaimTypes.NameIdentifier, userId);
+			identity.AddClaim(nameIdentifierClaim);
+
+			this.mockPrincipal.Setup(p => p.Identity)
+				.Returns(identity);
+		}
+
 		[TestMethod]
 		public void CreateEventPostValidTest()
 		{
@@ -35,12 +55,19 @@ namespace ThreeLD.Tests.Editor
 				Category = "Test"
 			};
 
-			var mock = new Mock<IRepository<Event>>();
-			mock.Setup(repo => repo.Add(eventToAdd))
+			var mockEvents = new Mock<IRepository<Event>>();
+			mockEvents.Setup(repo => repo.Add(eventToAdd))
 				.Callback(() => events.Add(eventToAdd));
-			mock.Setup(repo => repo.Save()).Returns(1);
+			mockEvents.Setup(repo => repo.Save()).Returns(1);
 
-			var controller = new EditorController(mock.Object);
+			var mockContext = new Mock<ControllerContext>();
+			mockContext.SetupGet(c => c.HttpContext.User)
+				.Returns(this.mockPrincipal.Object);
+
+			var controller = new EditorController(mockEvents.Object, null)
+			{
+				ControllerContext = mockContext.Object
+			};
 
 			controller.Validate(eventToAdd);
 
@@ -50,10 +77,11 @@ namespace ThreeLD.Tests.Editor
 
 			var addedEvent = events.FirstOrDefault();
 
-			mock.Verify(repo => repo.Add(eventToAdd), Times.Once());
-			mock.Verify(repo => repo.Save(), Times.Once());
+			mockEvents.Verify(repo => repo.Add(eventToAdd), Times.Once());
+			mockEvents.Verify(repo => repo.Save(), Times.Once());
 
 			Assert.AreSame(eventToAdd, addedEvent);
+			Assert.AreEqual(userId, addedEvent?.CreatedBy);
 		}
 
 		[TestMethod]
@@ -70,12 +98,19 @@ namespace ThreeLD.Tests.Editor
 				Category = "Test"
 			};
 
-			var mock = new Mock<IRepository<Event>>();
-			mock.Setup(repo => repo.Update(eventToAdd));
-			mock.Setup(repo => repo.Save()).Returns(1);
+			var mockEvents = new Mock<IRepository<Event>>();
+			mockEvents.Setup(repo => repo.Update(eventToAdd));
+			mockEvents.Setup(repo => repo.Save()).Returns(1);
 
-			var controller = new EditorController(mock.Object);
+			var mockContext = new Mock<ControllerContext>();
+			mockContext.SetupGet(c => c.HttpContext.User)
+				.Returns(this.mockPrincipal.Object);
 
+			var controller = new EditorController(mockEvents.Object, null)
+			{
+				ControllerContext = mockContext.Object
+			};
+			
 			controller.Validate(eventToAdd);
 
 			var result = controller.CreateEvent(eventToAdd);
@@ -95,10 +130,10 @@ namespace ThreeLD.Tests.Editor
 				Url = "https://www.event1.test.com"
 			};
 			
-			var mock = new Mock<IRepository<Event>>();
-			mock.Setup(repo => repo.Save()).Returns(1);
+			var mockEvents = new Mock<IRepository<Event>>();
+			mockEvents.Setup(repo => repo.Save()).Returns(1);
 
-			var controller = new EditorController(mock.Object);
+			var controller = new EditorController(mockEvents.Object, null);
 
 			controller.Validate(eventToAdd);
 
@@ -110,8 +145,8 @@ namespace ThreeLD.Tests.Editor
 
 			Assert.AreSame(eventToAdd, viewResult.Model);
 
-			mock.Verify(repo => repo.Add(eventToAdd), Times.Never());
-			mock.Verify(repo => repo.Save(), Times.Never());
+			mockEvents.Verify(repo => repo.Add(eventToAdd), Times.Never());
+			mockEvents.Verify(repo => repo.Save(), Times.Never());
 		}
 	}
 }

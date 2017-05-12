@@ -32,9 +32,11 @@ namespace ThreeLD.Tests.User
 			};
 
 			var mockRepository = new Mock<IRepository<Preference>>();
-			
+
+			mockRepository.Setup(r => r.GetById(preferenceToRemoveId))
+				.Returns(preferences[0]);
 			mockRepository.Setup(r => r.Delete(preferenceToRemoveId))
-				.Callback(() => 
+				.Callback(() =>
 					preferences.RemoveAll(p => p.Id == preferenceToRemoveId));
 			mockRepository.Setup(r => r.Save()).Returns(1);
 
@@ -53,7 +55,7 @@ namespace ThreeLD.Tests.User
 			Assert.AreEqual(0, preferences.Count);
 			Assert.IsNotNull(controller.TempData["message"]);
 			Assert.IsNull(controller.TempData["error"]);
-			
+
 			mockRepository.Verify(
 				r => r.Delete(preferenceToRemoveId), Times.Once());
 			mockRepository.Verify(r => r.Save(), Times.Once());
@@ -74,8 +76,7 @@ namespace ThreeLD.Tests.User
 				}
 			};
 
-			var mockRepository =
-				new Mock<IRepository<Preference>>();
+			var mockRepository = new Mock<IRepository<Preference>>();
 
 			mockRepository.Setup(r => r.GetById(preferenceToRemoveId))
 				.Returns((Preference)null);
@@ -100,8 +101,6 @@ namespace ThreeLD.Tests.User
 			Assert.IsNull(controller.TempData["message"]);
 			Assert.IsNotNull(controller.TempData["error"]);
 
-			mockRepository.Verify(
-				r => r.GetById(preferenceToRemoveId), Times.Never());
 			mockRepository.Verify(
 				r => r.Delete(preferenceToRemoveId), Times.Once());
 			mockRepository.Verify(r => r.Save(), Times.Once());
