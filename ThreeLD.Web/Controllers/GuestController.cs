@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
+using ThreeLD.Web.Models.ViewModels;
 
 namespace ThreeLD.Web.Controllers
 {
@@ -31,14 +32,33 @@ namespace ThreeLD.Web.Controllers
             {
                 return this.View(nameof(Index), "Home");
             }*/
+            var categories =
+                this.events.GetAll()
+                            .Where(e => e.IsApproved)
+                            .Select(e => e.Category)
+                            .Distinct()
+                            .ToList();
 
-            return this.View(this.events.GetAll()
-			        .Where(e => e.IsApproved)
-			        .OrderBy(e => e.DateTime));
+            Dictionary<string, bool> dict = new Dictionary<string, bool>();
+
+            foreach(var i in categories)
+            {
+                dict.Add(i, false);
+            }
+
+            var model = new FilterEventsModel()
+            {
+                Events = this.events.GetAll()
+                    .Where(e => e.IsApproved)
+                    .OrderBy(e => e.DateTime).ToList(),
+
+                Categories = dict
+            };
+
+            return this.View(model);
         }
-
-        [HttpPost]
-        public ViewResult FilterEvents(
+        
+        private ViewResult ViewEvents(
             string categories, DateTime? start, DateTime? end)
         {
             var result = new List<Event>();
@@ -47,7 +67,7 @@ namespace ThreeLD.Web.Controllers
 
             foreach (string category in categoriesArray)
             {
-	            var currentEvents = this.events.GetAll()
+                var currentEvents = this.events.GetAll()
                     .Where(e => e.IsApproved)
                     .Where(e => e.Category == category)
                     .Where(e =>
@@ -57,10 +77,46 @@ namespace ThreeLD.Web.Controllers
                          DateTime.Compare(e.DateTime, end.Value) <= 0))
                     .ToList();
 
-	            result.AddRange(currentEvents);
+                result.AddRange(currentEvents);
+            }
+
+            var categoriesAll =
+                this.events.GetAll()
+                            .Where(e => e.IsApproved)
+                            .Select(e => e.Category)
+                            .Distinct()
+                            .ToList();
+
+            Dictionary<string, bool> dict = new Dictionary<string, bool>();
+
+            foreach (var i in categoriesAll)
+            {
+                dict.Add(i, categoriesArray.Contains(i));
+            }
+
+            var model = new FilterEventsModel()
+            {
+                Events = result,
+
+                Categories = dict
+            };
+
+            return this.View(nameof(this.ViewEvents), model);
+        }
+
+        [HttpPost]
+        public ViewResult ViewEvents(ICollection<string> categories)
+        {
+            string result = string.Empty;
+            if(categories != null)
+            {
+                foreach (string i in categories)
+                {
+                    result += i + ",";
+                }
             }
             
-            return this.View(nameof(this.ViewEvents), result);
+            return ViewEvents(result, null, null);
         }
     }
 }
