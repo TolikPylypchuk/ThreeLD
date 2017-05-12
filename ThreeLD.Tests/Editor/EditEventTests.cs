@@ -17,6 +17,7 @@ namespace ThreeLD.Tests.Editor
 	[TestClass]
 	[SuppressMessage("ReSharper", "ImplicitlyCapturedClosure")]
 	[SuppressMessage("ReSharper", "UnusedVariable")]
+	[SuppressMessage("ReSharper", "InconsistentNaming")]
 	public class EditEventTests
 	{
 		private Mock<IPrincipal> mockPrincipal;
@@ -32,38 +33,10 @@ namespace ThreeLD.Tests.Editor
 				ClaimTypes.NameIdentifier, userId);
 			identity.AddClaim(nameIdentifierClaim);
 
-			this.mockPrincipal.Setup(x => x.Identity)
+			this.mockPrincipal.Setup(p => p.Identity)
 				.Returns(identity);
 		}
-
-		[TestMethod]
-		public void EditEventGetTest()
-		{
-			var eventToUpdate = new Event
-			{
-				Id = 1,
-				Name = "Test",
-				Address = "Test",
-				DateTime = DateTime.Now,
-				Duration = TimeSpan.FromHours(2),
-				Url = "https://www.event1.test.com",
-				Description = "A test event",
-				Category = "Test"
-			};
-			
-			var mockEvents = new Mock<IRepository<Event>>();
-			mockEvents.Setup(repo => repo.GetById(eventToUpdate.Id))
-				.Returns(eventToUpdate);
-
-			var controller = new EditorController(mockEvents.Object, null);
-
-			var result = controller.EditEvent(eventToUpdate.Id);
-
-			Assert.AreSame(eventToUpdate, (Event)result.Model);
-
-			mockEvents.Verify(repo => repo.GetById(eventToUpdate.Id), Times.Once());
-		}
-
+		
 		[TestMethod]
 		public void EditEventPostValidTest()
 		{

@@ -45,6 +45,7 @@ namespace ThreeLD.Web.Controllers
 			return this.RedirectToAction(nameof(this.ViewEvents));
 		}
 
+		[HttpGet]
 		public async Task<ViewResult> ViewEvents()
 		{
 			var approvedEvents =
@@ -158,7 +159,10 @@ namespace ThreeLD.Web.Controllers
 				this.TempData["error"] = "The specified event doesn't exist.";
 			} else
 			{
+				string currentUserId = this.User.Identity.GetUserId();
+				
 				e.IsApproved = true;
+				e.CreatedBy = currentUserId;
 				this.events.Update(e);
 				this.events.Save();
 
@@ -170,7 +174,7 @@ namespace ThreeLD.Web.Controllers
 				{
 					this.notifications.Add(new Notification
 					{
-						From = this.User.Identity.GetUserId(),
+						From = currentUserId,
 						To = e.ProposedBy,
 						IsRead = false,
 						Message = message
