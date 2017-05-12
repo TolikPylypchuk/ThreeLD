@@ -222,6 +222,7 @@
     <Content Include="Views\Admin\_Layout.cshtml" />
     <Content Include="Views\Admin\_ViewStart.cshtml" />
     <Content Include="Views\User\ViewNotifications.cshtml" />
+    <Content Include="Views\User\ViewPreferredEvents.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

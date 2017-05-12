@@ -328,15 +328,23 @@ namespace ThreeLD.Web.Controllers
 
 			var model = new ViewPreferencesModel
 			{
-				EventsByPreferences = new Dictionary<string, List<Event>>()
+				EventsByPreferences = new Dictionary<string, Dictionary<Event, bool>>()
 			};
 
 			foreach (var preference in currentUserPreferences)
 			{
 				var eventsByPreference = approvedEvents.Where(
-					e => e.Category == preference.Category).ToList();
+					e => e.Category == preference.Category);
+
+                var eventsDict = new Dictionary<Event, bool>();
+                
+                foreach (var e in eventsByPreference)
+                {
+                    eventsDict.Add(e, currentUser.BookmarkedEvents.Any(ev => ev.Id == e.Id));
+                }
+
 				model.EventsByPreferences.Add(
-					preference.Category, eventsByPreference);
+					preference.Category, eventsDict);
 			}
 
 			return this.View(model);
