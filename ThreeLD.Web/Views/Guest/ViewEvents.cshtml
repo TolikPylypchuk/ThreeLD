@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ThreeLD.DB.Models.Event>
+﻿@model ThreeLD.Web.Models.ViewModels.FilterEventsModel
 
 @{
     ViewBag.Title = "View Events";
@@ -6,6 +6,22 @@
 
 <h1>Events</h1>
 
+<form method="post" action="/Guest/ViewEvents">
+    <table class="table table-bordered table-striped">
+        <tbody>
+            @foreach (var i in Model.Categories)
+            {
+                <tr>
+                    <td>@i.Key</td>
+                    <td><input type="checkbox" name="categories" checked="@i.Value" value="@i.Key" /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <input type="submit" value="Filter" />
+    <br />
+</form>
+<br />
 <table class="table table-bordered table-striped">
 	<thead>
 		<tr>
@@ -19,7 +35,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach (var e in Model)
+		@foreach (var e in Model.Events)
 		{
 			<tr>
 				<td>@e.Name</td>
@@ -33,4 +49,3 @@
 		}
 	</tbody>
 </table>
-

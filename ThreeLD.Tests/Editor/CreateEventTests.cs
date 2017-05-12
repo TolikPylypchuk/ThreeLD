@@ -19,6 +19,7 @@ namespace ThreeLD.Tests.Editor
 	[TestClass]
 	[SuppressMessage("ReSharper", "ImplicitlyCapturedClosure")]
 	[SuppressMessage("ReSharper", "UnusedVariable")]
+	[SuppressMessage("ReSharper", "InconsistentNaming")]
 	public class CreateEventTests
 	{
 		private Mock<IPrincipal> mockPrincipal;
@@ -34,7 +35,7 @@ namespace ThreeLD.Tests.Editor
 				ClaimTypes.NameIdentifier, userId);
 			identity.AddClaim(nameIdentifierClaim);
 
-			this.mockPrincipal.Setup(x => x.Identity)
+			this.mockPrincipal.Setup(p => p.Identity)
 				.Returns(identity);
 		}
 
@@ -80,7 +81,7 @@ namespace ThreeLD.Tests.Editor
 			mockEvents.Verify(repo => repo.Save(), Times.Once());
 
 			Assert.AreSame(eventToAdd, addedEvent);
-			Assert.AreEqual(userId, addedEvent.CreatedBy);
+			Assert.AreEqual(userId, addedEvent?.CreatedBy);
 		}
 
 		[TestMethod]

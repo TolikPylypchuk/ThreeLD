@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using Moq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Moq;
 
 using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;

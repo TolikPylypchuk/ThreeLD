@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-
+using System.Security.Claims;
+using System.Security.Principal;
+using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Moq;
@@ -15,8 +17,26 @@ namespace ThreeLD.Tests.Editor
 {
 	[TestClass]
 	[SuppressMessage("ReSharper", "UnusedVariable")]
+	[SuppressMessage("ReSharper", "InconsistentNaming")]
 	public class ProposedEventsTests
 	{
+		private Mock<IPrincipal> mockPrincipal;
+		private const string userId = "a";
+
+		[TestInitialize]
+		public void Init()
+		{
+			this.mockPrincipal = new Mock<IPrincipal>();
+			var identity = new GenericIdentity(userId);
+
+			var nameIdentifierClaim = new Claim(
+				ClaimTypes.NameIdentifier, userId);
+			identity.AddClaim(nameIdentifierClaim);
+
+			this.mockPrincipal.Setup(p => p.Identity)
+				.Returns(identity);
+		}
+		
 		[TestMethod]
 		public void ViewProposedEventsTest()
 		{
@@ -48,10 +68,11 @@ namespace ThreeLD.Tests.Editor
 				}
 			};
 
-			var mock = new Mock<IRepository<Event>>();
-			mock.Setup(repo => repo.GetAll()).Returns(events.AsQueryable());
+			var mockEvents = new Mock<IRepository<Event>>();
+			mockEvents.Setup(repo => repo.GetAll())
+				.Returns(events.AsQueryable());
 
-			var controller = new EditorController(mock.Object, null);
+			var controller = new EditorController(mockEvents.Object, null);
 
 			var result = controller.ViewProposedEvents();
 
@@ -62,7 +83,7 @@ namespace ThreeLD.Tests.Editor
 			Assert.AreEqual(1, model.Count);
 			Assert.AreEqual(2, model[0].Id);
 
-			mock.Verify(repo => repo.GetAll(), Times.Once());
+			mockEvents.Verify(repo => repo.GetAll(), Times.Once());
 		}
 
 		[TestMethod]
@@ -83,11 +104,21 @@ namespace ThreeLD.Tests.Editor
 				IsApproved = false
 			};
 
-			var mock = new Mock<IRepository<Event>>();
-			mock.Setup(repo => repo.GetById(id)).Returns(eventToApprove);
-			mock.Setup(repo => repo.Save()).Returns(1);
+			var mockEvents = new Mock<IRepository<Event>>();
+			mockEvents.Setup(repo => repo.GetById(id)).Returns(eventToApprove);
+			mockEvents.Setup(repo => repo.Save()).Returns(1);
 
-			var controller = new EditorController(mock.Object, null);
+			var mockNotifications = new Mock<IRepository<Notification>>();
+
+			var mockContext = new Mock<ControllerContext>();
+			mockContext.SetupGet(c => c.HttpContext.User)
+				.Returns(this.mockPrincipal.Object);
+
+			var controller = new EditorController(
+				mockEvents.Object, mockNotifications.Object)
+			{
+				ControllerContext = mockContext.Object
+			};
 
 			var result = controller.ApproveEvent(id);
 
@@ -96,9 +127,9 @@ namespace ThreeLD.Tests.Editor
 			Assert.IsNotNull(controller.TempData["message"]);
 			Assert.IsNull(controller.TempData["error"]);
 
-			mock.Verify(repo => repo.GetById(id), Times.Once());
-			mock.Verify(repo => repo.Update(eventToApprove), Times.Once());
-			mock.Verify(repo => repo.Save(), Times.Once());
+			mockEvents.Verify(repo => repo.GetById(id), Times.Once());
+			mockEvents.Verify(repo => repo.Update(eventToApprove), Times.Once());
+			mockEvents.Verify(repo => repo.Save(), Times.Once());
 		}
 
 		[TestMethod]
@@ -106,18 +137,18 @@ namespace ThreeLD.Tests.Editor
 		{
 			const int id = 1;
 
-			var mock = new Mock<IRepository<Event>>();
-			mock.Setup(repo => repo.GetById(id)).Returns((Event)null);
+			var mockEvents = new Mock<IRepository<Event>>();
+			mockEvents.Setup(repo => repo.GetById(id)).Returns((Event)null);
 
-			var controller = new EditorController(mock.Object, null);
+			var controller = new EditorController(mockEvents.Object, null);
 
 			var result = controller.ApproveEvent(id);
 
 			Assert.IsNull(controller.TempData["message"]);
 			Assert.IsNotNull(controller.TempData["error"]);
 
-			mock.Verify(repo => repo.GetById(id), Times.Once());
-			mock.Verify(repo => repo.Save(), Times.Never());
+			mockEvents.Verify(repo => repo.GetById(id), Times.Once());
+			mockEvents.Verify(repo => repo.Save(), Times.Never());
 		}
 	}
 }
