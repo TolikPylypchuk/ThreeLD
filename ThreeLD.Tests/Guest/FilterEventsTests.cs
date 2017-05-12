@@ -32,7 +32,7 @@ namespace ThreeLD.Tests.Guest
         */
 
         [TestMethod]
-        public void FilterEventsPostTest()
+        public void FilterEventsTest()
         {
 
         }

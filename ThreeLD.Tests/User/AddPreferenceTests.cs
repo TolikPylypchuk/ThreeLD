@@ -52,7 +52,7 @@ namespace ThreeLD.Tests.User
                 .Returns(this.mockPrincipal.Object);
 
             var controller =
-                new UserController(mockRepository.Object, null)
+                new UserController(mockRepository.Object, null, null)
                 {
                     ControllerContext = controllerContext.Object
                 };
@@ -104,7 +104,7 @@ namespace ThreeLD.Tests.User
                 .Returns(this.mockPrincipal.Object);
 
             var controller =
-                new UserController(mockRepository.Object, null)
+                new UserController(mockRepository.Object, null, null)
                 {
                     ControllerContext = controllerContext.Object
                 };
@@ -160,7 +160,7 @@ namespace ThreeLD.Tests.User
                 .Returns(this.mockPrincipal.Object);
 
             var controller =
-                new UserController(mockRepository.Object, null)
+                new UserController(mockRepository.Object, null, null)
                 {
                     ControllerContext = controllerContext.Object
                 };

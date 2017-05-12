@@ -13,7 +13,7 @@ namespace ThreeLD.Tests.User
         [TestMethod]
         public void ProposeEventGetTest()
         {
-            UserController controller = new UserController(null, null);
+            UserController controller = new UserController(null, null, null);
             ViewResult result = controller.ProposeEvent();
 
             Assert.IsNotNull(result.Model);

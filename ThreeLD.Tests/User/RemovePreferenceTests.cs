@@ -41,7 +41,7 @@ namespace ThreeLD.Tests.User
 			var controllerContext = new Mock<ControllerContext>();
 
 			var controller =
-				new UserController(mockRepository.Object, null)
+				new UserController(mockRepository.Object, null, null)
 				{
 					ControllerContext = controllerContext.Object
 				};
@@ -87,7 +87,7 @@ namespace ThreeLD.Tests.User
 			var controllerContext = new Mock<ControllerContext>();
 
 			var controller =
-				new UserController(mockRepository.Object, null)
+				new UserController(mockRepository.Object, null, null)
 				{
 					ControllerContext = controllerContext.Object
 				};
