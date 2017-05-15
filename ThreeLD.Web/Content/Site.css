@@ -15,9 +15,23 @@
 input,
 select,
 textarea {
-    max-width: 280px;
+    width: 250px;
+    border-radius: 4px;
+    height: 35px;
+    border: 2px solid papayawhip;
 }
 
-h1 {
+    h1 {
 color: darkred;
+}
+
+table {
+    border-collapse: collapse;
+    border: 1px solid darkred;
+}
+.form-group {
+    width: 255px;
+    border: 2px solid darkred;
+    border-radius: 4px;
+    height: 39px;
 }

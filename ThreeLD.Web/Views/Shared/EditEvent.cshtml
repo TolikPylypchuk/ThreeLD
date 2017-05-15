@@ -7,42 +7,42 @@
 	ViewBag.Title = $"{ViewBag.Action} an Event";
 }
 
-<h2>@ViewBag.Action an Event</h2>
+<h1>@ViewBag.Action an Event</h1>
 
 <div>
 	@Html.ValidationSummary(false)
 
 	@using (Html.BeginForm())
-	{
+    {
+        <label>Name:</label>
 		<div class="form-group">
-			<label>Name:</label>
 			@Html.TextBoxFor(m => m.Name)
 		</div>
+        <label>Date and Time: </label>
 		<div class="form-group">
-			<label>Date and Time: </label>
 			@Html.TextBoxFor(
 				m => m.DateTime,
 				"{0:yyyy-MM-ddTHH\\:mm\\:ss}",
 				new {type = "datetime-local"})
 		</div>
+        <label>Duration: </label>
 		<div class="form-group">
-			<label>Duration: </label>
 			@Html.TextBoxFor(m => m.Duration, "{0:hh\\:mm}")
 		</div>
+        <label>Address: </label>
 		<div class="form-group">
-			<label>Address: </label>
 			@Html.TextBoxFor(m => m.Address)
 		</div>
+        <label>URL: </label>
 		<div class="form-group">
-			<label>URL: </label>
 			@Html.TextBoxFor(m => m.Url)
 		</div>
+        <label>Description: </label>
 		<div class="form-group">
-			<label>Description: </label>
 			@Html.TextBoxFor(m => m.Description)
 		</div>
+        <label>Categories: </label>
 		<div class="form-group">
-			<label>Categories: </label>
 			@Html.TextBoxFor(m => m.Category)
 		</div>
 
