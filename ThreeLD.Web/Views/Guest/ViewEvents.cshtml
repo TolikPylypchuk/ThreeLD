@@ -4,48 +4,54 @@
     ViewBag.Title = "View Events";
 }
 
-<h1>Events</h1>
-
-<form method="post" action="/Guest/ViewEvents">
-    <table class="table table-bordered">
-        <tbody>
-            @foreach (var i in Model.Categories)
+<div class="header">
+    <h1>Events</h1>
+</div>
+<div class="row">
+    <div class="col-3 menu">
+        <form method="post" action="/Guest/ViewEvents">
+            <table class="table table-bordered">
+                <tbody>
+                    @foreach (var i in Model.Categories)
             {
+                        <tr>
+                            <td>@i.Key</td>
+                            <td><input type="checkbox" name="categories" checked="@i.Value" value="@i.Key" /></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+    </div>
+
+    <div class="col-9">
+        <table class="table table-bordered">
+            <thead>
                 <tr>
-                    <td>@i.Key</td>
-                    <td><input type="checkbox" name="categories" checked="@i.Value" value="@i.Key" /></td>
+                    <th>Name</th>
+                    <th>Date and Time</th>
+                    <th>Duration</th>
+                    <th>Address</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>URL</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-    <input type="submit" value="Filter" />
-    <br />
-</form>
-<br />
-<table class="table table-bordered">
-	<thead>
-		<tr>
-			<th>Name</th>
-			<th>Date and Time</th>
-			<th>Duration</th>
-			<th>Address</th>
-			<th>Description</th>
-			<th>Category</th>
-			<th>URL</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var e in Model.Events)
-		{
-			<tr>
-				<td>@e.Name</td>
-				<td>@e.DateTime</td>
-				<td>@e.Duration</td>
-				<td>@e.Address</td>
-				<td>@e.Description</td>
-				<td>@e.Category</td>
-				<td><a href="@e.Url" class="btn btn-link">Link</a></td>
-			</tr>
-		}
-	</tbody>
-</table>
+            </thead>
+            <tbody>
+                @foreach (var e in Model.Events)
+                {
+                    <tr>
+                        <td>@e.Name</td>
+                        <td>@e.DateTime</td>
+                        <td>@e.Duration</td>
+                        <td>@e.Address</td>
+                        <td>@e.Description</td>
+                        <td>@e.Category</td>
+                        <td><a href="@e.Url" class="btn btn-link">Link</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

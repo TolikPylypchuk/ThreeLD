@@ -31,18 +31,28 @@
 				<td>@e.Description</td>
 				<td>@e.Category</td>
 				<td><a href="@e.Url" class="btn btn-link">Link</a></td>
-				<td>
-				@using (Html.BeginForm("ApproveEvent", "Editor"))
-				{
-					@Html.Hidden("id", e.Id)
-					<button type="submit" class="btn btn-success">Approve</button>
-				}
-				@using (Html.BeginForm("DeleteEvent", "Editor"))
-				{
-					@Html.Hidden("id", e.Id)
-					<button type="submit" class="btn btn-danger">Delete</button>
-				}
-				</td>
+                <td>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            @using (Html.BeginForm("ApproveEvent", "Editor"))
+                            {
+                                @Html.Hidden("id", e.Id)
+                                <button type="submit" class="btn btn-link">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                </button>
+                            }
+                            </div>
+                          <div class="col-xs-4">
+                            @using (Html.BeginForm("DeleteEvent", "Editor"))
+                            {
+                                @Html.Hidden("id", e.Id)
+                                <button type="submit" class="btn btn-link">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            }
+                        </div>
+                        </div>
+                </td>
 			</tr>
 		}
 		</tbody>

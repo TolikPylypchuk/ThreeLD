@@ -38,7 +38,7 @@
 					            using (Html.BeginForm(
 						            "AddBookmark", "User", new { eventId = e.Key.Id }))
 					            {
-						            <button type="submit" class="btn btn-info">
+						            <button type="submit" class="btn btn-link">
 							            <span class="glyphicon glyphicon-heart"></span>
 						            </button>
 					            }
@@ -47,7 +47,7 @@
 					            using (Html.BeginForm(
 						            "RemoveBookmark", "User", new { eventId = e.Key.Id }))
 					            {
-						            <button type="submit" class="btn btn-info">
+						            <button type="submit" class="btn btn-link">
 							            <span class="glyphicon glyphicon-heart-empty"></span>
 						            </button>
 					            }
@@ -57,7 +57,7 @@
 				            @using (Html.BeginForm(
 					            "DeleteEvent", "Editor", new { id = e.Key.Id }))
 				            {
-					            <button type="submit" class="btn btn-danger">
+					            <button type="submit" class="btn btn-link">
 						            <span class="glyphicon glyphicon-remove"></span>
 					            </button>
 				            }

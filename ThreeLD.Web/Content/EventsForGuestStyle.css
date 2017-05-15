@@ -6,7 +6,6 @@
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-    
     padding-left: 15px;
     padding-right: 15px;
 }
@@ -15,37 +14,33 @@
 input,
 select,
 textarea {
-    width: 250px;
-    border-radius: 4px;
-    height: 35px;
+    width: 100px;
+    border-radius: 3px;
+    height: 15px;
 }
 
 h1 {
     color: #ff6600;
 }
-
-.form-group {
-    width: 250px;
-    border-radius: 4px;
-    height: 35px;
+.header {
+    padding: 15px;
 }
+
 .row::after {
     content: "";
     clear: both;
     display: table;
 }
-
 [class*="col-"] {
     float: left;
     padding: 15px;
 }
 
 .col-3 {
-    width: 50%;
+    width: 25%;
 }
 
 .col-9 {
-    width: 50%;
+    width: 75%;
 }
-
 
