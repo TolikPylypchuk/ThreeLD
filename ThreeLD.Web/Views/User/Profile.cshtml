@@ -1,126 +1,127 @@
 ﻿@model ThreeLD.Web.Models.ViewModels.ProfileViewModel
 
 @{
-    ViewBag.Title = "Account Info";
+	ViewBag.Title = "Account Info";
 }
 <div class="header">
-    <h1>Profile</h1>
+	<h1>Profile</h1>
 
-    <div class="panel-body">
-        <div>
-            <table class="table table-bordered">
-                <tbody>
-                    <tr>
-                        <th>User Name</th>
-                        <td>@Model.User.UserName</td>
-                    </tr>
-                    <tr>
-                        <th>First Name</th>
-                        <td>@Model.User.FirstName</td>
-                    </tr>
-                    <tr>
-                        <th> Last Name</th>
-                        <td>@Model.User.LastName</td>
-                    </tr>
-                    <tr>
-                        <th>Email</th>
-                        <td>@Model.User.Email</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+	<div class="panel-body">
+		<div>
+			<table class="table table-bordered">
+				<tbody>
+					<tr>
+						<th>User Name</th>
+						<td>@Model.User.UserName</td>
+					</tr>
+					<tr>
+						<th>First Name</th>
+						<td>@Model.User.FirstName</td>
+					</tr>
+					<tr>
+						<th> Last Name</th>
+						<td>@Model.User.LastName</td>
+					</tr>
+					<tr>
+						<th>Email</th>
+						<td>@Model.User.Email</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 </div>
 
 <div class="row">
-    <div class="col-3 menu">
-        <h1>Preferences</h1>
+	<div class="col-3 menu">
+		<h1>Preferences</h1>
 
-        @if (!Model.User.Preferences.Any())
-        {
-            <p>You don't have any preferences.</p>
-        }
+		@if (!Model.User.Preferences.Any())
+		{
+			<p>You don't have any preferences.</p>
+		}
 
-        <table class="table table-bordered">
-            <tbody>
-                @foreach (var p in Model.User.Preferences)
-            {
-                    <tr>
-                        <td>
-                            @p.Category
-                        </td>
-                        <td>
-                            @using (Html.BeginForm(
-"RemovePreference", "User", new { id = p.Id }))
-                            {
-                                <button type="submit" class="btn btn-link">
-                                    <span class="glyphicon glyphicon-remove">
-                                    </span>
-                                </button>
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+		<table class="table table-bordered">
+			<tbody>
+			@foreach (var p in Model.User.Preferences)
+			{
+				<tr>
+					<td>
+						@p.Category
+					</td>
+					<td>
+						@using (Html.BeginForm(
+							"RemovePreference", "User", new { id = p.Id }))
+						{
+							<button type="submit" class="btn btn-link">
+								<span class="glyphicon glyphicon-remove">
+								</span>
+							</button>
+						}
+					</td>
+				</tr>
+			}
+			</tbody>
+		</table>
 
-        @using (Html.BeginForm("AddPreference", "User"))
-        {
-            <div class="form-group">
-                @if (Model.Categories.Any())
-                {
-                    @Html.DropDownListFor(
-                m => m.SelectedCategory,
-                Model.Categories.Select(c => new SelectListItem
-                {
-                    Text = c,
-                    Value = c
-                }),
-                "Choose category...",
-                new { @class = "form-control" })
-                    <button type="submit" class="btn btn-link">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </button>
-                }
-                else
-                {
-                    <p>You prefer every category out there.</p>
-                }
-            </div>
-        }
-        <br>
-        </div>
+		@using (Html.BeginForm("AddPreference", "User"))
+		{
+			<div class="form-group">
+				@if (Model.Categories.Any())
+				{
+					@Html.DropDownListFor(
+						m => m.SelectedCategory,
+						Model.Categories.Select(c => new SelectListItem
+						{
+							Text = c,
+							Value = c
+						}),
+						"Choose category...",
+						new { @class = "form-control" })
+					<button type="submit" class="btn btn-link">
+						<span class="glyphicon glyphicon-plus"></span>
+					</button>
+				}
+				else
+				{
+					<p>You prefer every category out there.</p>
+				}
+			</div>
+		}
+		<br />
+	</div>
 
-    <div class="col-9">
-        <h1>Bookmarks</h1>
+	<div class="col-9">
+		<h1>Bookmarks</h1>
 
-        @if (!Model.User.BookmarkedEvents.Any())
-        {
-            <p>You don't have any bookmarks.</p>
-        }
+		@if (!Model.User.BookmarkedEvents.Any())
+		{
+			<p>You don't have any bookmarks.</p>
+		}
 
-        <table class="table table-bordered">
-            <tbody>
-                @foreach (var e in Model.User.BookmarkedEvents)
-            {
-                    <tr>
-                        <td>
-                            <a class="btn btn-link" href="@e.Url">@e.Name</a>
-                        </td>
-                        <td>
-                            @using (Html.BeginForm(
-"RemoveBookmark",
-"User",
-new { eventId = e.Id, returnURL = ViewBag.ReturnURL }))
-                            {
-                                <button type="submit" class="btn btn-link">
-                                    <span class="glyphicon glyphicon-remove">
-                                    </span>
-                                </button>
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+		<table class="table table-bordered">
+			<tbody>
+			@foreach (var e in Model.User.BookmarkedEvents)
+			{
+				<tr>
+					<td>
+						<a class="btn btn-link" href="@e.Url">@e.Name</a>
+					</td>
+					<td>
+						@using (Html.BeginForm(
+							"RemoveBookmark",
+							"User",
+							new { eventId = e.Id, returnURL = ViewBag.ReturnURL }))
+						{
+							<button type="submit" class="btn btn-link">
+								<span class="glyphicon glyphicon-remove">
+								</span>
+							</button>
+						}
+					</td>
+				</tr>
+			}
+			</tbody>
+		</table>
+	</div>
+</div>
