@@ -1,15 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using ThreeLD.DB.Properties;
+
 namespace ThreeLD.DB.Models
 {
 	[Table(nameof(AppDbContext.Preferences))]
 	public class Preference : EntityBase
 	{
-		[Required(ErrorMessage = "Specify the user.")]
 		public string UserId { get; set; }
 
-		[Required(ErrorMessage = "The category of the preference is required.")]
+		[Display(
+			Name = "PreferenceCategoryDisplayName",
+			ResourceType = typeof(Resources))]
+		[Required(
+			ErrorMessageResourceName = "PreferenceCategoryRequired",
+			ErrorMessageResourceType = typeof(Resources))]
 		public string Category { get; set; }
 
 		[ForeignKey(nameof(UserId))]

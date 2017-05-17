@@ -1,15 +1,40 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+
 using Microsoft.AspNet.Identity.EntityFramework;
+
+using ThreeLD.DB.Properties;
 
 namespace ThreeLD.DB.Models
 {
 	public class User : IdentityUser
 	{
-		[Required(ErrorMessage = "The first name of the user is required.")]
+		[Display(
+			Name = "UserUserNameDisplayName",
+			ResourceType = typeof(Resources))]
+		[Required(
+			ErrorMessageResourceName = "UserUserNameRequired",
+			ErrorMessageResourceType = typeof(Resources))]
+		public override string UserName
+		{
+			get => base.UserName;
+			set => base.UserName = value;
+		}
+		
+		[Display(
+			Name = "UserFirstNameDisplayName",
+			ResourceType = typeof(Resources))]
+		[Required(
+			ErrorMessageResourceName = "UserFirstNameRequired",
+			ErrorMessageResourceType = typeof(Resources))]
 		public string FirstName { get; set; }
 
-		[Required(ErrorMessage = "The last name of the user is required.")]
+		[Display(
+			Name = "UserLastNameDisplayName",
+			ResourceType = typeof(Resources))]
+		[Required(
+			ErrorMessageResourceName = "UserLastNameRequired",
+			ErrorMessageResourceType = typeof(Resources))]
 		public string LastName { get; set; }
 
 		public virtual ICollection<Event> BookmarkedEvents { get; set; } =

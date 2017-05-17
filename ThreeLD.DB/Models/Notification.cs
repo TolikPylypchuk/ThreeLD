@@ -2,21 +2,25 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using ThreeLD.DB.Properties;
+
 namespace ThreeLD.DB.Models
 {
     [Table(nameof(AppDbContext.Notifications))]
     public class Notification : EntityBase
     {
-        [Required(ErrorMessage = "The message of the notication is required.")]
+		[Display(
+			Name = "NotificationMessageDisplayName",
+			ResourceType = typeof(Resources))]
+		[Required(
+			ErrorMessageResourceName = "NotificationMessageRequired",
+			ErrorMessageResourceType = typeof(Resources))]
         public string Message { get; set; }
 
         [DefaultValue(false)]
         public bool IsRead { get; set; }
-
-        [Required(ErrorMessage = "Specify the editor.")]
+		
         public string From { get; set; }
-
-        [Required(ErrorMessage = "Specify the user.")]
         public string To { get; set; }
 
         [ForeignKey(nameof(From))]

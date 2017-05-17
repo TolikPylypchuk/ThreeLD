@@ -1,8 +1,7 @@
+using System.Data.Entity.Migrations;
+
 namespace ThreeLD.DB.Migrations
 {
-    using System;
-    using System.Data.Entity.Migrations;
-    
     public partial class CreatedByAndProposedByFieldsAdded : DbMigration
     {
         public override void Up()

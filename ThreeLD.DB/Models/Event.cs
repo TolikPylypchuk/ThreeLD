@@ -4,31 +4,71 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using ThreeLD.DB.Properties;
+
 namespace ThreeLD.DB.Models
 {
     [Table(nameof(AppDbContext.Events))]
     public class Event : EntityBase
     {
-        [Required(ErrorMessage = "The name of the event is required.")]
-        public string Name { get; set; }
+		[Display(
+			Name = "EventNameDisplayName",
+			ResourceType = typeof(Resources))]
+        [Required(
+			ErrorMessageResourceName = "EventNameRequired",
+			ErrorMessageResourceType = typeof(Resources))]
+		public string Name { get; set; }
 
-        [Required(ErrorMessage = "The date and time of the event is required.")]
+		[Display(
+			Name = "EventDateTimeDisplayName",
+			ResourceType = typeof(Resources))]
+		[DisplayFormat(
+			DataFormatString = "{0:yyyy-MM-ddTHH\\:mm\\:ss}",
+			ApplyFormatInEditMode = true)]
+		[Required(
+			ErrorMessageResourceName = "EventDateTimeRequired",
+			ErrorMessageResourceType = typeof(Resources))]
         public DateTime DateTime { get; set; }
 
-        [Required(ErrorMessage = "The duration of the event is required.")]
+		[Display(
+			Name = "EventDurationDisplayName",
+			ResourceType = typeof(Resources))]
+		[DisplayFormat(
+			DataFormatString = "{0:hh\\:mm}",
+			ApplyFormatInEditMode = true)]
+		[Required(
+			ErrorMessageResourceName = "EventDurationRequired",
+			ErrorMessageResourceType = typeof(Resources))]
         public TimeSpan Duration { get; set; }
 
-        [Required(ErrorMessage = "The address of the event is required.")]
+		[Display(
+			Name = "EventAddressDisplayName",
+			ResourceType = typeof(Resources))]
+		[Required(
+			ErrorMessageResourceName = "EventAddressRequired",
+			ErrorMessageResourceType = typeof(Resources))]
         public string Address { get; set; }
 
         [Url]
-        [Required(ErrorMessage = "The URL of the event is required.")]
-        public string Url { get; set; }
+		[Display(
+			Name = "EventUrlDisplayName",
+			ResourceType = typeof(Resources))]
+		public string Url { get; set; }
 
-        [Required(ErrorMessage = "The description of the event is required.")]
+		[Display(
+			Name = "EventDescriptionDisplayName",
+			ResourceType = typeof(Resources))]
+		[Required(
+			ErrorMessageResourceName = "EventDescriptionRequired",
+			ErrorMessageResourceType = typeof(Resources))]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "The category of the event is required.")]
+		[Display(
+			Name = "EventCategoryDisplayName",
+			ResourceType = typeof(Resources))]
+		[Required(
+			ErrorMessageResourceName = "EventCategoryRequired",
+			ErrorMessageResourceType = typeof(Resources))]
         public string Category { get; set; }
 
         [DefaultValue(true)]

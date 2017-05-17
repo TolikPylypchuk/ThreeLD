@@ -14,35 +14,34 @@
 
 	@using (Html.BeginForm())
     {
-        <label>Name:</label>
 		<div class="form-group">
+			@Html.LabelFor(m => m.Name):
 			@Html.TextBoxFor(m => m.Name)
 		</div>
-        <label>Date and Time: </label>
 		<div class="form-group">
+			@Html.LabelFor(m => m.DateTime):
 			@Html.TextBoxFor(
 				m => m.DateTime,
-				"{0:yyyy-MM-ddTHH\\:mm\\:ss}",
 				new {type = "datetime-local"})
 		</div>
-        <label>Duration: </label>
 		<div class="form-group">
-			@Html.TextBoxFor(m => m.Duration, "{0:hh\\:mm}")
+			@Html.LabelFor(m => m.Duration):
+			@Html.TextBoxFor(m => m.Duration)
 		</div>
-        <label>Address: </label>
 		<div class="form-group">
+			@Html.LabelFor(m => m.Address):
 			@Html.TextBoxFor(m => m.Address)
 		</div>
-        <label>URL: </label>
 		<div class="form-group">
+			@Html.LabelFor(m => m.Url):
 			@Html.TextBoxFor(m => m.Url)
 		</div>
-        <label>Description: </label>
 		<div class="form-group">
+			@Html.LabelFor(m => m.Description):
 			@Html.TextBoxFor(m => m.Description)
 		</div>
-        <label>Categories: </label>
 		<div class="form-group">
+			@Html.LabelFor(m => m.Category):
 			@Html.TextBoxFor(m => m.Category)
 		</div>
 
