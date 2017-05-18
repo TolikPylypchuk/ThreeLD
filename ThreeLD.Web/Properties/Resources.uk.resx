@@ -1,101 +1,354 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-	<!-- 
-		Microsoft ResX Schema
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
 
-		Version 1.3
-
-		The primary goals of this format is to allow a simple XML format 
-		that is mostly human readable. The generation and parsing of the 
-		various data types are done through the TypeConverter classes 
-		associated with the data types.
-
-		Example:
-
-		... ado.net/XML headers & schema ...
-		<resheader name="resmimetype">text/microsoft-resx</resheader>
-		<resheader name="version">1.3</resheader>
-		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-		<data name="Name1">this is my long string</data>
-		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-			[base64 mime encoded serialized .NET Framework object]
-		</data>
-		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-			[base64 mime encoded string representing a byte array form of the .NET Framework object]
-		</data>
-
-		There are any number of "resheader" rows that contain simple 
-		name/value pairs.
-
-		Each data row contains a name, and value. The row also contains a 
-		type or mimetype. Type corresponds to a .NET class that support 
-		text/value conversion through the TypeConverter architecture. 
-		Classes that don't support this are serialized and stored with the 
-		mimetype set.
-
-		The mimetype is used for serialized objects, and tells the 
-		ResXResourceReader how to depersist the object. This is currently not 
-		extensible. For a given mimetype the value must be set accordingly:
-
-		Note - application/x-microsoft.net.object.binary.base64 is the format 
-		that the ResXResourceWriter will generate, however the reader can 
-		read any of the formats listed below.
-
-		mimetype: application/x-microsoft.net.object.binary.base64
-		value   : The object must be serialized with 
-			: System.Serialization.Formatters.Binary.BinaryFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.soap.base64
-		value   : The object must be serialized with 
-			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.bytearray.base64
-		value   : The object must be serialized into a byte array 
-			: using a System.ComponentModel.TypeConverter
-			: and then encoded with base64 encoding.
-	-->
-	
-	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-		<xsd:element name="root" msdata:IsDataSet="true">
-			<xsd:complexType>
-				<xsd:choice maxOccurs="unbounded">
-					<xsd:element name="data">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="resheader">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" />
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:choice>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:schema>
-	<resheader name="resmimetype">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="version">
-		<value>1.3</value>
-	</resheader>
-	<resheader name="reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ActionsText" xml:space="preserve">
+    <value>Дії</value>
+  </data>
+  <data name="AllPreferencesText" xml:space="preserve">
+    <value>Вам цікаві всі категорії.</value>
+  </data>
+  <data name="AssignEditorText" xml:space="preserve">
+    <value>Призначити редактора</value>
+  </data>
+  <data name="BookmarkDoesNotExistFormat" xml:space="preserve">
+    <value>Відмітка про подію {0} не існує.</value>
+  </data>
+  <data name="BookmarkRemovedFormat" xml:space="preserve">
+    <value>Відмітка про подію {0} видалена.</value>
+  </data>
+  <data name="BookmarksHeader" xml:space="preserve">
+    <value>Відмітки</value>
+  </data>
+  <data name="BookmarkText" xml:space="preserve">
+    <value>Відмітка</value>
+  </data>
+  <data name="CancelText" xml:space="preserve">
+    <value>Скасувати</value>
+  </data>
+  <data name="CategoryAlreadyPreferredFormat" xml:space="preserve">
+    <value>Категорія {0} вже позначена як цікава.</value>
+  </data>
+  <data name="ChooseCategory" xml:space="preserve">
+    <value>Виберіть категорію</value>
+  </data>
+  <data name="ChooseCategoryText" xml:space="preserve">
+    <value>Виберіть категорію...</value>
+  </data>
+  <data name="CreateEventText" xml:space="preserve">
+    <value>Створити подію</value>
+  </data>
+  <data name="CreateText" xml:space="preserve">
+    <value>Створити</value>
+  </data>
+  <data name="EditEventHeaderFormat" xml:space="preserve">
+    <value>{0} подію</value>
+  </data>
+  <data name="EditEventTitleFormat" xml:space="preserve">
+    <value>{0} подію</value>
+  </data>
+  <data name="EditText" xml:space="preserve">
+    <value>Редагувати</value>
+  </data>
+  <data name="ErrorText" xml:space="preserve">
+    <value>Щось не так. Спробуйте знову.</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Помилка</value>
+  </data>
+  <data name="EventAlreadyBookmarkedFormat" xml:space="preserve">
+    <value>{0} вже відзначена.</value>
+  </data>
+  <data name="EventApprovedFormat" xml:space="preserve">
+    <value>{0} підтверджена.</value>
+  </data>
+  <data name="EventBookmarkedFormat" xml:space="preserve">
+    <value>{0} відзначена.</value>
+  </data>
+  <data name="EventCreatedFormat" xml:space="preserve">
+    <value>{0} створена.</value>
+  </data>
+  <data name="EventDeletedFormat" xml:space="preserve">
+    <value>{0} видалена.</value>
+  </data>
+  <data name="EventDoesNotExist" xml:space="preserve">
+    <value>Зазначена подія не існує.</value>
+  </data>
+  <data name="EventUpdatedFormat" xml:space="preserve">
+    <value>{0} оновлена.</value>
+  </data>
+  <data name="LinkText" xml:space="preserve">
+    <value>Посилання</value>
+  </data>
+  <data name="LoginInvalid" xml:space="preserve">
+    <value>Неправильне ім'я або(і) пароль</value>
+  </data>
+  <data name="LoginPasswordDisplayName" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="LoginPasswordRequired" xml:space="preserve">
+    <value>Пароль є обов'язковий.</value>
+  </data>
+  <data name="LogInText" xml:space="preserve">
+    <value>Зайти</value>
+  </data>
+  <data name="LoginUserNameDisplayName" xml:space="preserve">
+    <value>Ім'я користувача</value>
+  </data>
+  <data name="LoginUserNameRequired" xml:space="preserve">
+    <value>Ім'я користувача є обов'язкове.</value>
+  </data>
+  <data name="LogOutText" xml:space="preserve">
+    <value>Вийти</value>
+  </data>
+  <data name="MyNotificationsText" xml:space="preserve">
+    <value>Мої сповіщення</value>
+  </data>
+  <data name="MyProfileText" xml:space="preserve">
+    <value>Мій профіль</value>
+  </data>
+  <data name="NoBookmarks" xml:space="preserve">
+    <value>У вас немає відміток.</value>
+  </data>
+  <data name="NoPreferencesText" xml:space="preserve">
+    <value>У вас немає вподобань.</value>
+  </data>
+  <data name="NotificationAlreadyRead" xml:space="preserve">
+    <value>Сповіщення вже позначено як прочитане.</value>
+  </data>
+  <data name="NotificationDoesNotExist" xml:space="preserve">
+    <value>Сповіщення не існує.</value>
+  </data>
+  <data name="NotificationRead" xml:space="preserve">
+    <value>Сповіщення позначено як прочитане.</value>
+  </data>
+  <data name="NotificationsCheckAll" xml:space="preserve">
+    <value>Позначити всі як прочитані.</value>
+  </data>
+  <data name="NoUserAccountsText" xml:space="preserve">
+    <value>Немає користувачів</value>
+  </data>
+  <data name="OKText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="PreferenceAdded" xml:space="preserve">
+    <value>Вподобання добавлене.</value>
+  </data>
+  <data name="PreferenceDoesNotExist" xml:space="preserve">
+    <value>Зазначене вподобання не існує.</value>
+  </data>
+  <data name="PreferenceRemoved" xml:space="preserve">
+    <value>Вподобання видалено.</value>
+  </data>
+  <data name="PreferencesHeader" xml:space="preserve">
+    <value>Вподобання</value>
+  </data>
+  <data name="ProfileHeader" xml:space="preserve">
+    <value>Профіль</value>
+  </data>
+  <data name="ProfileTitle" xml:space="preserve">
+    <value>Про мене</value>
+  </data>
+  <data name="ProposedEventsHeader" xml:space="preserve">
+    <value>Запропоновані події</value>
+  </data>
+  <data name="ProposedEventsTitle" xml:space="preserve">
+    <value>Запропоновані події</value>
+  </data>
+  <data name="ProposeEventText" xml:space="preserve">
+    <value>Запропонувати подію</value>
+  </data>
+  <data name="ProposeText" xml:space="preserve">
+    <value>Запропонувати</value>
+  </data>
+  <data name="SignUpEmailDisplayName" xml:space="preserve">
+    <value>Ел. пошта</value>
+  </data>
+  <data name="SignUpEmailInvalid" xml:space="preserve">
+    <value>Ел. пошта є неправильною.</value>
+  </data>
+  <data name="SignUpEmailRequired" xml:space="preserve">
+    <value>Ел. пошта є необхідною.</value>
+  </data>
+  <data name="SignUpFirstNameDisplayName" xml:space="preserve">
+    <value>Ім'я</value>
+  </data>
+  <data name="SignUpFirstNameRequired" xml:space="preserve">
+    <value>Ім'я є обов'язковим.</value>
+  </data>
+  <data name="SignUpLastNameDisplayName" xml:space="preserve">
+    <value>Прізвище</value>
+  </data>
+  <data name="SignUpLastNameRequired" xml:space="preserve">
+    <value>Прізвище є обов'язковим.</value>
+  </data>
+  <data name="SignUpPasswordDisplayName" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="SignUpPasswordRequired" xml:space="preserve">
+    <value>Пароль є обов'язковий.</value>
+  </data>
+  <data name="SignUpText" xml:space="preserve">
+    <value>Зареєструватися</value>
+  </data>
+  <data name="SignUpUserNameDisplayName" xml:space="preserve">
+    <value>Ім'я користувача</value>
+  </data>
+  <data name="SignUpUserNameRequired" xml:space="preserve">
+    <value>Ім'я користувача є обов'язковим.</value>
+  </data>
+  <data name="SubmitText" xml:space="preserve">
+    <value>Підтвердити</value>
+  </data>
+  <data name="UnassignEditorText" xml:space="preserve">
+    <value>Звільнити редактора</value>
+  </data>
+  <data name="UserNotFoundText" xml:space="preserve">
+    <value>Користувача не знайдено</value>
+  </data>
+  <data name="UsersHeader" xml:space="preserve">
+    <value>Аккаунти користувача</value>
+  </data>
+  <data name="UsersTitle" xml:space="preserve">
+    <value>Користувачі</value>
+  </data>
+  <data name="ViewEventsHeader" xml:space="preserve">
+    <value>Події</value>
+  </data>
+  <data name="ViewEventsTitle" xml:space="preserve">
+    <value>Події</value>
+  </data>
+  <data name="ViewNotificationsHeader" xml:space="preserve">
+    <value>Мої сповіщення</value>
+  </data>
+  <data name="ViewNotificationsTitle" xml:space="preserve">
+    <value>Мої сповіщення</value>
+  </data>
+  <data name="ViewPreferedEventsHeader" xml:space="preserve">
+    <value>Рекомендовані події</value>
+  </data>
+  <data name="ViewPreferedEventsTitle" xml:space="preserve">
+    <value>Рекомендовані події</value>
+  </data>
+  <data name="ViewPreferredEventsText" xml:space="preserve">
+    <value>Рекомендовані події</value>
+  </data>
+  <data name="ViewProposedEventsText" xml:space="preserve">
+    <value>Запропоновані події</value>
+  </data>
 </root>
