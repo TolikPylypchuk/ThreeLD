@@ -60,12 +60,27 @@ namespace ThreeLD.Web.Controllers
 							.Where(e => e.IsApproved)
 							.OrderBy(e => e.DateTime);
 
-			var currentUser =
+            var categories =
+                this.events.GetAll()
+                            .Where(e => e.IsApproved)
+                            .Select(e => e.Category)
+                            .Distinct()
+                            .ToList();
+
+            Dictionary<string, bool> dict = new Dictionary<string, bool>();
+
+            foreach (var i in categories)
+            {
+                dict.Add(i, true);
+            }
+
+            var currentUser =
 				this.UserManager.FindById(User.Identity.GetUserId());
 
 			var model = new ViewEventsUserModel()
 			{
-				Events = new Dictionary<Event, bool>()
+				Events = new Dictionary<Event, bool>(),
+                Categories = dict
 			};
 
 			currentUser.BookmarkedEvents.AsQueryable().Load();
@@ -79,7 +94,60 @@ namespace ThreeLD.Web.Controllers
 			return this.View(model);
 		}
 
-		[HttpGet]
+        private ViewResult ViewEvents(
+           string categories, DateTime? start, DateTime? end)
+        {
+            var categoriesArray = categories.Split(',');
+
+            var currentUser =
+                this.UserManager.FindById(User.Identity.GetUserId());
+            
+            var categoriesAll =
+                this.events.GetAll()
+                            .Where(e => e.IsApproved)
+                            .Select(e => e.Category)
+                            .Distinct()
+                            .ToList();
+
+            Dictionary<string, bool> dict = new Dictionary<string, bool>();
+
+            foreach (var i in categoriesAll)
+            {
+                dict.Add(i, categoriesArray.Contains(i));
+            }
+
+            var model = new ViewEventsUserModel()
+            {
+                Events = this.events.GetAll()
+                    .Where(e => e.IsApproved)
+                    .Where(e => categoriesArray.Contains(e.Category))
+                    .Where(e =>
+                        (start == null ||
+                         DateTime.Compare(e.DateTime, start.Value) >= 0) &&
+                        (end == null ||
+                         DateTime.Compare(e.DateTime, end.Value) <= 0))
+                    .ToDictionary(e => e, e => currentUser.BookmarkedEvents.Contains(e)),
+                Categories = dict
+            };
+
+            return this.View(nameof(this.ViewEvents), model);
+        }
+        [HttpPost]
+        public ViewResult ViewEvents(ICollection<string> categories)
+        {
+            string result = string.Empty;
+            if (categories != null)
+            {
+                foreach (string i in categories)
+                {
+                    result += i + ",";
+                }
+            }
+
+            return ViewEvents(result, null, null);
+        }
+
+        [HttpGet]
 		[Authorize(Roles = "User")]
 		public ViewResult ProposeEvent()
 		{
