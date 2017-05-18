@@ -71,7 +71,53 @@ namespace ThreeLD.Web.Controllers
 			return this.View(model);
 		}
 
-		[HttpGet]
+        private ViewResult ViewEvents(
+           string categories, DateTime? start, DateTime? end)
+        {
+            var result = new List<Event>();
+
+            var categoriesArray = categories.Split(',');
+
+            foreach (string category in categoriesArray)
+            {
+                var currentEvents = this.events.GetAll()
+                    .Where(e => e.IsApproved)
+                    .Where(e => e.Category == category)
+                    .Where(e =>
+                        (start == null ||
+                         DateTime.Compare(e.DateTime, start.Value) >= 0) &&
+                        (end == null ||
+                         DateTime.Compare(e.DateTime, end.Value) <= 0))
+                    .ToList();
+
+                result.AddRange(currentEvents);
+            }
+
+            var categoriesAll =
+                this.events.GetAll()
+                            .Where(e => e.IsApproved)
+                            .Select(e => e.Category)
+                            .Distinct()
+                            .ToList();
+
+            Dictionary<string, bool> dict = new Dictionary<string, bool>();
+
+            foreach (var i in categoriesAll)
+            {
+                dict.Add(i, categoriesArray.Contains(i));
+            }
+
+            var model = new FilterEventsModel()
+            {
+                Events = result,
+
+                Categories = dict
+            };
+
+            return this.View(nameof(this.ViewEvents), model);
+        }
+
+        [HttpGet]
 		[ExcludeFromCodeCoverage]
 		public ViewResult CreateEvent()
 		{
