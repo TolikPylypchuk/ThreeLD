@@ -20,7 +20,19 @@ namespace ThreeLD.DB.Models
 			get => base.UserName;
 			set => base.UserName = value;
 		}
-		
+
+		[Display(
+			Name = "UserEmailDisplayName",
+			ResourceType = typeof(Resources))]
+		[Required(
+			ErrorMessageResourceName = "UserEmailRequired",
+			ErrorMessageResourceType = typeof(Resources))]
+		public override string Email
+		{
+			get => base.UserName;
+			set => base.UserName = value;
+		}
+
 		[Display(
 			Name = "UserFirstNameDisplayName",
 			ResourceType = typeof(Resources))]

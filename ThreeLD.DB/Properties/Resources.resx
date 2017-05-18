@@ -177,6 +177,12 @@
   <data name="PreferenceCategoryRequired" xml:space="preserve">
     <value>The category of the preference is required.</value>
   </data>
+  <data name="UserEmailDisplayName" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="UserEmailRequired" xml:space="preserve">
+    <value>The email is required.</value>
+  </data>
   <data name="UserFirstNameDisplayName" xml:space="preserve">
     <value>First Name</value>
   </data>

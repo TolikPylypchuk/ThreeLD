@@ -241,6 +241,24 @@ namespace ThreeLD.DB.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        public static string UserEmailDisplayName {
+            get {
+                return ResourceManager.GetString("UserEmailDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The email is required..
+        /// </summary>
+        public static string UserEmailRequired {
+            get {
+                return ResourceManager.GetString("UserEmailRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to First Name.
         /// </summary>
         public static string UserFirstNameDisplayName {

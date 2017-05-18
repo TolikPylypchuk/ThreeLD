@@ -121,6 +121,10 @@
     <Compile Include="Migrations\201705171008230_Localization.Designer.cs">
       <DependentUpon>201705171008230_Localization.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705182259451_UserEmailOverride.cs" />
+    <Compile Include="Migrations\201705182259451_UserEmailOverride.Designer.cs">
+      <DependentUpon>201705182259451_UserEmailOverride.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppRole.cs" />
     <Compile Include="Models\EntityBase.cs" />
@@ -155,6 +159,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705171008230_Localization.resx">
       <DependentUpon>201705171008230_Localization.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705182259451_UserEmailOverride.resx">
+      <DependentUpon>201705182259451_UserEmailOverride.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

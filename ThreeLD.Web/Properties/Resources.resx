@@ -351,4 +351,16 @@
   <data name="ProposeText" xml:space="preserve">
     <value>Propose</value>
   </data>
+  <data name="LogInHeader" xml:space="preserve">
+    <value>Log In</value>
+  </data>
+  <data name="LogInTitle" xml:space="preserve">
+    <value>Log In</value>
+  </data>
+  <data name="SignUpHeader" xml:space="preserve">
+    <value>Sign Up</value>
+  </data>
+  <data name="SignUpTitle" xml:space="preserve">
+    <value>Sign Up</value>
+  </data>
 </root>

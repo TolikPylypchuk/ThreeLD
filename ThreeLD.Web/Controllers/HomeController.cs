@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Web;
 using System.Web.Mvc;
 
@@ -6,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 
 using ThreeLD.DB.Infrastructure;
+using ThreeLD.Web.Localization;
 
 namespace ThreeLD.Web.Controllers
 {
@@ -26,6 +28,17 @@ namespace ThreeLD.Web.Controllers
 			}
 
 			return this.RedirectToAction("ViewEvents", "Guest");
+		}
+		
+		public ActionResult ChangeLanguage(Language newLang, string returnUrl)
+		{
+			if (!String.IsNullOrEmpty(returnUrl) && returnUrl.Length >= 3)
+			{
+				returnUrl = returnUrl.Substring(3);
+			}
+
+			return this.Redirect(
+				$"/{newLang.ToString().ToLower()}/{returnUrl}");
 		}
 	}
 }

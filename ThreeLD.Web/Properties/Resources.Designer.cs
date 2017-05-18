@@ -295,6 +295,15 @@ namespace ThreeLD.Web.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Log In.
+        /// </summary>
+        public static string LogInHeader {
+            get {
+                return ResourceManager.GetString("LogInHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid name or password..
         /// </summary>
         public static string LoginInvalid {
@@ -327,6 +336,15 @@ namespace ThreeLD.Web.Properties {
         public static string LogInText {
             get {
                 return ResourceManager.GetString("LogInText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log In.
+        /// </summary>
+        public static string LogInTitle {
+            get {
+                return ResourceManager.GetString("LogInTitle", resourceCulture);
             }
         }
         
@@ -583,6 +601,15 @@ namespace ThreeLD.Web.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sign Up.
+        /// </summary>
+        public static string SignUpHeader {
+            get {
+                return ResourceManager.GetString("SignUpHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last Name.
         /// </summary>
         public static string SignUpLastNameDisplayName {
@@ -624,6 +651,15 @@ namespace ThreeLD.Web.Properties {
         public static string SignUpText {
             get {
                 return ResourceManager.GetString("SignUpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sign Up.
+        /// </summary>
+        public static string SignUpTitle {
+            get {
+                return ResourceManager.GetString("SignUpTitle", resourceCulture);
             }
         }
         

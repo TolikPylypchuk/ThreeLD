@@ -191,7 +191,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\IdentityHelpers.cs" />
+    <Compile Include="Localization\Language.cs" />
+    <Compile Include="Localization\LanguageConstraint.cs" />
+    <Compile Include="Localization\MultiLanguageMvcRouteHandler.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
+    <Compile Include="Localization\SingleLanguageMvcRouteHandler.cs" />
     <Compile Include="Models\ViewModels\AdminUsersModel.cs" />
     <Compile Include="Models\ViewModels\FilterEventsModel.cs" />
     <Compile Include="Models\ViewModels\NotificationsViewModel.cs" />

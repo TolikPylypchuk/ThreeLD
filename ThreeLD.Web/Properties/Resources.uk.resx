@@ -322,7 +322,7 @@
     <value>Користувача не знайдено</value>
   </data>
   <data name="UsersHeader" xml:space="preserve">
-    <value>Аккаунти користувача</value>
+    <value>Акаунти користувачів</value>
   </data>
   <data name="UsersTitle" xml:space="preserve">
     <value>Користувачі</value>
@@ -350,5 +350,17 @@
   </data>
   <data name="ViewProposedEventsText" xml:space="preserve">
     <value>Запропоновані події</value>
+  </data>
+  <data name="LogInHeader" xml:space="preserve">
+    <value>Вхід</value>
+  </data>
+  <data name="LogInTitle" xml:space="preserve">
+    <value>Вхід</value>
+  </data>
+  <data name="SignUpHeader" xml:space="preserve">
+    <value>Реєстрація</value>
+  </data>
+  <data name="SignUpTitle" xml:space="preserve">
+    <value>Реєстрація</value>
   </data>
 </root>

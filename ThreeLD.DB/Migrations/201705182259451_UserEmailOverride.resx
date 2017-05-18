@@ -117,88 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="EventAddressDisplayName" xml:space="preserve">
-    <value>Адреса</value>
+  <data name="Target" xml:space="preserve">
+    <value>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</value>
   </data>
-  <data name="EventAddressRequired" xml:space="preserve">
-    <value>Адреса є обов'язковою.</value>
-  </data>
-  <data name="EventCategoryDisplayName" xml:space="preserve">
-    <value>Категорія</value>
-  </data>
-  <data name="EventCategoryRequired" xml:space="preserve">
-    <value>Категорія є обов'язковою.</value>
-  </data>
-  <data name="EventDateTimeDisplayName" xml:space="preserve">
-    <value>Дата і час</value>
-  </data>
-  <data name="EventDateTimeInvalid" xml:space="preserve">
-    <value>Дата і час є неправильними.</value>
-  </data>
-  <data name="EventDateTimeRequired" xml:space="preserve">
-    <value>Дата і час є обов'язковими.</value>
-  </data>
-  <data name="EventDescriptionDisplayName" xml:space="preserve">
-    <value>Опис</value>
-  </data>
-  <data name="EventDescriptionRequired" xml:space="preserve">
-    <value>Опис є обов'язковим.</value>
-  </data>
-  <data name="EventDurationDisplayName" xml:space="preserve">
-    <value>Тривалість</value>
-  </data>
-  <data name="EventDurationInvalid" xml:space="preserve">
-    <value>Тривалість є неправильною.</value>
-  </data>
-  <data name="EventDurationRequired" xml:space="preserve">
-    <value>Тривалість є обов'язковою.</value>
-  </data>
-  <data name="EventNameDisplayName" xml:space="preserve">
-    <value>Назва</value>
-  </data>
-  <data name="EventNameRequired" xml:space="preserve">
-    <value>Назва є обов'язковою.</value>
-  </data>
-  <data name="EventUrlDisplayName" xml:space="preserve">
-    <value>URL</value>
-  </data>
-  <data name="EventUrlInvalid" xml:space="preserve">
-    <value>URL неправильна.</value>
-  </data>
-  <data name="NotificationMessageDisplayName" xml:space="preserve">
-    <value>Повідомлення</value>
-  </data>
-  <data name="NotificationMessageRequired" xml:space="preserve">
-    <value>Повідомлення є обов'язковим.</value>
-  </data>
-  <data name="PreferenceCategoryDisplayName" xml:space="preserve">
-    <value>Категорія</value>
-  </data>
-  <data name="PreferenceCategoryRequired" xml:space="preserve">
-    <value>Категорія є обов'язковою.</value>
-  </data>
-  <data name="UserEmailDisplayName" xml:space="preserve">
-    <value>Ел. пошта</value>
-  </data>
-  <data name="UserEmailRequired" xml:space="preserve">
-    <value>Ел. пошта є обов'язковою.</value>
-  </data>
-  <data name="UserFirstNameDisplayName" xml:space="preserve">
-    <value>Ім'я</value>
-  </data>
-  <data name="UserFirstNameRequired" xml:space="preserve">
-    <value>Ім'я є обовязкове.</value>
-  </data>
-  <data name="UserLastNameDisplayName" xml:space="preserve">
-    <value>Прізвище</value>
-  </data>
-  <data name="UserLastNameRequired" xml:space="preserve">
-    <value>Прізнище є обов'язкове.</value>
-  </data>
-  <data name="UserUserNameDisplayName" xml:space="preserve">
-    <value>Ім'я користувача</value>
-  </data>
-  <data name="UserUserNameRequired" xml:space="preserve">
-    <value>Ім'я користувача є обов'язкове.</value>
+  <data name="DefaultSchema" xml:space="preserve">
+    <value>dbo</value>
   </data>
 </root>

@@ -7,9 +7,9 @@
 
 	<title>@ViewBag.Title</title>
 
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/EventsForGuestStyle.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+	<link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<link href="~/Content/EventsForGuestStyle.css" rel="stylesheet" type="text/css" />
+	<link href="~/Content/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 </head>
 
 <body>
@@ -17,18 +17,44 @@
 		<div class="container">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle"
-				        data-toggle="collapse" data-target=".navbar-collapse">
+						data-toggle="collapse" data-target=".navbar-collapse">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-                <a href="@Url.Action("Index", "Home")" class="navbar-brand">
-                    <span><img src="~/Content/favicon.png" height="35" alt="Logo" /></span>
-                    <span>ThreeLD</span>
-                </a>
+				<a href="@Url.Action("Index", "Home")" class="navbar-brand">
+					<span>
+						<img src="~/Content/favicon.png" height="25" alt="Logo"/>
+					</span>
+					<span>ThreeLD</span>
+				</a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-right">
+					<li>
+						@Html.ActionLink(
+							"eng",
+							"ChangeLanguage",
+							"Home",
+							new
+							{
+								newLang = (int)Language.En,
+								returnUrl = Request.Url?.LocalPath
+							},
+							null)
+					</li>
+					<li>
+						@Html.ActionLink(
+							"укр",
+							"ChangeLanguage",
+							"Home",
+							new
+							{
+								newLang = (int)Language.Uk,
+								returnUrl = Request.Url?.LocalPath
+							},
+							null)
+					</li>
 					<li>
 						@Html.ActionLink(
 							Resources.LogInText,
