@@ -28,6 +28,10 @@ namespace ThreeLD.DB.Models
 		[Required(
 			ErrorMessageResourceName = "EventDateTimeRequired",
 			ErrorMessageResourceType = typeof(Resources))]
+		[DataType(
+			DataType.DateTime,
+			ErrorMessageResourceName = "EventDateTimeInvalid",
+			ErrorMessageResourceType = typeof(Resources))]
         public DateTime DateTime { get; set; }
 
 		[Display(
@@ -39,6 +43,10 @@ namespace ThreeLD.DB.Models
 		[Required(
 			ErrorMessageResourceName = "EventDurationRequired",
 			ErrorMessageResourceType = typeof(Resources))]
+		[DataType(
+			DataType.Duration,
+			ErrorMessageResourceName = "EventDurationInvalid",
+			ErrorMessageResourceType = typeof(Resources))]
         public TimeSpan Duration { get; set; }
 
 		[Display(
@@ -49,10 +57,12 @@ namespace ThreeLD.DB.Models
 			ErrorMessageResourceType = typeof(Resources))]
         public string Address { get; set; }
 
-        [Url]
-		[Display(
+        [Display(
 			Name = "EventUrlDisplayName",
 			ResourceType = typeof(Resources))]
+		[Url(
+			ErrorMessageResourceName = "EventUrlInvalid",
+			ErrorMessageResourceType = typeof(Resources))]
 		public string Url { get; set; }
 
 		[Display(

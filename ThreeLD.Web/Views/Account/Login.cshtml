@@ -1,4 +1,4 @@
-﻿@model ThreeLD.Web.Models.ViewModels.LoginModel
+﻿@model LoginModel
 
 @{
 	ViewBag.Title = "Log In";
@@ -11,20 +11,21 @@
 @using (Html.BeginForm(new { returnUrl = ViewBag.ReturnURL }))
 {
 	@Html.AntiForgeryToken()
+
 	<div class="form-group">
-		<label>User Name</label>
-		@Html.TextBoxFor(x => x.UserName, new { @class = "form-control" })
+		@Html.LabelFor(m => m.UserName):
+		@Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
 	</div>
     <br>
 	<div class="form-group">
-		<label>Password</label>
-		@Html.PasswordFor(x => x.Password, new { @class = "form-control" })
+		@Html.LabelFor(m => m.Password):
+		@Html.PasswordFor(m => m.Password, new { @class = "form-control" })
 	</div>
     <br>
-	<button class="btn btn-primary" type="submit">Log In</button>
+	<button class="btn btn-primary" type="submit">@Resources.LogInText</button>
 
 	@Html.ActionLink(
-		"Cancel",
+		Resources.CancelText,
 		"Index",
 		"Home",
 		null,

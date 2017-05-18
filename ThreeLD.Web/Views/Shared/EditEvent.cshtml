@@ -1,13 +1,14 @@
-﻿@model ThreeLD.DB.Models.Event
+﻿@model Event
 
 @{
     Layout = ViewBag.Role != null
         ? $"~/Views/{ViewBag.Role}/_Layout.cshtml"
         : "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = $"{ViewBag.Action} an Event";
+    ViewBag.Title = String.Format(
+		Resources.EditEventTitleFormat, ViewBag.Action);
 }
 
-<h1>@ViewBag.Action an Event</h1>
+<h1>@String.Format(Resources.EditEventTitleFormat, ViewBag.Action)</h1>
 
 <div>
 	@Html.ValidationSummary(false)
@@ -52,6 +53,8 @@
 			Html.HiddenFor(m => m.ProposedBy);
 		}
 
-		<button type="submit" class="btn btn-default">Submit</button>
+	    <button type="submit" class="btn btn-default">
+		    @Resources.SubmitText
+	    </button>
 	}
 </div>

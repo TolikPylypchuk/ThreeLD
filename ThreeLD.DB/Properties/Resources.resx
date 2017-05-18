@@ -132,6 +132,9 @@
   <data name="EventDateTimeDisplayName" xml:space="preserve">
     <value>Date and Time</value>
   </data>
+  <data name="EventDateTimeInvalid" xml:space="preserve">
+    <value>The date or time is invalid.</value>
+  </data>
   <data name="EventDateTimeRequired" xml:space="preserve">
     <value>The date and time of the event is required.</value>
   </data>
@@ -144,6 +147,9 @@
   <data name="EventDurationDisplayName" xml:space="preserve">
     <value>Duration</value>
   </data>
+  <data name="EventDurationInvalid" xml:space="preserve">
+    <value>The duration is invalid.</value>
+  </data>
   <data name="EventDurationRequired" xml:space="preserve">
     <value>The duration of the event is required.</value>
   </data>
@@ -155,6 +161,9 @@
   </data>
   <data name="EventUrlDisplayName" xml:space="preserve">
     <value>URL</value>
+  </data>
+  <data name="EventUrlInvalid" xml:space="preserve">
+    <value>The URL is invalid.</value>
   </data>
   <data name="NotificationMessageDisplayName" xml:space="preserve">
     <value>Message</value>

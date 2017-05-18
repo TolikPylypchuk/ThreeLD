@@ -6,6 +6,7 @@ namespace ThreeLD.Web.Models.ViewModels
 {
     public class ViewPreferencesModel
     {
-        public Dictionary<string, Dictionary<Event, bool>> EventsByPreferences { get; set; }
+        public Dictionary<string, Dictionary<Event, bool>>
+			EventsByPreferences { get; set; }
     }
 }

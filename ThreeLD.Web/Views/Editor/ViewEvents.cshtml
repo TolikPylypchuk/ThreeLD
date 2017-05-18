@@ -1,76 +1,90 @@
-﻿@model ThreeLD.Web.Models.ViewModels.ViewEventsUserModel
+﻿@model ViewEventsUserModel
 
 @{
-    ViewBag.Title = "View Events";
+	ViewBag.Title = Resources.ViewEventsTitle;
+	var dummy = new Event();
 }
 
-<h1>Events</h1>
+<h1>@Resources.ViewEventsHeader</h1>
 
 <table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Date and Time</th>
-            <th>Duration</th>
-            <th>Address</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>URL</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var e in Model.Events)
-        {
-            <tr>
-                <td>@e.Key.Name</td>
-                <td>@e.Key.DateTime</td>
-                <td>@e.Key.Duration</td>
-                <td>@e.Key.Address</td>
-                <td>@e.Key.Description</td>
-                <td>@e.Key.Category</td>
-	            <td><a href="@e.Key.Url" class="btn btn-link">Link</a></td>
-	            <td>
-		            <div class="row">
-			            <div class="col-xs-4">
-				            @if (!e.Value)
-				            {
-					            using (Html.BeginForm(
-						            "AddBookmark", "User", new { eventId = e.Key.Id }))
-					            {
-						            <button type="submit" class="btn btn-link">
-							            <span class="glyphicon glyphicon-heart"></span>
-						            </button>
-					            }
-				            } else
-				            {
-					            using (Html.BeginForm(
-						            "RemoveBookmark", "User", new { eventId = e.Key.Id }))
-					            {
-						            <button type="submit" class="btn btn-link">
-							            <span class="glyphicon glyphicon-heart-empty"></span>
-						            </button>
-					            }
-				            }
-			            </div>
-			            <div class="col-xs-4">
-				            @using (Html.BeginForm(
-					            "DeleteEvent", "Editor", new { id = e.Key.Id }))
-				            {
-					            <button type="submit" class="btn btn-link">
-						            <span class="glyphicon glyphicon-remove"></span>
-					            </button>
-				            }
-			            </div>
-			            <div class="col-xs-4">
+	<thead>
+		<tr>
+			<th>@Html.DisplayNameFor(m => dummy.Name)</th>
+			<th>@Html.DisplayNameFor(m => dummy.DateTime)</th>
+			<th>@Html.DisplayNameFor(m => dummy.Duration)</th>
+			<th>@Html.DisplayNameFor(m => dummy.Address)</th>
+			<th>@Html.DisplayNameFor(m => dummy.Description)</th>
+			<th>@Html.DisplayNameFor(m => dummy.Category)</th>
+			<th>@Html.DisplayNameFor(m => dummy.Url)</th>
+			<th>@Resources.ActionsText</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var e in Model.Events)
+		{
+			<tr>
+				<td>@e.Key.Name</td>
+				<td>@e.Key.DateTime</td>
+				<td>@e.Key.Duration</td>
+				<td>@e.Key.Address</td>
+				<td>@e.Key.Description</td>
+				<td>@e.Key.Category</td>
+				<td>
+					<a href="@e.Key.Url" class="btn btn-link">
+						@Resources.LinkText
+					</a>
+				</td>
+				<td>
+					<div class="row">
+						<div class="col-xs-4">
+							@if (!e.Value)
+							{
+								using (Html.BeginForm(
+									"AddBookmark",
+									"User",
+									new { eventId = e.Key.Id }))
+								{
+									<button type="submit" class="btn btn-link">
+										<span class="glyphicon glyphicon-heart">
+										</span>
+									</button>
+								}
+							} else
+							{
+								using (Html.BeginForm(
+									"RemoveBookmark",
+									"User",
+									new { eventId = e.Key.Id }))
+								{
+									<button type="submit" class="btn btn-link">
+										<span class="glyphicon glyphicon-heart-empty">
+										</span>
+									</button>
+								}
+							}
+						</div>
+						<div class="col-xs-4">
+							@using (Html.BeginForm(
+								"DeleteEvent",
+								"Editor",
+								new { id = e.Key.Id }))
+							{
+								<button type="submit" class="btn btn-link">
+									<span class="glyphicon glyphicon-remove">
+									</span>
+								</button>
+							}
+						</div>
+						<div class="col-xs-4">
 							<a href="@Url.Action("EditEvent", new { id = e.Key.Id })"
-							   class="btn btn-link">
+								class="btn btn-link">
 								<span class="glyphicon glyphicon-pencil"></span>
 							</a>
 						</div>
-		            </div>
+					</div>
 				</td>
-            </tr>
-        }
-    </tbody>
+			</tr>
+		}
+	</tbody>
 </table>

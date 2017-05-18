@@ -13,6 +13,7 @@ using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
 using ThreeLD.Web.Models.ViewModels;
+using ThreeLD.Web.Properties;
 
 namespace ThreeLD.Web.Controllers
 {
@@ -75,7 +76,7 @@ namespace ThreeLD.Web.Controllers
 		[ExcludeFromCodeCoverage]
 		public ViewResult CreateEvent()
 		{
-			this.ViewBag.Action = "Create";
+			this.ViewBag.Action = Resources.CreateText;
 			this.ViewBag.Role = "Editor";
 			return this.View(nameof(this.EditEvent), new Event());
 		}
@@ -85,7 +86,7 @@ namespace ThreeLD.Web.Controllers
 		{
 			if (!this.ModelState.IsValid)
 			{
-				this.ViewBag.Action = "Create";
+				this.ViewBag.Action = Resources.CreateText;
 				this.ViewBag.Role = "Editor";
 				return this.View(nameof(this.EditEvent), e);
 			}
@@ -95,7 +96,8 @@ namespace ThreeLD.Web.Controllers
 			this.events.Add(e);
 			this.events.Save();
 			
-			this.TempData["message"] = $"{e.Name} has been created.";
+			this.TempData["message"] = String.Format(
+				Resources.EventCreatedFormat, e.Name);
 
 			return this.RedirectToAction(nameof(this.ViewEvents));
 		}
@@ -104,7 +106,7 @@ namespace ThreeLD.Web.Controllers
 		[ExcludeFromCodeCoverage]
 		public ViewResult EditEvent(int id)
 		{
-			this.ViewBag.Action = "Edit";
+			this.ViewBag.Action = Resources.EditText;
 			this.ViewBag.Role = "Editor";
 			return this.View(this.events.GetById(id));
 		}
@@ -114,7 +116,7 @@ namespace ThreeLD.Web.Controllers
 		{
 			if (!this.ModelState.IsValid)
 			{
-				this.ViewBag.Action = "Edit";
+				this.ViewBag.Action = Resources.EditText;
 				this.ViewBag.Role = "Editor";
 				return this.View(nameof(this.EditEvent), e);
 			}
@@ -124,7 +126,8 @@ namespace ThreeLD.Web.Controllers
 			this.events.Update(e);
 			this.events.Save();
 
-			string message = $"{e.Name} has been updated.";
+			string message = String.Format(
+				Resources.EventUpdatedFormat, e.Name);
 
 			this.TempData["message"] = message;
 
@@ -156,7 +159,7 @@ namespace ThreeLD.Web.Controllers
 
 			if (e == null)
 			{
-				this.TempData["error"] = "The specified event doesn't exist.";
+				this.TempData["error"] = Resources.EventDoesNotExist;
 			} else
 			{
 				string currentUserId = this.User.Identity.GetUserId();
@@ -166,7 +169,8 @@ namespace ThreeLD.Web.Controllers
 				this.events.Update(e);
 				this.events.Save();
 
-				string message = $"{e.Name} has been approved.";
+				string message = String.Format(
+					Resources.EventApprovedFormat, e.Name);
 
 				this.TempData["message"] = message;
 
@@ -194,13 +198,14 @@ namespace ThreeLD.Web.Controllers
 
 			if (e == null)
 			{
-				this.TempData["error"] = "The specified event doesn't exist.";
+				this.TempData["error"] = Resources.EventDoesNotExist;
 			} else
 			{
 				this.events.Delete(e);
 				this.events.Save();
 
-				string message = $"{e.Name} has been deleted.";
+				string message = String.Format(
+					Resources.EventDeletedFormat, e.Name);
 
 				this.TempData["message"] = message;
 
