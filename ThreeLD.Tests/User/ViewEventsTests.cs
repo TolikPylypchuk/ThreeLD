@@ -68,7 +68,7 @@ namespace ThreeLD.Tests.User
 			Assert.AreEqual(
 				0, ((ViewEventsUserModel)viewResult.Model).Events.Count);
 
-			mockRepository.Verify(r => r.GetAll(), Times.Once);
+			mockRepository.Verify(r => r.GetAll(), Times.Exactly(2));
 		}
 
 		[TestMethod]
@@ -82,7 +82,8 @@ namespace ThreeLD.Tests.User
 			Event bookmarkedEvent = new Event()
 			{
 				IsApproved = true,
-				BookmarkedBy = new List<DB.Models.User>{ user }
+				BookmarkedBy = new List<DB.Models.User>{ user },
+                Category = "test"
 			};
 
 			user.BookmarkedEvents = new List<Event>{ bookmarkedEvent };
@@ -116,7 +117,7 @@ namespace ThreeLD.Tests.User
 			Assert.IsTrue(((ViewEventsUserModel)viewResult.Model)
 				.Events.ToArray()[0].Value);
 
-			mockRepository.Verify(r => r.GetAll(), Times.Once);
+			mockRepository.Verify(r => r.GetAll(), Times.Exactly(2));
 
 		}
 
@@ -131,7 +132,8 @@ namespace ThreeLD.Tests.User
 			Event bookmarkedEvent = new Event
 			{
 				IsApproved = true,
-				BookmarkedBy = new List<DB.Models.User>()
+				BookmarkedBy = new List<DB.Models.User>(),
+                Category = "test"
 			};
 
 			user.BookmarkedEvents = new List<Event>();
@@ -164,8 +166,7 @@ namespace ThreeLD.Tests.User
 			Assert.IsFalse(((ViewEventsUserModel)viewResult.Model)
 				.Events.ToArray()[0].Value);
 
-			mockRepository.Verify(r => r.GetAll(), Times.Once);
-
-		}
-	}
+            mockRepository.Verify(r => r.GetAll(), Times.Exactly(2));
+        }
+    }
 }
