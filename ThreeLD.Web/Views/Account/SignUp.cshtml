@@ -1,4 +1,4 @@
-﻿@model ThreeLD.Web.Models.ViewModels.SignUpModel
+﻿@model SignUpModel
 
 @{
 	ViewBag.Title = "Sign Up";
@@ -35,10 +35,10 @@
 		@Html.PasswordFor(x => x.Password, new { @class = "form-control" })
 	</div>
     <br>
-	<button type="submit" class="btn btn-primary">Create</button>
+	<button type="submit" class="btn btn-primary">@Resources.SignUpText</button>
 
 	@Html.ActionLink(
-		"Cancel",
+		Resources.CancelText,
 		"Index",
 		"Home",
 		null,

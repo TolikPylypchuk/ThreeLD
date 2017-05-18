@@ -31,7 +31,7 @@
 				<ul class="nav navbar-nav">
 					<li>
 						@Html.ActionLink(
-							"Propose an Event",
+							Resources.ProposeEventText,
 							"ProposeEvent",
 							"User",
 							null,
@@ -39,7 +39,7 @@
 					</li>
                     <li>
                         @Html.ActionLink(
-                            "View Preferred Events",
+                            Resources.ViewPreferredEventsText,
                             "ViewPreferredEvents",
                             "User",
                             null,
@@ -50,15 +50,27 @@
 				<ul class="nav navbar-nav navbar-right">
                     <li>
                         @Html.ActionLink(
-                            "My Notifications", "ViewNotifications", "User", null, null)
+                            Resources.MyNotificationsText,
+							"ViewNotifications",
+							"User",
+							null,
+							null)
                     </li>
 					<li>
 						@Html.ActionLink(
-							"My Profile", "Profile", "User", null, null)
+							Resources.MyProfileText,
+							"Profile",
+							"User",
+							null,
+							null)
 					</li>
 					<li>
 						@Html.ActionLink(
-							"Log Out", "Logout", "Account", null, null)
+							Resources.LogOutText,
+							"Logout",
+							"Account",
+							null,
+							null)
 					</li>
 				</ul>
 			</div>

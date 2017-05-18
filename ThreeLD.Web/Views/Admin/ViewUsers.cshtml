@@ -1,25 +1,28 @@
-﻿@model ThreeLD.Web.Models.ViewModels.AdminUsersModel
+﻿@model AdminUsersModel
 
 @{
-	ViewBag.Title = "Users";
+	ViewBag.Title = Resources.UsersTitle;
+	var dummy = new User();
 }
 
-<h1>User Accounts</h1>
+<h1>@Resources.UsersHeader</h1>
 
 <table class="table table-bordered">
 	<thead>
 		<tr>
-			<th>User Name</th>
-			<th>First Name</th>
-			<th>Last Name</th>
-			<th>Email</th>
-			<th>Actions</th>
+			<th>@Html.DisplayNameFor(m => dummy.UserName)</th>
+			<th>@Html.DisplayNameFor(m => dummy.FirstName)</th>
+			<th>@Html.DisplayNameFor(m => dummy.LastName)</th>
+			<th>@Html.DisplayNameFor(m => dummy.Email)</th>
+			<th>@Resources.ActionsText</th>
 		</tr>
 	</thead>
 	@if (!Model.Users.Any())
 	{
 		<tr>
-			<td colspan="5" class="text-center">No User Accounts</td>
+			<td colspan="5" class="text-center">
+				@Resources.NoUserAccountsText
+			</td>
 		</tr>
 	} else
 	{
@@ -44,7 +47,7 @@
 									{
 										<button class="btn btn-link"
 										        type="submit">
-                                            Assign Editor
+											@Resources.AssignEditorText
 										</button>
 									}
 								} else
@@ -56,7 +59,7 @@
 									{
 										<button class="btn btn-link"
 										        type="submit">
-                                            Unassign Editor
+											@Resources.UnassignEditorText
 										</button>
 									}
 								}
@@ -71,7 +74,12 @@
 									new { id = info.Key.Id }))
 								{
                                     <button type="submit" class="btn btn-link">
+<<<<<<< HEAD
+	                                    <span class="glyphicon glyphicon-heart">
+	                                    </span>
+=======
                                         <span class="glyphicon glyphicon-remove"></span>
+>>>>>>> 3a32f6a0f4558be1ca2c87ef66c4aacb80b5488a
                                     </button>
                                 }
                             }

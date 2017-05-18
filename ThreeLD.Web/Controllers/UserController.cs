@@ -13,6 +13,7 @@ using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
 using ThreeLD.DB.Repositories;
 using ThreeLD.Web.Models.ViewModels;
+using ThreeLD.Web.Properties;
 
 namespace ThreeLD.Web.Controllers
 {
@@ -150,7 +151,7 @@ namespace ThreeLD.Web.Controllers
 		[Authorize(Roles = "User")]
 		public ViewResult ProposeEvent()
 		{
-			this.ViewBag.Action = "Propose";
+			this.ViewBag.Action = Resources.ProposeText;
 			this.ViewBag.Role = "User";
 			return this.View("EditEvent", new Event());
 		}
@@ -161,7 +162,7 @@ namespace ThreeLD.Web.Controllers
 		{
 			if (!this.ModelState.IsValid)
 			{
-				this.ViewBag.Action = "Propose";
+				this.ViewBag.Action = Resources.ProposeText;
 				this.ViewBag.Role = "User";
 
 				return this.View(nameof(EditorController.EditEvent), newEvent);
@@ -183,8 +184,7 @@ namespace ThreeLD.Web.Controllers
 
 			if (e == null)
 			{
-				this.TempData["error"] =
-							$"Event with id {eventId} doesn't exist.";
+				this.TempData["error"] = Resources.EventDoesNotExist;
 			} else
 			{
 				var currentUser =
@@ -197,15 +197,16 @@ namespace ThreeLD.Web.Controllers
 
 				if (res != 0)
 				{
-					this.TempData["message"] =
-						$"Event {e.Name} has been bookmarked.";
+					this.TempData["message"] = String.Format(
+						Resources.EventBookmarkedFormat, e.Name);
 				}
 				else
 				{
-					this.TempData["error"] =
-						$"Event {e.Name} has already been bookmarked.";
+					this.TempData["error"] = String.Format(
+						Resources.EventAlreadyBookmarkedFormat, e.Name);
 				}
 			}
+
 			return this.RedirectToAction(nameof(this.ViewEvents));
 		}
 
@@ -223,15 +224,13 @@ namespace ThreeLD.Web.Controllers
 
 			if (res != 0)
 			{
-				this.TempData["message"] =
-					$"Bookmark on event {chosenEvent.Name} " +
-						"has been removed.";
+				this.TempData["message"] = String.Format(
+					Resources.BookmarkRemovedFormat, chosenEvent.Name);
 			}
 			else
 			{
-				this.TempData["error"] =
-					$"Bookmark on event {chosenEvent.Name} " +
-						"doesn't exist.";
+				this.TempData["error"] = String.Format(
+					Resources.BookmarkDoesNotExistFormat, chosenEvent.Name);
 			}
 
 			if (String.IsNullOrEmpty(returnURL))
@@ -245,7 +244,7 @@ namespace ThreeLD.Web.Controllers
 		[HttpGet]
 		public new ViewResult Profile()
 		{
-			ViewBag.ReturnURL = "/User/Profile";
+			ViewBag.ReturnURL = "/user/profile";
 
 			var currentUser =
 				this.UserManager.FindById(this.User.Identity.GetUserId());
@@ -263,7 +262,8 @@ namespace ThreeLD.Web.Controllers
 			{
 				User = currentUser,
 				Categories = categories
-					.Where(c => currentUser.Preferences.All(p => p.Category != c))
+					.Where(c => currentUser.Preferences.All(
+						p => p.Category != c))
 					.ToList(),
 				SelectedCategory = null
 			});
@@ -276,7 +276,7 @@ namespace ThreeLD.Web.Controllers
 
 			if (String.IsNullOrEmpty(category))
 			{
-				this.TempData["error"] = "Choose the category.";
+				this.TempData["error"] = Resources.ChooseCategory;
 				return this.View(nameof(this.Profile));
 			}
 
@@ -285,8 +285,8 @@ namespace ThreeLD.Web.Controllers
 			if (this.preferences.GetAll().Count(
 				p => p.Category == category && p.UserId == userId) != 0)
 			{
-				this.TempData["error"] = $"Category {category} is already " +
-					"assigned as preferred. Choose an unassigned one.";
+				this.TempData["error"] = String.Format(
+					Resources.CategoryAlreadyPreferredFormat, category);
 
 				return this.View(nameof(this.Profile));
 			}
@@ -300,7 +300,7 @@ namespace ThreeLD.Web.Controllers
 			this.preferences.Add(newPreference);
 			this.preferences.Save();
 
-			this.TempData["message"] = "The preference has been added.";
+			this.TempData["message"] = Resources.PreferenceAdded;
 
 			return this.RedirectToAction(nameof(this.Profile));
 		}
@@ -313,12 +313,11 @@ namespace ThreeLD.Web.Controllers
 
 			if (res != 0)
 			{
-				this.TempData["message"] = "The preference has been removed.";
+				this.TempData["message"] = Resources.PreferenceRemoved;
 			}
 			else
 			{
-				this.TempData["error"] =
-					"The specified preference doesn't exist.";
+				this.TempData["error"] = Resources.PreferenceDoesNotExist;
 			}
 
 			return this.RedirectToAction(nameof(this.Profile));
@@ -367,18 +366,17 @@ namespace ThreeLD.Web.Controllers
 					notification.IsRead = true;
 					this.notifications.Save();
 
-					this.TempData["message"] =
-						"The notification has been checked as read.";
+					this.TempData["message"] = Resources.NotificationRead;
 				}
 				else
 				{
 					this.TempData["error"] =
-						"The notification is already checked as read.";
+						Resources.NotificationAlreadyRead;
 				}
 			}
 			else
 			{
-				this.TempData["error"] = "The notification doesn't exist.";
+				this.TempData["error"] = Resources.NotificationDoesNotExist;
 			}
 
 			return RedirectToAction(nameof(this.ViewNotifications));
@@ -396,7 +394,8 @@ namespace ThreeLD.Web.Controllers
 
 			var model = new ViewPreferencesModel
 			{
-				EventsByPreferences = new Dictionary<string, Dictionary<Event, bool>>()
+				EventsByPreferences =
+					new Dictionary<string, Dictionary<Event, bool>>()
 			};
 
 			foreach (var preference in currentUserPreferences)
@@ -408,7 +407,8 @@ namespace ThreeLD.Web.Controllers
                 
                 foreach (var e in eventsByPreference)
                 {
-                    eventsDict.Add(e, currentUser.BookmarkedEvents.Any(ev => ev.Id == e.Id));
+                    eventsDict.Add(e, currentUser.BookmarkedEvents.Any(
+						ev => ev.Id == e.Id));
                 }
 
 				model.EventsByPreferences.Add(

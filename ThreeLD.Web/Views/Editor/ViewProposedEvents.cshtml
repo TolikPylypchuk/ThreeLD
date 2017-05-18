@@ -1,23 +1,23 @@
-﻿@model IEnumerable<ThreeLD.DB.Models.Event>
+﻿@model IEnumerable<Event>
 
 @{
-    ViewBag.Title = "Proposed Events";
+	ViewBag.Title = Resources.ProposedEventsTitle;
 }
 
-<h1>Proposed Events</h1>
+<h1>@Resources.ProposedEventsHeader</h1>
 
 <div>
 	<table class="table table-bordered">
 		<thead>
 		<tr>
-			<th>Name</th>
-			<th>Date and Time</th>
-			<th>Duration</th>
-			<th>Address</th>
-			<th>Description</th>
-			<th>Category</th>
-			<th>URL</th>
-			<th></th> 
+			<th>@Html.DisplayNameFor(m => m.Name)</th>
+			<th>@Html.DisplayNameFor(m => m.DateTime)</th>
+			<th>@Html.DisplayNameFor(m => m.Duration)</th>
+			<th>@Html.DisplayNameFor(m => m.Address)</th>
+			<th>@Html.DisplayNameFor(m => m.Description)</th>
+			<th>@Html.DisplayNameFor(m => m.Category)</th>
+			<th>@Html.DisplayNameFor(m => m.Url)</th>
+			<th>@Resources.ActionsText</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -30,29 +30,35 @@
 				<td>@e.Address</td>
 				<td>@e.Description</td>
 				<td>@e.Category</td>
-				<td><a href="@e.Url" class="btn btn-link">Link</a></td>
-                <td>
-                    <div class="row">
-                        <div class="col-xs-4">
-                            @using (Html.BeginForm("ApproveEvent", "Editor"))
-                            {
-                                @Html.Hidden("id", e.Id)
-                                <button type="submit" class="btn btn-link">
-                                    <span class="glyphicon glyphicon-ok"></span>
-                                </button>
-                            }
-                            </div>
-                          <div class="col-xs-4">
-                            @using (Html.BeginForm("DeleteEvent", "Editor"))
-                            {
-                                @Html.Hidden("id", e.Id)
-                                <button type="submit" class="btn btn-link">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </button>
-                            }
-                        </div>
-                        </div>
-                </td>
+				<td>
+					<a href="@e.Url" class="btn btn-link">
+						@Resources.LinkText
+					</a>
+				</td>
+				<td>
+					<div class="row">
+						<div class="col-xs-4">
+							@using (Html.BeginForm(
+								"ApproveEvent", "Editor", new { id = e.Id }))
+							{
+								<button type="submit" class="btn btn-link">
+									<span class="glyphicon glyphicon-ok">
+									</span>
+								</button>
+							}
+						</div>
+						<div class="col-xs-4">
+							@using (Html.BeginForm(
+								"DeleteEvent", "Editor", new { id = e.Id }))
+							{
+								<button type="submit" class="btn btn-link">
+									<span class="glyphicon glyphicon-remove">
+									</span>
+								</button>
+							}
+						</div>
+					</div>
+				</td>
 			</tr>
 		}
 		</tbody>

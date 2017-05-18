@@ -160,6 +160,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.uk.resx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

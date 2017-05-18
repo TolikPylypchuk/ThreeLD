@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity.Owin;
 using ThreeLD.DB.Infrastructure;
 using ThreeLD.DB.Models;
 using ThreeLD.Web.Models.ViewModels;
+using ThreeLD.Web.Properties;
 
 namespace ThreeLD.Web.Controllers
 {
@@ -88,7 +89,7 @@ namespace ThreeLD.Web.Controllers
 				return View("Error", result.Errors);
 			}
 
-			return View("Error", new[] { "User Not Found" });
+			return View("Error", new[] { Resources.UserNotFoundText });
 		}
 	}
 }

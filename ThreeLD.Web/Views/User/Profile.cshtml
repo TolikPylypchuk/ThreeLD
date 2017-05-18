@@ -1,29 +1,30 @@
-﻿@model ThreeLD.Web.Models.ViewModels.ProfileViewModel
+﻿@model ProfileViewModel
 
 @{
-	ViewBag.Title = "Account Info";
+	ViewBag.Title = Resources.ProfileTitle;
 }
+
 <div class="header">
-	<h1>Profile</h1>
+	<h1>@Resources.ProfileHeader</h1>
 
 	<div class="panel-body">
 		<div>
 			<table class="table table-bordered">
 				<tbody>
 					<tr>
-						<th>User Name</th>
+						<th>@Html.DisplayNameFor(m => m.User.UserName)</th>
 						<td>@Model.User.UserName</td>
 					</tr>
 					<tr>
-						<th>First Name</th>
+						<th>@Html.DisplayNameFor(m => m.User.FirstName)</th>
 						<td>@Model.User.FirstName</td>
 					</tr>
 					<tr>
-						<th> Last Name</th>
+						<th>@Html.DisplayNameFor(m => m.User.LastName)</th>
 						<td>@Model.User.LastName</td>
 					</tr>
 					<tr>
-						<th>Email</th>
+						<th>@Html.DisplayNameFor(m => m.User.Email)</th>
 						<td>@Model.User.Email</td>
 					</tr>
 				</tbody>
@@ -34,11 +35,11 @@
 
 <div class="row">
 	<div class="col-3 menu">
-		<h1>Preferences</h1>
+		<h1>@Resources.PreferencesHeader</h1>
 
 		@if (!Model.User.Preferences.Any())
 		{
-			<p>You don't have any preferences.</p>
+			<p>@Resources.NoPreferencesText</p>
 		}
 
 		<table class="table table-bordered">
@@ -76,7 +77,7 @@
 							Text = c,
 							Value = c
 						}),
-						"Choose category...",
+						Resources.ChooseCategoryText,
 						new { @class = "form-control" })
 					<button type="submit" class="btn btn-link">
 						<span class="glyphicon glyphicon-plus"></span>
@@ -84,7 +85,7 @@
 				}
 				else
 				{
-					<p>You prefer every category out there.</p>
+					<p>@Resources.AllPreferencesText</p>
 				}
 			</div>
 		}
@@ -92,11 +93,11 @@
 	</div>
 
 	<div class="col-9">
-		<h1>Bookmarks</h1>
+		<h1>@Resources.BookmarksHeader</h1>
 
 		@if (!Model.User.BookmarkedEvents.Any())
 		{
-			<p>You don't have any bookmarks.</p>
+			<p>@Resources.NoBookmarks</p>
 		}
 
 		<table class="table table-bordered">

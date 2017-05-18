@@ -106,6 +106,15 @@ namespace ThreeLD.DB.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The date or time is invalid..
+        /// </summary>
+        public static string EventDateTimeInvalid {
+            get {
+                return ResourceManager.GetString("EventDateTimeInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The date and time of the event is required..
         /// </summary>
         public static string EventDateTimeRequired {
@@ -142,6 +151,15 @@ namespace ThreeLD.DB.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The duration is invalid..
+        /// </summary>
+        public static string EventDurationInvalid {
+            get {
+                return ResourceManager.GetString("EventDurationInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The duration of the event is required..
         /// </summary>
         public static string EventDurationRequired {
@@ -174,6 +192,15 @@ namespace ThreeLD.DB.Properties {
         public static string EventUrlDisplayName {
             get {
                 return ResourceManager.GetString("EventUrlDisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The URL is invalid..
+        /// </summary>
+        public static string EventUrlInvalid {
+            get {
+                return ResourceManager.GetString("EventUrlInvalid", resourceCulture);
             }
         }
         
