@@ -73,26 +73,12 @@ namespace ThreeLD.Web.Controllers
 		}
 
         private ViewResult ViewEvents(
-           string categories, DateTime? start, DateTime? end)
+          string categories, DateTime? start, DateTime? end)
         {
-            var result = new List<Event>();
-
             var categoriesArray = categories.Split(',');
 
-            foreach (string category in categoriesArray)
-            {
-                var currentEvents = this.events.GetAll()
-                    .Where(e => e.IsApproved)
-                    .Where(e => e.Category == category)
-                    .Where(e =>
-                        (start == null ||
-                         DateTime.Compare(e.DateTime, start.Value) >= 0) &&
-                        (end == null ||
-                         DateTime.Compare(e.DateTime, end.Value) <= 0))
-                    .ToList();
-
-                result.AddRange(currentEvents);
-            }
+            var currentUser =
+                this.UserManager.FindById(User.Identity.GetUserId());
 
             var categoriesAll =
                 this.events.GetAll()
@@ -108,14 +94,35 @@ namespace ThreeLD.Web.Controllers
                 dict.Add(i, categoriesArray.Contains(i));
             }
 
-            var model = new FilterEventsModel()
+            var model = new ViewEventsUserModel()
             {
-                Events = result,
-
+                Events = this.events.GetAll()
+                    .Where(e => e.IsApproved)
+                    .Where(e => categoriesArray.Contains(e.Category))
+                    .Where(e =>
+                        (start == null ||
+                         DateTime.Compare(e.DateTime, start.Value) >= 0) &&
+                        (end == null ||
+                         DateTime.Compare(e.DateTime, end.Value) <= 0))
+                    .ToDictionary(e => e, e => currentUser.BookmarkedEvents.Contains(e)),
                 Categories = dict
             };
 
             return this.View(nameof(this.ViewEvents), model);
+        }
+        [HttpPost]
+        public ViewResult ViewEvents(ICollection<string> categories)
+        {
+            string result = string.Empty;
+            if (categories != null)
+            {
+                foreach (string i in categories)
+                {
+                    result += i + ",";
+                }
+            }
+
+            return ViewEvents(result, null, null);
         }
 
         [HttpGet]
