@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Web;
 using System.Web.Routing;
 
 namespace ThreeLD.Web.Localization
 {
+	[ExcludeFromCodeCoverage]
 	public class LanguageConstraint : IRouteConstraint
 	{
 		private string[] validValues;

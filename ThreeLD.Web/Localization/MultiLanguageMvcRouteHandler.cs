@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
@@ -6,16 +7,17 @@ using System.Web.Routing;
 
 namespace ThreeLD.Web.Localization
 {
+	[ExcludeFromCodeCoverage]
 	public class MultiLanguageMvcRouteHandler : MvcRouteHandler
 	{
 		protected override IHttpHandler GetHttpHandler(
 			RequestContext requestContext)
 		{
-			string culture = requestContext.RouteData
+			string lang = requestContext.RouteData
 				.Values["lang"]?.ToString() ??
 					"en";
 			
-			var ci = new CultureInfo(culture);
+			var ci = new CultureInfo(lang);
 
 			Thread.CurrentThread.CurrentUICulture = ci;
 			Thread.CurrentThread.CurrentCulture =
