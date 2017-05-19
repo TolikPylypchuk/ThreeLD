@@ -20,7 +20,8 @@ namespace ThreeLD.Web.Localization
 			RouteValueDictionary values,
 			RouteDirection routeDirection)
 		{
-			return this.validValues.Contains(values[parameterName].ToString());
+			return this.validValues.Contains(
+				values[parameterName].ToString().ToLower());
 		}
 	}
 }
