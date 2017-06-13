@@ -29,8 +29,8 @@ namespace ThreeLD.DB.Models
 			ErrorMessageResourceType = typeof(Resources))]
 		public override string Email
 		{
-			get => base.UserName;
-			set => base.UserName = value;
+			get => base.Email;
+			set => base.Email = value;
 		}
 
 		[Display(

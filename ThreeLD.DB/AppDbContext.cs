@@ -24,7 +24,7 @@ namespace ThreeLD.DB
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            Database.SetInitializer<AppDbContext>(null);
 
             modelBuilder.Entity<Notification>()
                         .HasRequired(n => n.User)
@@ -37,6 +37,8 @@ namespace ThreeLD.DB
                         .WithMany(u => u.OutcomingNotifications)
                         .HasForeignKey(n => n.From)
                         .WillCascadeOnDelete(false);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
