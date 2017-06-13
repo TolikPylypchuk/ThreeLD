@@ -1,84 +1,90 @@
 ﻿@model ViewEventsUserModel
 
 @{
-    ViewBag.Title = Resources.ViewEventsTitle;
+	ViewBag.Title = Resources.ViewEventsTitle;
 	var dummy = new Event();
 }
 
 <h1>@Resources.ViewEventsHeader</h1>
 
 <div class="row">
-    <div class="col-3 menu">
-        <form method="post" action="/User/ViewEvents">
-            <table class="table table-bordered">
-                <tbody>
-                    @foreach (var i in Model.Categories)
-                    {
-                        <tr>
-                            <td>@i.Key</td>
-                            <td><input type="checkbox" name="categories" checked="@i.Value" value="@i.Key" /></td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <button type="submit" class="btn btn-default">Submit</button>
-        </form>
-    </div>
+	<div class="col-3 menu">
+		@using (Html.BeginForm())
+		{
+			<table class="table table-bordered">
+				<tbody>
+					@foreach (var i in Model.Categories)
+					{
+						<tr>
+							<td>@i.Key</td>
+							<td>
+								<input type="checkbox" name="categories"
+								       checked="@i.Value" value="@i.Key" />
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+			<button type="submit" class="btn btn-default">
+				@Resources.SubmitText
+			</button>
+		}
+	</div>
 
-    <div class="col-9">
-	    <table class="table table-bordered">
-		    <thead>
-		    <tr>
-			    <th>@Html.DisplayNameFor(m => dummy.Name)</th>
-			    <th>@Html.DisplayNameFor(m => dummy.DateTime)</th>
-			    <th>@Html.DisplayNameFor(m => dummy.Duration)</th>
-			    <th>@Html.DisplayNameFor(m => dummy.Address)</th>
-			    <th>@Html.DisplayNameFor(m => dummy.Description)</th>
-			    <th>@Html.DisplayNameFor(m => dummy.Category)</th>
-			    <th>@Html.DisplayNameFor(m => dummy.Url)</th>
-			    <th>@Resources.BookmarkText</th>
-		    </tr>
-		    </thead>
-		    <tbody>
-		    @foreach (var e in Model.Events)
-		    {
-			    <tr>
-				    <td>@e.Key.Name</td>
-				    <td>@e.Key.DateTime.ToString("yyyy-MM-dd HH\\:mm")</td>
-				    <td>@e.Key.Duration.ToString("hh\\:mm")</td>
-				    <td>@e.Key.Address</td>
-				    <td>@e.Key.Description</td>
-				    <td>@e.Key.Category</td>
-				    <td>
-					    <a href="@e.Key.Url" class="btn btn-link">
-						    @Resources.LinkText
-					    </a>
-				    </td>
-				    <td>
-					    @if (!e.Value)
-					    {
-						    using (Html.BeginForm(
-							    "AddBookmark", "User", new { eventId = e.Key.Id }))
-						    {
-							    <button type="submit" class="btn btn-link">
-								    <span class="glyphicon glyphicon-heart"></span>
-							    </button>
-						    }
-					    } else
-					    {
-						    using (Html.BeginForm(
-							    "RemoveBookmark", "User", new { eventId = e.Key.Id }))
-						    {
-							    <button type="submit" class="btn btn-link">
-								    <span class="glyphicon glyphicon-heart-empty">
-								    </span>
-							    </button>
-						    }
-					    }
-				    </td>
-			    </tr>
-		    }
-		    </tbody>
-	    </table>
-    </div>
+	<div class="col-9">
+		<table class="table table-bordered">
+			<thead>
+			<tr>
+				<th>@Html.DisplayNameFor(m => dummy.Name)</th>
+				<th>@Html.DisplayNameFor(m => dummy.DateTime)</th>
+				<th>@Html.DisplayNameFor(m => dummy.Duration)</th>
+				<th>@Html.DisplayNameFor(m => dummy.Address)</th>
+				<th>@Html.DisplayNameFor(m => dummy.Description)</th>
+				<th>@Html.DisplayNameFor(m => dummy.Category)</th>
+				<th>@Html.DisplayNameFor(m => dummy.Url)</th>
+				<th>@Resources.BookmarkText</th>
+			</tr>
+			</thead>
+			<tbody>
+			@foreach (var e in Model.Events)
+			{
+				<tr>
+					<td>@e.Key.Name</td>
+					<td>@e.Key.DateTime.ToString("yyyy-MM-dd HH\\:mm")</td>
+					<td>@e.Key.Duration.ToString("hh\\:mm")</td>
+					<td>@e.Key.Address</td>
+					<td>@e.Key.Description</td>
+					<td>@e.Key.Category</td>
+					<td>
+						<a href="@e.Key.Url" class="btn btn-link">
+							@Resources.LinkText
+						</a>
+					</td>
+					<td>
+						@if (!e.Value)
+						{
+							using (Html.BeginForm(
+								"AddBookmark", "User", new { eventId = e.Key.Id }))
+							{
+								<button type="submit" class="btn btn-link">
+									<span class="glyphicon glyphicon-heart"></span>
+								</button>
+							}
+						} else
+						{
+							using (Html.BeginForm(
+								"RemoveBookmark", "User", new { eventId = e.Key.Id }))
+							{
+								<button type="submit" class="btn btn-link">
+									<span class="glyphicon glyphicon-heart-empty">
+									</span>
+								</button>
+							}
+						}
+					</td>
+				</tr>
+			}
+			</tbody>
+		</table>
+	</div>
 </div>

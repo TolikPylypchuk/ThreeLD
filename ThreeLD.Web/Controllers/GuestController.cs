@@ -10,113 +10,113 @@ using ThreeLD.Web.Models.ViewModels;
 
 namespace ThreeLD.Web.Controllers
 {
-    public class GuestController : Controller
-    {
-        private IRepository<Event> events;
+	public class GuestController : Controller
+	{
+		private IRepository<Event> events;
 
-        public GuestController(IRepository<Event> events)
-        {
-            this.events = events;
-        }
+		public GuestController(IRepository<Event> events)
+		{
+			this.events = events;
+		}
 
-        [ExcludeFromCodeCoverage]
-        public ActionResult Index()
-        {
-            return RedirectToAction(nameof(this.ViewEvents));
-        }
+		[ExcludeFromCodeCoverage]
+		public ActionResult Index()
+		{
+			return RedirectToAction(nameof(this.ViewEvents));
+		}
 
-        [HttpGet]
-        public ViewResult ViewEvents()
-        {
-            /*if (HttpContext.User.Identity.IsAuthenticated)
-            {
-                return this.View(nameof(Index), "Home");
-            }*/
-            var categories =
-                this.events.GetAll()
-                            .Where(e => e.IsApproved)
-                            .Select(e => e.Category)
-                            .Distinct()
-                            .ToList();
+		[HttpGet]
+		public ViewResult ViewEvents()
+		{
+			/*if (HttpContext.User.Identity.IsAuthenticated)
+			{
+				return this.View(nameof(Index), "Home");
+			}*/
+			var categories =
+				this.events.GetAll()
+							.Where(e => e.IsApproved)
+							.Select(e => e.Category)
+							.Distinct()
+							.ToList();
 
-            Dictionary<string, bool> dict = new Dictionary<string, bool>();
+			Dictionary<string, bool> dict = new Dictionary<string, bool>();
 
-            foreach(var i in categories)
-            {
-                dict.Add(i, true);
-            }
+			foreach(var i in categories)
+			{
+				dict.Add(i, true);
+			}
 
-            var model = new FilterEventsModel()
-            {
-                Events = this.events.GetAll()
-                    .Where(e => e.IsApproved)
-                    .OrderBy(e => e.DateTime).ToList(),
+			var model = new FilterEventsModel()
+			{
+				Events = this.events.GetAll()
+					.Where(e => e.IsApproved)
+					.OrderBy(e => e.DateTime).ToList(),
 
-                Categories = dict
-            };
+				Categories = dict
+			};
 
-            return this.View(model);
-        }
+			return this.View(model);
+		}
         
-        private ViewResult ViewEvents(
-            string categories, DateTime? start, DateTime? end)
-        {
-            var result = new List<Event>();
+		private ViewResult ViewEvents(
+			string categories, DateTime? start, DateTime? end)
+		{
+			var result = new List<Event>();
 
-            var categoriesArray = categories.Split(',');
+			var categoriesArray = categories.Split(',');
 
-            foreach (string category in categoriesArray)
-            {
-                var currentEvents = this.events.GetAll()
-                    .Where(e => e.IsApproved)
-                    .Where(e => e.Category == category)
-                    .Where(e =>
-                        (start == null ||
-                         DateTime.Compare(e.DateTime, start.Value) >= 0) &&
-                        (end == null ||
-                         DateTime.Compare(e.DateTime, end.Value) <= 0))
-                    .ToList();
+			foreach (string category in categoriesArray)
+			{
+				var currentEvents = this.events.GetAll()
+					.Where(e => e.IsApproved)
+					.Where(e => e.Category == category)
+					.Where(e =>
+						(start == null ||
+							DateTime.Compare(e.DateTime, start.Value) >= 0) &&
+						(end == null ||
+							DateTime.Compare(e.DateTime, end.Value) <= 0))
+					.ToList();
 
-                result.AddRange(currentEvents);
-            }
+				result.AddRange(currentEvents);
+			}
 
-            var categoriesAll =
-                this.events.GetAll()
-                            .Where(e => e.IsApproved)
-                            .Select(e => e.Category)
-                            .Distinct()
-                            .ToList();
+			var categoriesAll =
+				this.events.GetAll()
+						   .Where(e => e.IsApproved)
+						   .Select(e => e.Category)
+						   .Distinct()
+						   .ToList();
 
-            Dictionary<string, bool> dict = new Dictionary<string, bool>();
+			Dictionary<string, bool> dict = new Dictionary<string, bool>();
 
-            foreach (var i in categoriesAll)
-            {
-                dict.Add(i, categoriesArray.Contains(i));
-            }
+			foreach (var i in categoriesAll)
+			{
+				dict.Add(i, categoriesArray.Contains(i));
+			}
 
-            var model = new FilterEventsModel()
-            {
-                Events = result,
+			var model = new FilterEventsModel()
+			{
+				Events = result,
 
-                Categories = dict
-            };
+				Categories = dict
+			};
 
-            return this.View(nameof(this.ViewEvents), model);
-        }
+			return this.View(nameof(this.ViewEvents), model);
+		}
 
-        [HttpPost]
-        public ViewResult ViewEvents(ICollection<string> categories)
-        {
-            string result = string.Empty;
-            if(categories != null)
-            {
-                foreach (string i in categories)
-                {
-                    result += i + ",";
-                }
-            }
+		[HttpPost]
+		public ViewResult ViewEvents(ICollection<string> categories)
+		{
+			string result = string.Empty;
+			if(categories != null)
+			{
+				foreach (string i in categories)
+				{
+					result += i + ",";
+				}
+			}
             
-            return ViewEvents(result, null, null);
-        }
-    }
+			return ViewEvents(result, null, null);
+		}
+	}
 }
