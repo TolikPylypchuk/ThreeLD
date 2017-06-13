@@ -22,16 +22,17 @@ namespace ThreeLD.Web.Controllers
 		[ExcludeFromCodeCoverage]
 		public ActionResult Index()
 		{
-			return RedirectToAction(nameof(this.ViewEvents));
+			return this.RedirectToAction(nameof(this.ViewEvents));
 		}
 
 		[HttpGet]
 		public ViewResult ViewEvents()
 		{
-			/*if (HttpContext.User.Identity.IsAuthenticated)
+			if (HttpContext.User.Identity.IsAuthenticated)
 			{
 				return this.View(nameof(Index), "Home");
-			}*/
+			}
+
 			var categories =
 				this.events.GetAll()
 							.Where(e => e.IsApproved)
@@ -58,6 +59,7 @@ namespace ThreeLD.Web.Controllers
 			return this.View(model);
 		}
         
+		[HttpPost]
 		private ViewResult ViewEvents(
 			string categories, DateTime? start, DateTime? end)
 		{
@@ -82,10 +84,10 @@ namespace ThreeLD.Web.Controllers
 
 			var categoriesAll =
 				this.events.GetAll()
-						   .Where(e => e.IsApproved)
-						   .Select(e => e.Category)
-						   .Distinct()
-						   .ToList();
+							.Where(e => e.IsApproved)
+							.Select(e => e.Category)
+							.Distinct()
+							.ToList();
 
 			Dictionary<string, bool> dict = new Dictionary<string, bool>();
 
@@ -97,7 +99,6 @@ namespace ThreeLD.Web.Controllers
 			var model = new FilterEventsModel()
 			{
 				Events = result,
-
 				Categories = dict
 			};
 
@@ -116,7 +117,7 @@ namespace ThreeLD.Web.Controllers
 				}
 			}
             
-			return ViewEvents(result, null, null);
+			return this.ViewEvents(result, null, null);
 		}
 	}
 }

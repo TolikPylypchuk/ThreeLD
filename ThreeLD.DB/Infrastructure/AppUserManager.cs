@@ -38,5 +38,5 @@ namespace ThreeLD.DB.Infrastructure
 
 			return manager;
 		}
-	}
+    }
 }
